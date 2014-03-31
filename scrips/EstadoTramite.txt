@@ -1,0 +1,98 @@
+
+alter table FTTipoProceso add TTid numeric(18) null
+go
+
+alter table FTTipoProceso
+   add constraint FK_FTTIPOPR_REFERENCE_FTTIPOTR foreign key (TTid)
+      references FTTipoTramite (TTid)
+go
+
+
+
+
+delete from FTEstadoTramite
+go
+delete from FTFlujoTramite
+go
+--
+-- TABLE INSERT STATEMENTS
+--
+INSERT INTO dbo.FTEstadoTramite ( ETcodigo, ETdescripcion, Ecodigo ) 
+		 VALUES ( '10', 'PENDIENTE APROBACION DE ASISTENTE', 1 ) 
+go
+INSERT INTO dbo.FTEstadoTramite ( ETcodigo, ETdescripcion, Ecodigo ) 
+		 VALUES ( '20', 'APLICADO POR ASISTENTE', 1 ) 
+go
+INSERT INTO dbo.FTEstadoTramite ( ETcodigo, ETdescripcion, Ecodigo ) 
+		 VALUES ( '30', 'APROBADO (COORDINADOR - DIRECTOR)', 1 ) 
+go
+INSERT INTO dbo.FTEstadoTramite ( ETcodigo, ETdescripcion, Ecodigo ) 
+		 VALUES ( '15', 'DEVUELTA (COORDINADOR - DIRECTOR - FUNDATEC)', 1 ) 
+go
+INSERT INTO dbo.FTEstadoTramite ( ETcodigo, ETdescripcion, Ecodigo ) 
+		 VALUES ( '40', 'APROBADO (FUNDATEC)', 1 ) 
+go
+
+
+
+
+
+drop table FTFlujoTramite
+go
+
+/*==============================================================*/
+/* Table: FTFlujoTramite                                        */
+/*==============================================================*/
+create table FTFlujoTramite (
+   FTid                 numeric(18)                    identity,
+   ETid                 numeric(18)                    null,
+   TTid                 numeric(18)                    null,
+   FTpasoactual         int                            null,
+   FTpasoaprueba        int                            null,
+   FTpasorechaza        int                            null,
+   FTautoriza           int                            null,
+   constraint PK_FTFLUJOTRAMITE primary key (FTid)
+)
+go
+
+alter table FTFlujoTramite
+   add constraint FK_FTFLUJOT_REFERENCE_FTESTADO foreign key (ETid)
+      references FTEstadoTramite (ETid)
+go
+
+alter table FTFlujoTramite
+   add constraint FK_FTFLUJOT_REFERENCE_FTTIPOTR foreign key (TTid)
+      references FTTipoTramite (TTid)
+go
+
+
+
+
+
+/*==============================================================*/
+/* Table: FTHistoriaTramite                                     */
+/*==============================================================*/
+create table FTHistoriaTramite (
+   Usucodigo            numeric(18)                    null,
+   HTfecha              datetime                       null,
+   ETid                 numeric(18)                    null,
+   TPid                 numeric(18)                    null,
+   SPid                 numeric(18)                    null,
+   HTpasosigue          int                            null
+)
+go
+
+alter table FTHistoriaTramite
+   add constraint FK_FTHISTOR_REFERENCE_FTESTADO foreign key (ETid)
+      references FTEstadoTramite (ETid)
+go
+
+alter table FTHistoriaTramite
+   add constraint FK_FTHISTOR_REFERENCE_FTTIPOPR foreign key (TPid)
+      references FTTipoProceso (TPid)
+go
+
+alter table FTHistoriaTramite
+   add constraint FK_FTHISTOR_REFERENCE_FTSOLICI foreign key (SPid)
+      references FTSolicitudProceso (SPid)
+go

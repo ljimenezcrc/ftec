@@ -1,0 +1,28 @@
+
+/*==============================================================*/
+/* Table: FTDSolicitudProceso                                   */
+/*==============================================================*/
+
+drop table FTDSolicitudProceso
+go
+
+create table FTDSolicitudProceso (
+   SPid                 numeric(18)                    null,
+   Vid                  numeric(18)                    null,
+   DSPid                numeric(18)                    identity,
+   DSPdocumento         varchar(25)                    null,
+   DSPdescripcion       varchar(60)                    null,
+   DSPobjeto            varchar(60)                    null,
+   DSPmonto             money                          null
+)
+go
+
+alter table FTDSolicitudProceso
+   add constraint FK_FTDSOLIC_REFERENCE_FTSOLICI foreign key (SPid)
+      references FTSolicitudProceso (SPid)
+go
+
+alter table FTDSolicitudProceso
+   add constraint FK_FTDSOLIC_REFERENCE_FTVICERR foreign key (Vid)
+      references FTVicerrectoria (Vid)
+go

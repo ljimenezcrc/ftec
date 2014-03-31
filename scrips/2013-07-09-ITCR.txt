@@ -1,0 +1,316 @@
+﻿/* campos creado para el ITCR en paso de fuentes del 20130709 */ 
+
+alter table DCargas add DCcuentapext   varchar(10) NULL
+go
+alter table DCargas add DCtipoc        bit DEFAULT 1 NOT NULL
+go
+alter table DCargas add CFformatoC     varchar(100)  NULL
+go
+
+               
+borrar la llave primaria de RHCargasRebajar
+
+
+ALTER TABLE RHCargasRebajar
+    DROP CONSTRAINT RHCargasRebajar_PK
+go
+
+go
+
+alter table RHCargasRebajar add RHCRporc_Bimp money         NULL
+go
+alter table RHCargasRebajar add DClinea       numeric(18,0) NULL
+go
+
+ALTER TABLE RHCargasRebajar
+    WITH NOCHECK
+    ADD CONSTRAINT RHCargasRebajar_FK03
+    FOREIGN KEY (DClinea)
+    REFERENCES DCargas (DClinea)
+
+go
+
+alter table RHPagosExternosTipo add   PEXTporcexonera money null
+go
+
+alter table ECargas add  ECporcexonera   money         NULL
+go
+
+alter table RHPagosExternos add  PEXaplicado   int           NULL
+go
+
+DLaboralesEmpleado
+ECargas
+
+
+RHCargasRebajar
+    
+RHPagosExternosTipo 
+RHPagosExternos 
+ 
+
+WfxProcess
+RHMaestroPuestoP
+
+
+
+
+
+
+11:57 a.m. 12/07/2013
+/**********************************************************/
+SICERE
+/**********************************************************/
+
+
+CREATE TABLE SicereE
+(
+    SEid            numeric(18,0) IDENTITY,
+    Ecodigo         numeric(18,0) NOT NULL,
+    SEperiodo       int           NOT NULL,
+    SEmes           int           NOT NULL,
+    SEgrupoplanilla char(10)      NULL,
+    BMUsucodigo     numeric(18,0) NULL,
+    ts_rversion     timestamp     NULL,
+    CONSTRAINT SicereE_PK
+    PRIMARY KEY NONCLUSTERED (SEid)
+)
+
+go
+
+
+CREATE TABLE SicereD
+(
+    SEid           numeric(18,0) NOT NULL,
+    DEid           numeric(18,0) NOT NULL,
+    DEsegurosocial varchar(25)   NOT NULL,
+    SDnumpatronal  varchar(25)   NOT NULL,
+    SDoficina      numeric(18,0) NOT NULL,
+    SDtipoident    varchar(1)    NOT NULL,
+    SDnombre       varchar(100)  NOT NULL,
+    SDocupacion    varchar(4)    NOT NULL,
+    SDsalario      money         NOT NULL,
+    SDIncidencias  money         NOT NULL,
+    SDseguro       varchar(1)    NOT NULL,
+    SDcambio       varchar(2)    NOT NULL,
+    SDhoras        varchar(2)    NULL,
+    SDjornada      varchar(3)    NULL,
+    SDcodigo       varchar(3)    NULL,
+    SDfinicio      datetime      NOT NULL,
+    SDffin         datetime      NULL,
+    SDorden        int           NOT NULL,
+    DLlinea        numeric(18,0) NULL,
+    BMUsucodigo    numeric(18,0) NULL,
+    ts_rversion    timestamp     NULL
+)
+
+go
+CREATE NONCLUSTERED INDEX SicereD_FI01
+    ON SicereD(SEid)
+go
+
+ALTER TABLE SicereD
+    ADD CONSTRAINT SicereD_FK01
+    FOREIGN KEY (SEid)
+    REFERENCES SicereE (SEid)
+go
+
+
+CREATE TABLE HSicereE
+(
+    SEid            numeric(18,0) NOT NULL,
+    Ecodigo         numeric(18,0) NOT NULL,
+    SEperiodo       int           NOT NULL,
+    SEmes           int           NOT NULL,
+    SEgrupoplanilla char(10)      NULL,
+    BMUsucodigo     numeric(18,0) NULL,
+    ts_rversion     timestamp     NULL,
+    CONSTRAINT HSicereE_PK
+    PRIMARY KEY NONCLUSTERED (SEid)
+)
+
+go
+CREATE TABLE HSicereD
+(
+    SEid           numeric(18,0) NOT NULL,
+    DEid           numeric(18,0) NOT NULL,
+    DEsegurosocial varchar(25)   NOT NULL,
+    SDnumpatronal  varchar(25)   NOT NULL,
+    SDoficina      numeric(18,0) NOT NULL,
+    SDtipoident    varchar(1)    NOT NULL,
+    SDnombre       varchar(100)  NOT NULL,
+    SDocupacion    varchar(4)    NOT NULL,
+    SDsalario      money         NOT NULL,
+    SDIncidencias  money         NOT NULL,
+    SDseguro       varchar(1)    NOT NULL,
+    SDcambio       varchar(2)    NULL,
+    SDhoras        varchar(2)    NULL,
+    SDjornada      varchar(3)    NULL,
+    SDcodigo       varchar(3)    NULL,
+    SDfinicio      datetime      NOT NULL,
+    SDffin         datetime      NULL,
+    SDorden        int           NOT NULL,
+    BMUsucodigo    numeric(18,0) NULL,
+    ts_rversion    timestamp     NULL
+)
+
+go
+
+CREATE NONCLUSTERED INDEX HSicereD_FI01
+    ON HSicereD(SEid)
+go
+
+ALTER TABLE HSicereD
+    ADD CONSTRAINT HSicereD_FK01
+    FOREIGN KEY (SEid)
+    REFERENCES HSicereE (SEid)
+go
+
+
+go
+alter table NTipoIdentificacion add Ecodigo int null
+
+
+go
+CREATE TABLE RHHistoricoCCSS
+(
+    Ecodigo       numeric(18,0) NULL,
+    Numpatronal   numeric(18,0) NULL,
+    GrupoPlanilla varchar(10)   NULL,
+    Mes           int           NULL,
+    Periodo       int           NULL,
+    DEid          numeric(18,0) NULL,
+    FECINI        date          NULL,
+    MONTO         numeric(18,4) NULL,
+    TIPCAM        char(2)       NULL,
+    FECFIN        date          NULL,
+    TINCAPACI     char(3)       NULL,
+    NUMJOR        numeric(10,0) NULL,
+    RHJid         numeric(18,0) NULL,
+    CLAJOR        char(3)       NULL,
+    RHOcodigo     char(10)      NULL,
+    CONSE         numeric(4,2)  NULL,
+    fechaAlta     datetime      NOT NULL,
+    BMUsucodigo   numeric(18,0) NULL,
+    ts_rversion   timestamp     NULL
+)
+
+
+/***********************************/
+insert into DVtipificacion (DVTcodigo,DVTdescripcion,DVTesValor,DVTcodigoValor,DVTtabla,DVTidentity)
+values 	('OF','Oficinas' ,1,	'OF', 'Oficinas','Ocodigo')
+/***********************************/
+
+
+
+
+
+
+
+10:06 a.m. 23/07/2013
+
+
+alter table SNegocios add SNcomercial	varchar(100)	NULL
+
+
+
+alter table SNegocios add SNcomercial	varchar(100)	NULL
+
+
+
+USE minisif
+go
+CREATE TABLE REF_Consultora
+(
+    Cid          numeric(18,0) IDENTITY,
+    Cresponsable varchar(30)   NULL,
+    Ccedula      varchar(20)   NULL,
+    EXC          float         NULL,
+    EXN          float         NULL,
+    Ecodigo      int           NOT NULL,
+    SNcodigo     int           NOT NULL,
+    BMUsucodigo  numeric(18,0) NULL,
+    ts_rversion  timestamp     NULL,
+    CEstado      bit           NOT NULL,
+    CPApellido   varchar(30)   NULL,
+    CSApellido   varchar(30)   NULL,
+    CONSTRAINT REF_Consultora_PK
+    PRIMARY KEY CLUSTERED (Cid)
+)
+
+go
+CREATE NONCLUSTERED INDEX REF_Consultora_FI01
+    ON REF_Consultora(Ecodigo,SNcodigo)
+
+go
+ALTER TABLE REF_Consultora
+    ADD CONSTRAINT REF_Consultora_FK01
+    FOREIGN KEY (Ecodigo,SNcodigo)
+    REFERENCES SNegocios (Ecodigo,SNcodigo)
+go
+
+
+alter table SNContactos add SNCtipo char(1)       NULL
+go
+alter table SNContactos add SNCofertas           bit           DEFAULT 0 NOT NULL
+go
+
+alter table SNContactos add SNCpropietario       bit           DEFAULT 0 NOT NULL
+go
+
+alter table SNContactos add SNCarea              int           NULL
+go
+alter table SNContactos add SNRepresentanteLegal bit           DEFAULT 0 NOT NULL
+go
+
+alter table PCNivelMascara  add PCNDescripCta   bit    DEFAULT 0       NOT NULL
+go
+
+USE minisif
+go
+CREATE TABLE CPtipoCtas
+(
+    CPTCid          numeric(18,0) IDENTITY,
+    CPPid           numeric(18,0) NOT NULL,
+    CPTCtipo        char(1)       NOT NULL,
+    Ecodigo         int           NOT NULL,
+    Cmayor          char(4)       NOT NULL,
+    CPTCmascara     varchar(100)  NOT NULL,
+    CPTCdescripcion varchar(40)   NOT NULL,
+    BMUsucodigo     numeric(18,0) NULL,
+    ts_rversion     timestamp     NULL,
+    CONSTRAINT CPtipoCtas_PK
+    PRIMARY KEY CLUSTERED (CPTCid),
+    CONSTRAINT CPtipoCtas_CK03
+    CHECK (CPTCtipo in ('I','E','C','X'))
+)
+go
+CREATE NONCLUSTERED INDEX CPtipoCtas_ID01
+    ON CPtipoCtas(CPPid,Ecodigo,Cmayor,CPTCmascara)
+go
+
+
+
+
+alter table Oficinas add  SScodigo        char(10)      NULL
+go
+alter table Oficinas add  SRcodigo        char(10)      NULL
+go
+alter table Oficinas add  CFcuentaIDifCa  numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaGDifCa  numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaMultas  numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaIDifCaB numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaGDifCaB numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaDebBO   numeric(18,0) NULL
+go
+alter table Oficinas  add  CFcuentaCreBO   numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaDebBM   numeric(18,0) NULL
+go
+alter table Oficinas add   CFcuentaCreBM   numeric(18,0) NULL
+go

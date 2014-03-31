@@ -1,0 +1,78 @@
+alter table FTSolicitudProceso add    SPdocumento          varchar(25)                    not null
+go
+alter table FTSolicitudProceso add    SPfechafactura       datetime                       not null
+go
+alter table FTSolicitudProceso add    SPfechavence         datetime                       not null
+go
+alter table FTSolicitudProceso add    SPfechaarribo        datetime                       not null
+go
+alter table FTSolicitudProceso add    TPid                 numeric(18)                    not null
+go
+alter table FTSolicitudProceso add    FPid                 numeric(18)                    null
+go
+alter table FTSolicitudProceso add    LPid                 numeric(18)                    null
+go
+alter table FTSolicitudProceso add    Mcodigo              numeric(8)                     null
+go
+alter table FTSolicitudProceso add    Bid                  numeric                        null
+go
+alter table FTSolicitudProceso add    SPfecha              datetime                       null
+go
+alter table FTSolicitudProceso add    SPfechaReg           datetime                       null
+go
+alter table FTSolicitudProceso add    Usucodigo            numeric(18)                    null
+go
+alter table FTSolicitudProceso add    SPestado             int                            not null
+go
+alter table FTSolicitudProceso add    SPacta               varchar(25)                    null
+go
+alter table FTSolicitudProceso add    Ecodigo              int                            null
+go
+alter table FTSolicitudProceso add    SNcodigo             int                            null
+go
+alter table FTSolicitudProceso add    Ret_Ecodigo          int                            null
+go
+alter table FTSolicitudProceso add    Rcodigo              char(2)                        null
+go
+alter table FTSolicitudProceso add    SPctacliente         varchar(20)                    null
+go
+alter table FTSolicitudProceso add    SPfechaTrans         datetime                       null
+go
+alter table FTSolicitudProceso add    SPobservacion        varchar(2000)                  null
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_FTTIPOPR foreign key (TPid)
+      references FTTipoProceso (TPid)
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_FTFORMAP foreign key (FPid)
+      references FTFormaPago (FPid)
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_FTLUGARP foreign key (LPid)
+      references FTLugarPago (LPid)
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_MONEDAS foreign key (Mcodigo)
+      references Monedas
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_BANCOS foreign key (Bid)
+      references Bancos
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_SNEGOCIO foreign key (Ecodigo, SNcodigo)
+      references SNegocios
+go
+
+alter table FTSolicitudProceso
+   add constraint FK_FTSOLICI_REFERENCE_RETENCIO foreign key (Ret_Ecodigo, Rcodigo)
+      references Retenciones 
+go
+

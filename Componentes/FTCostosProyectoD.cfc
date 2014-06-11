@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			 select CPDid, CPid, Vid, CPDporcentaje  
-                from FTCostoProyectoD
+                from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec">
 				where CPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CPid#" voidnull>
                     and Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Vid#" voidnull>
 		</cfquery>
@@ -33,7 +33,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTCostoProyectoD (	CPid
+                insert into <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec"> (	CPid
                                             	, Vid
                                             	, CPDporcentaje 
                                           	)
@@ -51,7 +51,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CPDid, CPid, Vid, CPDporcentaje  
-                    from FTCostoProyectoD
+                    from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec">
                     where CPDid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -74,7 +74,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTCostoProyectoD
+                from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec">
                 where  CPDid 		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CPDid#" voidnull> 
             </cfquery>	
         </cftransaction>
@@ -96,7 +96,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTCostoProyectoD set
+                update <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec"> set
                       CPid				= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.CPid#" 		voidnull>
                     , Vid 	  			= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#" 		voidnull>
                     , CPDporcentaje	   	= <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.CPDporcentaje#" 		voidnull>
@@ -106,7 +106,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CPDid, CPid, Vid, CPDporcentaje  
-                    from FTCostoProyectoD
+                    from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec">
                     where CPDid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CPDid#" voidnull> 
                 </cfquery>
                 <cfdump var="#Arguments#">

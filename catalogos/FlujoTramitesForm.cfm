@@ -29,10 +29,10 @@
             , b.ETcodigo #_Cat# ' - ' #_Cat#  b.ETdescripcion as Estado
             , c.TTcodigo #_Cat# ' - ' #_Cat# c.TTdescripcion as Tramite
             <!---, d.TAcodigo #_Cat# ' - ' #_Cat# d.TAdescripcion as Autorizados--->
-        from FTFlujoTramite a
-            inner join FTEstadoTramite b
+        from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">  a
+            inner join <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">  b
                 on a.ETid = b.ETid
-            inner join FTTipoTramite c
+            inner join <cf_dbdatabase table="FTTipoTramite" datasource="ftec">  c
                 on a.TTid = c.TTid
            <!--- inner join FTTipoAutorizador d
                 on a.TAid = d.TAid--->
@@ -52,8 +52,8 @@
                     , a.TAid
                     , b.TAcodigo
                     , b.TAdescripcion
-            from FTDFlujoTramite a
-            inner join FTTipoAutorizador b
+            from <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec"> a
+            inner join <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec"> b
             	on a.TAid = b.TAid
             where FTid = #form.FTid#
         </cfquery>
@@ -62,7 +62,7 @@
 
 <cfquery name="rsTiposTram" datasource="#Session.DSN#" >
     Select *, TTcodigo #_Cat# ' - ' #_Cat# TTdescripcion  as TTdescrip
-    from FTTipoTramite
+    from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
     where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
         order by TTcodigo #_Cat# ' - ' #_Cat# TTdescripcion asc
 </cfquery>
@@ -71,7 +71,7 @@
 
 <cfquery name="rsEstados" datasource="#Session.DSN#" >
 	Select *,  ETcodigo #_Cat# ' - ' #_Cat# ETdescripcion  as ETdescrip
-	from FTEstadoTramite
+	from <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
 		order by ETcodigo #_Cat# ' - ' #_Cat# ETdescripcion asc
 </cfquery>
@@ -87,7 +87,7 @@
         ,TAmontomax	
         ,Ecodigo	
         ,Usucodigo	   
-    from FTTipoAutorizador
+    from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
     where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#session.Ecodigo#">
 	    order by TAcodigo #_Cat# ' - ' #_Cat# TAdescripcion 
 </cfquery>

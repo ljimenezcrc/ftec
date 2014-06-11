@@ -14,7 +14,7 @@
 
 <cfif isdefined ('form.Vpk') and len(trim(form.Vpk)) gt 0 and not isdefined ('form.Vcodigo')>
 	<cfquery name="rsDato" datasource="#session.dsn#">
-		select Vcodigo from FTVicerrectoria where Vid=#form.Vpk#
+		select Vcodigo from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vid=#form.Vpk#
 	</cfquery>
 	<cfset form.Vcodigo=#rsDato.Vcodigo#>
 </cfif>
@@ -32,7 +32,7 @@
 </cfif> 	
 
 <cfquery name="rsFTVicerrectoria" datasource="#session.dsn#">
-	select Vid,Vcodigo, Vdescripcion from FTVicerrectoria where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
+	select Vid,Vcodigo, Vdescripcion from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
 </cfquery>
 
 <cfif len(trim(rsFTVicerrectoria.Vdescripcion)) gt 0>
@@ -140,7 +140,7 @@ returnvariable="LB_UsuarioAutorizadores"/>
 							<input type="hidden" id="Vcodigo" name="Vcodigo" value="<cfif isdefined("form.Vcodigo") and len(trim(form.Vcodigo)) neq 0><cfoutput>#form.Vcodigo#</cfoutput></cfif>">
 								<cfif isdefined ('form.Vcodigo') and len(trim(form.Vcodigo)) gt 0>
 									<cfquery name="rsVid" datasource="#session.dsn#">
-										select Vid from FTVicerrectoria where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
+										select Vid from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
 									</cfquery>
 									<cfif rsVid.recordcount gt 0>
 										<cfset LvarVid=rsVid.Vid>
@@ -152,13 +152,14 @@ returnvariable="LB_UsuarioAutorizadores"/>
 						</table>
 					</form>
 	
-    
-    
-    
 	
 				<!--- Lista de Usuarios Autorizadores para RH y Compras del Centro Funcional --->
+                <cf_dbdatabase table="FTAutorizador " datasource="ftec" returnvariable="FTAutorizador">
+                <cf_dbdatabase table="FTTipoAutorizador " datasource="ftec" returnvariable="FTTipoAutorizador">
+                
+                
 				<cfinvoke component="rh.Componentes.pListas" method="pListaRH" returnvariable="pListaRet" >
-					<cfinvokeargument name="tabla" value="FTAutorizador aut, Usuario a, DatosPersonales b ,FTTipoAutorizador z "/>
+					<cfinvokeargument name="tabla" value="#FTAutorizador# aut, Usuario a, DatosPersonales b ,#FTTipoAutorizador# z "/>
 					<cfinvokeargument name="columnas" value="
 							a.Usucodigo, a.Usulogin, aut.Aid as Apk
 							,b.Pid,{fn concat({fn concat({fn concat({fn concat(b.Pnombre , ' ' )}, b.Papellido1 )}, ' ' )}, b.Papellido2 )}  as nombre

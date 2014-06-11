@@ -20,7 +20,7 @@
 
 <cfquery name="rsTipoProceso" datasource="#session.dsn#">
 	select TPid, TPcodigo, TPdescripcion
-    from FTTipoProceso
+    from <cf_dbdatabase table="FTTipoProceso " datasource="ftec">
     where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Session.Ecodigo#">
     order by TPcodigo,TPdescripcion
 </cfquery>
@@ -77,23 +77,23 @@
                     d.TPcodigo
                     ,(select 
                         coalesce(sum(a1.DSPmontototal),0.00) 
-                    from FTDSolicitudProceso a1
-                        inner join FTSolicitudProceso b1
+                    from <cf_dbdatabase table="FTDSolicitudProceso " datasource="ftec"> a1
+                        inner join <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> b1
                             on a1.SPid = b1.SPid
                     where b1.SPid = a.SPid) as Total
                     
-                from FTSolicitudProceso a
+                from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
                 <!---inner join FTVicerrectoria b
                     on a.Vid = b.Vid
                     and a.Ecodigo = b.Ecodigo--->
-                inner join FTFormaPago c
+                inner join <cf_dbdatabase table="FTFormaPago " datasource="ftec"> c
                     on a.FPid = c.FPid
                     and a.Ecodigo = c.Ecodigo
-                inner join FTTipoProceso d
+                inner join <cf_dbdatabase table="FTTipoProceso " datasource="ftec"> d
                     on a.TPid = d.TPid
                     and a.Ecodigo = c.Ecodigo
                 where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
-                and not exists (select 1 from FTHistoriaTramite h where h.SPid = a.SPid)
+                and not exists (select 1 from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> h where h.SPid = a.SPid)
                 
                 <cfif isdefined("Form.TipoProceso") and Len(Trim(Form.TipoProceso)) NEQ 0>
                     <cfif Form.TipoProceso NEQ "-1">

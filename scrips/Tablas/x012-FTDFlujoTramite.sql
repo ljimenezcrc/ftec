@@ -9,16 +9,7 @@ select
 FTDid
 ,FTid
 ,TAid
-from minisif..FTDFlujoTramite
+from minisif_ft..FTDFlujoTramite
 
 go
-
-select *
-from FTDFlujoTramite
-
-select * 
-from ftec..FTDFlujoTramite
-
-go
-
-sp_help FTDFlujoTramite
+ 

@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select FPid, FPcodigo, FPdescripcion, Ecodigo
-				from FTFormaPago
+				from <cf_dbdatabase table="FTFormaPago" datasource="ftec">
 				where FPcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.FPcodigo#" voidnull>
 		</cfquery>
 
@@ -30,7 +30,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTFormaPago(	  Ecodigo
+                insert into <cf_dbdatabase table="FTFormaPago" datasource="ftec">(	  Ecodigo
                                                 , FPcodigo
                                                 , FPdescripcion
                                                 )
@@ -48,7 +48,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select FPid, FPcodigo, FPdescripcion, Ecodigo
-					from FTFormaPago
+					from <cf_dbdatabase table="FTFormaPago" datasource="ftec">
                     where FPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -69,7 +69,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTFormaPago
+                from <cf_dbdatabase table="FTFormaPago" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and FPcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.FPcodigo#" voidnull>
             </cfquery>	
@@ -88,7 +88,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTFormaPago set
+                update <cf_dbdatabase table="FTFormaPago" datasource="ftec"> set
 	                     FPcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.FPcodigo#" 		voidnull>
                         , FPdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.FPdescripcion#" 	voidnull>
                 where FPid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.FPid#" voidnull>
@@ -97,7 +97,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select FPid, FPcodigo, FPdescripcion, Ecodigo
-					from FTFormaPago
+					from <cf_dbdatabase table="FTFormaPago" datasource="ftec">
                     where FPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.FPid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

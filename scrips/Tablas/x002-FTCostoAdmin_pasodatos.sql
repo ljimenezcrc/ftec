@@ -17,16 +17,7 @@ CAid
 ,Ecodigo
 ,CAobligatorio
 ,Usucodigo
-from minisif..FTCostoAdmin
+from minisif_ft..FTCostoAdmin
 
 go
 
-select *
-from FTCostoAdmin
-
-select *
-from ftec..FTCostoAdmin
-
-go
-
-sp_help FTCostoAdmin

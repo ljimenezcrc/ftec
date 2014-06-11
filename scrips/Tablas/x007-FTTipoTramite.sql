@@ -11,16 +11,7 @@ TTid
 ,TTcodigo
 ,TTdescripcion
 ,Ecodigo
-from minisif..FTTipoTramite
+from minisif_ft..FTTipoTramite
 
 go
 
-select *
-from FTTipoTramite
-
-select *
-from ftec..FTTipoTramite
-
-go
-
-sp_help FTTipoTramite

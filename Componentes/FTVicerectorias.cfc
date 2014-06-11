@@ -9,7 +9,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			 select Ecodigo, Vcodigo, Vdescripcion, Vpadre, CFid, Vesproyecto, Vfinicio, Vffinal, Vestado, Mcodigo, Vmonto
-                from FTVicerrectoria
+                from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
 				where Vcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.Vcodigo#" voidnull>
 		</cfquery>
 
@@ -30,7 +30,7 @@
         <cfargument name="Vcodigo" 			required="true" 	type="string">
     	<cfargument name="Vdescripcion" 	required="true" 	type="string">
         <cfargument name="Vpadre"			required="false" 	type="any" default="">
-        <cfargument name="CFid" 			required="false" 	type="numeric">
+        <cfargument name="CFid" 			required="false" 	type="any" default="null">
   <!--- <cfargument name="Vctaingreso" 		required="true" 	type="string">
         <cfargument name="Vctagasto" 		required="true" 	type="string">
         <cfargument name="Vctasaldoinicial" required="true" 	type="string">--->
@@ -45,7 +45,7 @@
 
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTVicerrectoria(	  
+                insert into <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">(	  
                                               Ecodigo
                                             , Vcodigo
                                             , Vdescripcion
@@ -71,8 +71,8 @@
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_char"		value="#Arguments.Vctagasto#"  		voidnull>
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.Vctasaldoinicial#"voidnull>--->
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Vesproyecto#" 	voidnull>
-                                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#Arguments.Vfinicio#" 		voidnull>
-                                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#Arguments.Vffinal#"			voidnull>
+                                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#LSParsedateTime(Arguments.Vfinicio)#" 		voidnull>
+                                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#LSParsedateTime(Arguments.Vffinal)#"		voidnull>
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vestado#"  		voidnull>
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Mcodigo#"  		voidnull>
                                             , <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.Vmonto#"  		voidnull>
@@ -89,7 +89,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select Ecodigo, Vcodigo, Vdescripcion, Vpadre, CFid, Vesproyecto, Vfinicio, Vffinal, Vestado, Mcodigo, Vmonto
-                    from FTVicerrectoria
+                    from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
                     where Vid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -110,7 +110,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTVicerrectoria
+                from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and Vcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.Vcodigo#" voidnull>
             </cfquery>	
@@ -128,7 +128,7 @@
         <cfargument name="Vcodigo" 			required="true" 	type="string">
     	<cfargument name="Vdescripcion" 	required="true" 	type="string">
         <cfargument name="Vpadre"			required="false" 	type="any" default="">
-        <cfargument name="CFid" 			required="false" 	type="numeric">
+        <cfargument name="CFid" 			required="false" 	type="any" default="null">
         
         <cfargument name="Vesproyecto"		required="true" 	type="numeric" default="0">
         <cfargument name="Vfinicio" 		required="false" 	type="any">
@@ -141,7 +141,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTVicerrectoria set
+                update <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> set
                           Vcodigo			= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.Vcodigo#" 		voidnull>
                         , Vdescripcion		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.Vdescripcion#" 	voidnull>
                         , Vpadre			= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vpadre#" 			voidnull>
@@ -170,7 +170,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select Ecodigo, Vcodigo, Vdescripcion, Vpadre, CFid, Vesproyecto, Vfinicio, Vffinal, Vestado, Mcodigo, Vmonto
-                    from FTVicerrectoria
+                    from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
                     where Vid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Vid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

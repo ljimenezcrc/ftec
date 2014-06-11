@@ -167,7 +167,7 @@ MM_reloadPage(true);
                                         , a.Mcodigo
                                         , a.Vmonto
                                         , a.Usucodigo
-                                	from FTVicerrectoria a
+                                	from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
                                     where  a.Ecodigo =  #session.Ecodigo# 
 										<cfif isdefined("form.Vcodigof") and len(trim(form.Vcodigof))NEQ 0>
                                             and ltrim(rtrim(upper(a.Vcodigo))) like '%#trim(ucase(form.Vcodigof))#%'

@@ -9,7 +9,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			 select TAid, Vid, Usucodigo, Afdesde, Afhasta, Ecodigo, Ainactivo, TAresponsable
-                from FTAutorizador
+                from <cf_dbdatabase table="FTAutorizador" datasource="ftec">
 				where Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Vid#" voidnull>
                     and Usucodigo = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Usucodigo#" voidnull>
 		</cfquery>
@@ -38,7 +38,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTAutorizador(	  Ecodigo
+                insert into <cf_dbdatabase table="FTAutorizador" datasource="ftec">(	  Ecodigo
                                             , TAid
                                             , Vid
                                             , Usucodigo
@@ -66,7 +66,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select Aid,TAid, Vid, Usucodigo, Afdesde, Afhasta, Ecodigo, Ainactivo, TAresponsable
-                	from FTAutorizador
+                	from <cf_dbdatabase table="FTAutorizador" datasource="ftec">
                     where Aid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -91,7 +91,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTAutorizador
+                from <cf_dbdatabase table="FTAutorizador" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and Aid 		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Aid#" voidnull> 
             </cfquery>	
@@ -116,7 +116,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTAutorizador set
+                update <cf_dbdatabase table="FTAutorizador" datasource="ftec"> set
                       TAid				= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.TAid#" 		voidnull>
                     , Afdesde 	  		= <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#Arguments.Afdesde#" 		voidnull>
                     , Afhasta	 	  	= <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#Arguments.Afhasta#" 		voidnull>
@@ -128,7 +128,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select Aid,TAid, Vid, Usucodigo, Afdesde, Afhasta, Ecodigo, Ainactivo, TAresponsable
-                	from FTAutorizador
+                	from <cf_dbdatabase table="FTAutorizador" datasource="ftec">
                     where Aid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

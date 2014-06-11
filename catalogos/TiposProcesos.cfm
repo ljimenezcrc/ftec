@@ -27,9 +27,11 @@
 		<cfinclude template="../../rh/portlets/pNavegacion.cfm">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr> 
-				<td valign="top">
-					<cfinvoke component="sif.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
-                    	<cfinvokeargument name="tabla" 				value="FTTipoProceso"/>
+				<td valign="top">               
+					<cf_dbdatabase table="FTTipoProceso" datasource="ftec" returnvariable = "FTTipoProceso">
+
+                   <cfinvoke component="sif.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
+                    	<cfinvokeargument name="tabla" 				value="#FTTipoProceso#"/>
                         <cfinvokeargument name="columnas"			value="TPid, TPcodigo, TPdescripcion, Ecodigo"/>
                         <cfinvokeargument name="desplegar"			value="TPcodigo, TPdescripcion"/>
                         <cfinvokeargument name="etiquetas"			value="C&oacute;digo, Descripci&oacute;n"/>

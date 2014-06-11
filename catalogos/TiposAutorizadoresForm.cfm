@@ -16,7 +16,7 @@
 <cfif isDefined("session.Ecodigo") and isDefined("Form.TAcodigo") and len(trim(#Form.TAcodigo#)) NEQ 0>
 	<cfquery name="rsTipos" datasource="#Session.DSN#" >
 	Select *
-	from FTTipoAutorizador
+	from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
 		and TAcodigo = <cfqueryparam cfsqltype="cf_sql_char" value="#Form.TAcodigo#" >		  
 		order by TAcodigo asc

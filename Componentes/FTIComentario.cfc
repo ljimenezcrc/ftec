@@ -9,7 +9,9 @@
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select ICid
                     ,Iid
-                    ,ICfecha	
+                    ,ICfecha
+                    ,ICfechadesde
+                    ,ICfechahasta	
                     ,ICcodigo	
                     ,ICcomentario
                     ,ICperiodo
@@ -30,7 +32,8 @@
 	<!--- *************************** --->
 	<cffunction access="public" name="Alta" returntype="numeric">
         <cfargument name="Iid" 			required="false" 	type="numeric">
-        <cfargument name="ICfecha" 		required="false" 	type="date">
+        <cfargument name="ICfechadesde"	required="false" 	type="date">
+        <cfargument name="ICfechahasta"	required="false" 	type="date">
         <cfargument name="ICperiodo"	required="false"	type="string">
         <cfargument name="ICcodigo" 	required="false" 	type="string">
         <cfargument name="ICcomentario" required="false" 	type="string">
@@ -39,13 +42,17 @@
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                 insert into <cf_dbdatabase table="FTIComentario" datasource="ftec">( Iid
-                                        ,ICfecha	
+                                        ,ICfecha
+                                        ,ICfechadesde
+					                    ,ICfechahasta	
                                         ,ICcodigo	
                                         ,ICcomentario	
                                         ,ICperiodo	
                                         )
                                 values(	  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Iid#"				voidnull>
-                                        , <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfecha#"			voidnull>
+                                        , <cf_dbfunction name="today">
+                                        , <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfechadesde#"	voidnull>
+                                        , <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfechahasta#"	voidnull>
                                         , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICcodigo#" 		voidnull>
                                         , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICcomentario#" 	voidnull>
                                         , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICperiodo#" 	voidnull>
@@ -61,7 +68,9 @@
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select ICid
                             ,Iid
-                            ,ICfecha	
+                            ,ICfecha
+                            ,ICfechadesde
+		                    ,ICfechahasta	
                             ,ICcodigo	
                             ,ICcomentario
                             ,ICperiodo
@@ -99,7 +108,8 @@
 	<cffunction access="public" name="Cambio">
         <cfargument name="ICid" 		required="true" 	type="numeric">
        	<cfargument name="Iid" 			required="false" 	type="numeric">
-        <cfargument name="ICfecha" 		required="false" 	type="date">
+        <cfargument name="ICfechadesde"	required="false" 	type="date">
+        <cfargument name="ICfechahasta"	required="false" 	type="date">
         <cfargument name="ICcodigo" 	required="false" 	type="string">
         <cfargument name="ICperiodo" 	required="false" 	type="string">
         <cfargument name="ICcomentario" required="false" 	type="string">
@@ -110,7 +120,9 @@
                 update <cf_dbdatabase table="FTIComentario" datasource="ftec"> set
 	                     ICcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICcodigo#"		voidnull>
                         ,ICcomentario	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICcomentario#" 	voidnull>
-                        ,ICfecha		= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfecha#"			voidnull>
+                        ,ICfecha		= <cf_dbfunction name="today">
+                        ,ICfechadesde	= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfechadesde#"	voidnull>
+	                    ,ICfechahasta	= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.ICfechahasta#"	voidnull>
                         ,ICperiodo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ICperiodo#"		voidnull>
                 where ICid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"				value="#Arguments.ICid#" voidnull>
             </cfquery>
@@ -119,11 +131,12 @@
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select ICid
                             ,Iid
-                            ,ICfecha	
+                            ,ICfecha
+                            ,ICfechadesde
+		                    ,ICfechahasta	
                             ,ICcodigo	
                             ,ICcomentario
                             ,ICperiodo
-                        from FTIComentario
 					from <cf_dbdatabase table="FTIComentario" datasource="ftec">
                     where ICid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.ICid#">
                 </cfquery>

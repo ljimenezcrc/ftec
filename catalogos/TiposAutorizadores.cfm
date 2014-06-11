@@ -40,8 +40,10 @@
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr> 
 				<td valign="top">
+                <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec" returnvariable = "FTTipoAutorizador">
+                
 					<cfinvoke component="sif.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
-                    	<cfinvokeargument name="tabla" 				value="FTTipoAutorizador"/>
+                    	<cfinvokeargument name="tabla" 				value="#FTTipoAutorizador#"/>
                         <cfinvokeargument name="columnas"			value="TAid,Ecodigo,TAcodigo, TAdescripcion, TAmontomin, TAmontomax"/>
                         <cfinvokeargument name="desplegar"			value="TAcodigo, TAdescripcion,TAmontomin,TAmontomax"/>
                         <cfinvokeargument name="etiquetas"			value="#LB_Codigo#,#LB_Descripcion#,#LB_MtoInicio#,#LB_MtoFin#"/>

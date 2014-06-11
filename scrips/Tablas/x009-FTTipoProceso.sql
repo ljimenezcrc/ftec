@@ -13,16 +13,6 @@ TPid
 ,TPdescripcion
 ,Ecodigo
 ,TTid
-from minisif..FTTipoProceso
+from minisif_ft..FTTipoProceso
 
 go
-
-select *
-from FTTipoProceso
-
-select * 
-from ftec..FTTipoProceso
-
-go
-
-sp_help FTTipoProceso

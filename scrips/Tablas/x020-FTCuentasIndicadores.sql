@@ -17,16 +17,7 @@ CIid
 ,NivelTot
 ,MesInicio
 ,MesFinal
-from minisif..FTCuentasIndicadores
+from minisif_ft..FTCuentasIndicadores
 
 go
-
-select *
-from FTCuentasIndicadores
-
-select * 
-from ftec..FTCuentasIndicadores
-
-go
-
-sp_help FTCuentasIndicadores
+ 

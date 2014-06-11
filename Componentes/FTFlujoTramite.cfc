@@ -16,7 +16,7 @@
         
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza,FTautoriza
-				from FTFlujoTramite
+				from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
 				where TTid		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.TTid#" voidnull>
                  	and ETid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.ETid#" voidnull>
                  	and FTpasoactual	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTpasoactual#" voidnull>
@@ -44,7 +44,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTFlujoTramite(	   TTid
+                insert into <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">(	   TTid
                                                 , ETid
                                                 , FTpasoactual
                                                 , FTpasoaprueba
@@ -71,7 +71,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza
-					from FTFlujoTramite
+					from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
                     where FTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -92,7 +92,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTFlujoTramite
+                from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
                 where FTid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTid#" voidnull>
             </cfquery>	
         </cftransaction>
@@ -116,7 +116,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTFlujoTramite set
+                update <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> set
 	                     FTpasoactual	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTpasoactual#" 		voidnull>
                         , FTpasoaprueba = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.FTpasoaprueba#" 	voidnull>
                         , FTpasorechaza = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.FTpasorechaza#" 	voidnull>
@@ -127,7 +127,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select FTid, TTid, ETid, TAid, FTorden
-					from FTFlujoTramite
+					from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
                     where FTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.FTid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -144,7 +144,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTDFlujoTramite(	   FTid
+                insert into <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec">(	   FTid
                                                 , TAid
                                                 )
                                         values(<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	 value="#Arguments.FTid#" 	voidnull>
@@ -159,7 +159,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select FTDid,FTid, TAid
-					from FTDFlujoTramite
+					from <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec">
                     where FTDid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -177,7 +177,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTDFlujoTramite
+                from <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec">
                 where FTDid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTDid#" voidnull>
             </cfquery>	
         </cftransaction>

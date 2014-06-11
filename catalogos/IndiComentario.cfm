@@ -34,10 +34,10 @@
         <td valign="top">
             <cfinvoke component="commons.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
                 <cfinvokeargument name="tabla" 				value="#preservesinglequotes(FTIComentario)# "/>
-                <cfinvokeargument name="columnas"			value="ICid,Iid, ICcodigo, ICfecha"/>
-                <cfinvokeargument name="desplegar"			value="ICcodigo, ICfecha"/>
-                <cfinvokeargument name="etiquetas"			value="Código, Fecha"/>
-                <cfinvokeargument name="formatos"			value="S,D"/>
+                <cfinvokeargument name="columnas"			value="ICid,Iid, ICcodigo, ICperiodo"/>
+                <cfinvokeargument name="desplegar"			value="ICcodigo, ICperiodo"/>
+                <cfinvokeargument name="etiquetas"			value="Código, Periodo"/>
+                <cfinvokeargument name="formatos"			value="S,S"/>
                 <cfinvokeargument name="filtro"				value="Iid=#form.Iid# order by ICcodigo"/>
                 <cfinvokeargument name="align"				value="left, center"/>
                 <cfinvokeargument name="ajustar"			value="N,N"/>

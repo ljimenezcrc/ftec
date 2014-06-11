@@ -20,7 +20,7 @@
 
 <cfquery name="rsTipoProceso" datasource="#session.dsn#">
 	select TPid, TPcodigo, TPdescripcion
-    from FTTipoProceso
+    from <cf_dbdatabase table="FTTipoProceso" datasource="ftec">
     where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Session.Ecodigo#">
     order by TPcodigo,TPdescripcion
 </cfquery>
@@ -75,59 +75,59 @@
                         d.TPcodigo
                         ,(select 
                             coalesce(sum(a1.DSPmontototal),0.00)
-                        from FTDSolicitudProceso a1
-                            inner join FTSolicitudProceso b1
+                        from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1
+                            inner join <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> b1
                                 on a1.SPid = b1.SPid
                         where b1.SPid = a.SPid) as Total
                         , e.Usucodigo
                         , 1 as Tramite     
-                    from FTSolicitudProceso a
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                     inner join SNegocios b
 						on a.SNcodigo = b.SNcodigo
-                    inner join FTFormaPago c
+                    inner join <cf_dbdatabase table="FTFormaPago" datasource="ftec"> c
                         on a.FPid = c.FPid
                         and a.Ecodigo = c.Ecodigo
-                    inner join FTTipoProceso d
+                    inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> d
                         on a.TPid = d.TPid
                         and a.Ecodigo = c.Ecodigo
                         
-                    inner join FTAutorizador e
-                        on  e.Vid in (select Vid from FTDSolicitudProceso a1 where a1.SPid = a.SPid and coalesce(DScambiopaso,0) = 0)
+                    inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec"> e
+                        on  e.Vid in (select Vid from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1 where a1.SPid = a.SPid and coalesce(DScambiopaso,0) = 0)
 
-                    inner join FTTipoAutorizador f
+                    inner join <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec"> f
                         on e.TAid = f.TAid
                         and (
-                             ((select coalesce(sum(a1.DSPmonto),0.00) from FTDSolicitudProceso a1 
-                                inner join FTSolicitudProceso b1 
+                             ((select coalesce(sum(a1.DSPmonto),0.00) from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1 
+                                inner join <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> b1 
                                     on a1.SPid = b1.SPid 
                                 where b1.SPid = a.SPid) between f.TAmontomin and f.TAmontomax
                              )
                         and  (e.Usucodigo in (
                                             select e1.Usucodigo
-                                                from FTHistoriaTramite a11
-                                                    inner join FTTipoProceso b1
+                                                from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a11
+                                                    inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> b1
                                                         on a11.TPid = b1.TPid
-                                                    inner join FTFlujoTramite c1
+                                                    inner join <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> c1
                                                         on b1.TTid = c1.TTid
-                                                    inner join FTDFlujoTramite d1
+                                                    inner join <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec"> d1
                                                         on c1.FTid = d1.FTid
-                                                    inner join FTAutorizador e1
+                                                    inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec"> e1
                                                         on d1.TAid = e1.TAid
                                                         and e1.Vid in (select a2.Vid
-                                                                        from FTDSolicitudProceso a2
+                                                                        from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a2
                                                                         where a2.SPid = a11.SPid
                                                                         and coalesce(a2.DScambiopaso,0) = 0)
                                                         and a11.HTpasosigue = c1.FTpasoactual
                                             where a11.SPid = a.SPid 
-                                                and a11.HTfecha = (select max(b11.HTfecha) from FTHistoriaTramite b11 where b11.SPid = a11.SPid and HTcompleto = 1)
+                                                and a11.HTfecha = (select max(b11.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> b11 where b11.SPid = a11.SPid and HTcompleto = 1)
                                                 and HTcompleto = 1                                                
                                             )
                             )
                         )    
                 
-                    inner join FTHistoriaTramite ht
+                    inner join <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> ht
                         on a.SPid = ht.SPid
-                            and ht.HTfecha = (select max(b1.HTfecha) from FTHistoriaTramite b1 where ht.SPid = b1.SPid)
+                            and ht.HTfecha = (select max(b1.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> b1 where ht.SPid = b1.SPid)
                             and ht.HTpasosigue > 0   
                     where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
                     and e.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">

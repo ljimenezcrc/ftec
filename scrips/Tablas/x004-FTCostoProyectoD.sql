@@ -11,16 +11,7 @@ CPDid
 ,CPid
 ,Vid
 ,CPDporcentaje
-from minisif..FTCostoProyectoD
+from minisif_ft..FTCostoProyectoD
 
 go
 
-select *
-from FTCostoProyectoD
-
-select *
-from ftec..FTCostoProyectoD
-
-go
-
-sp_help FTCostoProyectoD

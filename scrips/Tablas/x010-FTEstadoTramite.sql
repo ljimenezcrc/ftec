@@ -11,16 +11,7 @@ ETid
 ,ETcodigo
 ,ETdescripcion
 ,Ecodigo
-from minisif..FTEstadoTramite
+from minisif_ft..FTEstadoTramite
 
 go
 
-select *
-from FTEstadoTramite
-
-select * 
-from ftec..FTEstadoTramite
-
-go
-
-sp_help FTEstadoTramite

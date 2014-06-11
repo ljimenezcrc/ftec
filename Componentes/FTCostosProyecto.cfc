@@ -9,7 +9,7 @@
         <cfargument name="Debug"		required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			 select CPid, Vid, CAid, CPporcentaje, CPexoneracion, CPfdesde, CPfhasta, CPDistribuido, CPvalorcatalogo, Usucodigo
-                from FTCostoProyecto
+                from <cf_dbdatabase table="FTCostoProyecto" datasource="ftec">
 				where Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Vid#" voidnull>
                     and CAid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CAid#" voidnull>
 		</cfquery>
@@ -33,7 +33,7 @@
     
     	<cfquery name="rsCostosObligatorios" datasource="#Session.DSN#">
        		select CAid, CAcodigo, CAdescripcion, CAporcentaje, CAobligatorio, Ecodigo
-            	from FTCostoAdmin
+            	from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">
                 where CAobligatorio = 1
         </cfquery>
 
@@ -73,7 +73,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTCostoProyecto( Vid
+                insert into <cf_dbdatabase table="FTCostoProyecto" datasource="ftec">( Vid
                                             , CAid
                                             , CPporcentaje
                                             , CPexoneracion
@@ -102,7 +102,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CPid, Vid, CAid, CPporcentaje, CPexoneracion, CPfdesde, CPfhasta, CPDistribuido, CPvalorcatalogo, Usucodigo
-                	from FTCostoProyecto
+                	from <cf_dbdatabase table="FTCostoProyecto" datasource="ftec">
                     where CPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -124,7 +124,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTCostoProyecto
+                from <cf_dbdatabase table="FTCostoProyecto" datasource="ftec">
                 where CPid 		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CPid#" voidnull> 
             </cfquery>	
         </cftransaction>
@@ -152,7 +152,7 @@
 		<cfif isdefined('Arguments.CPDistribuido') and #Arguments.CPDistribuido# EQ 0>
             <cfquery name="rsGet" datasource="#Session.DSN#">
                  select CPDid, CPid, Vid, CPDporcentaje  
-                    from FTCostoProyectoD
+                    from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec">
                     where CPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.CPid#" voidnull>
             </cfquery>
             
@@ -168,7 +168,7 @@
         
         <cftransaction> 
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTCostoProyecto set
+                update <cf_dbdatabase table="FTCostoProyecto" datasource="ftec"> set
                     CPporcentaje		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.CPporcentaje#" 	voidnull>
                     , CPexoneracion		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.CPexoneracion#" 	voidnull>
                     , CPfdesde			= <cf_jdbcquery_param cfsqltype="cf_sql_date"		value="#Arguments.CPfdesde#" 		voidnull>
@@ -182,7 +182,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CPid, Vid, CAid, CPporcentaje, CPexoneracion, CPfdesde, CPfhasta, CPDistribuido, CPvalorcatalogo, Usucodigo
-                	from FTCostoProyecto
+                	from <cf_dbdatabase table="FTCostoProyecto" datasource="ftec">
                     where CPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.CPid#" voidnull>
                 </cfquery>
                 <cfdump var="#Arguments#">

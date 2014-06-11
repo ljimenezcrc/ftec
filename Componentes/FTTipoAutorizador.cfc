@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select TAid, TAcodigo, TAdescripcion, TAmontomin, TAmontomax, Ecodigo
-				from FTTipoAutorizador
+				from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
 				where TAcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TAcodigo#" voidnull>
 		</cfquery>
 
@@ -32,9 +32,11 @@
         <cfargument name="TAmontomax" 		required="true" 	type="numeric" default="0.00">
         <cfargument name="Usucodigo" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
+        
+        
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTTipoAutorizador(	  Ecodigo
+                insert into <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">(	  Ecodigo
                                                 , TAcodigo
                                                 , TAdescripcion
                                                 , TAmontomin
@@ -58,7 +60,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select TAid, TAcodigo, TAdescripcion, TAmontomin, TAmontomax, Ecodigo
-                    from FTTipoAutorizador
+                    from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
                     where TAid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -79,7 +81,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTTipoAutorizador
+                from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and TAcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TAcodigo#" voidnull>
             </cfquery>	
@@ -101,7 +103,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTTipoAutorizador set
+                update <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec"> set
 	                     TAcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TAcodigo#" 		voidnull>
                         , TAdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TAdescripcion#" 	voidnull>
                         , TAmontomin	= <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.TAmontomin#" 		voidnull>
@@ -113,7 +115,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select TAid, TAcodigo, TAdescripcion, TAmontomin, TAmontomax, Ecodigo
-                    from FTTipoAutorizador
+                    from <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec">
                     where TAid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

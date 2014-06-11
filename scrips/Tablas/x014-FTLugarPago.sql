@@ -11,16 +11,8 @@ LPid
 ,LPcodigo
 ,LPdescripcion
 ,Ecodigo
-from minisif..FTLugarPago
+from minisif_ft..FTLugarPago
 
 go
 
-select *
-from FTLugarPago
-
-select * 
-from ftec..FTLugarPago
-
-go
-
-sp_help FTLugarPago
+ 

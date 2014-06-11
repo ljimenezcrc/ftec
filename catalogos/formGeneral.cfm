@@ -16,7 +16,7 @@
                 , a.CFid
                 , b.CFdescripcion
                 , b.CFcodigo 
-        from FTVicerrectoria a
+        from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> a
         left join  CFuncional b
         	on a.CFid = b.CFid
         where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
@@ -24,7 +24,8 @@
 	</cfquery>
    
     <cfquery name="rsNombreVC" datasource="#Session.DSN#">
-        select Vid as Vpkresp, Vcodigo as Vcodigoresp, Vdescripcion as Vdescripcionresp from FTVicerrectoria 
+        select Vid as Vpkresp, Vcodigo as Vcodigoresp, Vdescripcion as Vdescripcionresp 
+        from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec">
         where Vid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsForm.Vpkresp#">
     </cfquery>
     
@@ -197,9 +198,9 @@
                          	<td align="right" width="25%" valign="top"><cf_translate  key="LB_desde">Desde:</cf_translate></td>
                             <td>
                                 <cfif isdefined('modo') and  modo eq 'CAMBIO'>
-                                    <cf_sifcalendario name="Vfinicio" id = "Vfinicio"  value="#LSDateFormat(rsForm.Vfinicio,'dd/mm/yyyy')#">
+                                    <cf_sifcalendario name="Vfinicio" id = "Vfinicio"  value="#LSDateFormat(rsForm.Vfinicio,"dd/mm/yyyy")#">
                                 <cfelse>
-                                    <cf_sifcalendario name="Vfinicio" id = "Vfinicio"  value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
+                                    <cf_sifcalendario name="Vfinicio" id = "Vfinicio"  value="#LSDateFormat(Now(),"dd/mm/yyyy")#">
                                 </cfif>
                             </td>
                             

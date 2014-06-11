@@ -15,16 +15,7 @@ EIid
 ,EImes
 ,EIperiodo
 ,EInoaplica
-from minisif..FTEmpleadoIndicador
+from minisif_ft..FTEmpleadoIndicador
 
 go
-
-select *
-from FTEmpleadoIndicador
-
-select * 
-from ftec..FTEmpleadoIndicador
-
-go
-
-sp_help FTEmpleadoIndicador
+ 

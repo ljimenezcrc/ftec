@@ -32,7 +32,7 @@
 
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTSolicitudProceso (SPdocumento
+                insert into <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> (SPdocumento
 								                ,TPid
                                                 ,FPid                 
                                                 ,LPid                 
@@ -113,7 +113,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select SPid,TPid,Vid ,FPid,LPid,Mcodigo,SPfecha,SPfechaReg,Usucodigo,SPestado,SPacta,Ecodigo,SPobservacion,SPctacliente,Bid,SPfechaTrans,SNcodigo
-                    from FTSolicitudProceso
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
                     where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -134,7 +134,7 @@
         <cftransaction>  
         	<cfquery name="rsGet" datasource="#Session.DSN#">
                 select * 
-                from FTSolicitudProceso
+                from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
                 where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
                 and SPestado = 1
             </cfquery>
@@ -142,13 +142,13 @@
         	<cfif isdefined('rsGet') and rsGet.RecordCount EQ 0>
             	<cfquery name="rsDeleteDet" datasource="#Session.DSN#">
                     delete 
-                    from FTDSolicitudProceso
+                    from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
                     where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
                 </cfquery>
                 
             	<cfquery name="rsDeleteEnc" datasource="#Session.DSN#">
                     delete 
-                    from FTSolicitudProceso
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
                     where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
                     and  SPestado = 0
                 </cfquery>
@@ -194,7 +194,7 @@
 
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTSolicitudProceso set 
+                update <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> set 
                     TPid		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.TPid#" 		voidnull>
                     ,FPid   = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.FPid#" 		voidnull>
                     <cfif isdefined('Arguments.LPid')>
@@ -260,7 +260,7 @@
                         ,SPestado             
                         ,SPacta 
                         ,Ecodigo
-                    from FTSolicitudProceso
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
                     where SPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -303,7 +303,7 @@
         
         <cfquery name="rsCFid" datasource="#session.DSN#">
             select a.CFid,b.CFcuentac
-            from FTVicerrectoria a
+            from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
                 inner join CFuncional b
                 on a.CFid = b.CFid
             where a.Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#">
@@ -350,7 +350,7 @@
                 <cftry>
                 <cftransaction> 
                 <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                        insert into FTDSolicitudProceso (SPid
+                        insert into <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> (SPid
                                                         ,Vid
                                                         ,Cid
                                                         ,Icodigo
@@ -389,7 +389,7 @@
                     <cfif Arguments.Debug>
                         <cfquery name="rsDebug" datasource="#Session.DSN#">
                             select DSPid,SPid,DSPdocumento,DSPdescripcion,DSPobjeto,DSPmonto
-                            from FTDSolicitudProceso
+                            from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
                             where DSPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                         </cfquery>
                         <cfdump var="#Arguments#">
@@ -449,7 +449,7 @@
         
         <cfquery name="rsCFid" datasource="#session.DSN#">
             select a.CFid,b.CFcuentac
-            from FTVicerrectoria a
+            from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
                 inner join CFuncional b
                 on a.CFid = b.CFid
             where a.Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#">
@@ -496,7 +496,8 @@
                 <cftry>
                 <cftransaction> 
                 <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                        update FTDSolicitudProceso  set Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Vid#" voidnull>
+                        update <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">  set 
+                        								Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Vid#" voidnull>
                                                         ,Cid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Cid#" voidnull>
                                                         ,Icodigo = <cf_jdbcquery_param  cfsqltype="cf_sql_varchar" 	value="#Arguments.Icodigo#" voidnull>
                                                         ,DSPdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdescripcion#" 	voidnull>                
@@ -512,7 +513,7 @@
                     <cfif Arguments.Debug>
                         <cfquery name="rsDebug" datasource="#Session.DSN#">
                             select DSPid,SPid,DSPdocumento,DSPdescripcion,DSPobjeto,DSPmonto
-                            from FTDSolicitudProceso
+                            from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
                             where DSPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                         </cfquery>
                         <cfdump var="#Arguments#">
@@ -554,7 +555,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTDSolicitudProceso
+                from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
                 where  DSPid in (<cfqueryparam cfsqltype="cf_sql_varchar"  list="yes" value="#Arguments.DSPid#"> )
             </cfquery>	
         </cftransaction>

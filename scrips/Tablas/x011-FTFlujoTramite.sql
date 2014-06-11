@@ -17,16 +17,6 @@ FTid
 ,FTpasoaprueba
 ,FTpasorechaza
 ,FTautoriza
-from minisif..FTFlujoTramite
+from minisif_ft..FTFlujoTramite
 
 go
-
-select *
-from FTFlujoTramite
-
-select * 
-from ftec..FTFlujoTramite
-
-go
-
-sp_help FTFlujoTramite

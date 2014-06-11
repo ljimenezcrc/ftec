@@ -57,14 +57,14 @@ returnvariable="BTN_Agregar"/>
                 , a.Usucodigo 
                 , b.CAcodigo
                 , b.CAdescripcion
-        from FTCostoProyecto a
-            inner join FTCostoAdmin b
+        from <cf_dbdatabase table="FTCostoProyecto" datasource="ftec"> a
+            inner join <cf_dbdatabase table="FTCostoAdmin" datasource="ftec"> b
                 on a.CAid = b.CAid
                  <cfif isdefined('form.CApk')>
                      and a.CAid = #form.CApk#
                  </cfif>
         where b.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
-            and a.Vid = (select Vid from FTVicerrectoria where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
+            and a.Vid = (select Vid from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
     </cfquery>
 
 	<cfset lvCPporcentaje = rsFormCost.CPporcentaje>
@@ -77,8 +77,8 @@ returnvariable="BTN_Agregar"/>
                     , a.CPDporcentaje
                     , b.Vcodigo
                     , b.Vdescripcion
-            from FTCostoProyectoD a
-                inner join FTVicerrectoria b
+            from <cf_dbdatabase table="FTCostoProyectoD" datasource="ftec"> a
+                inner join <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> b
                 on a.Vid = b.Vid
             where CPid = #form.CPpk#
         </cfquery>
@@ -91,7 +91,7 @@ returnvariable="BTN_Agregar"/>
                 , a.CAdescripcion
                 , a.CAporcentaje
                 , a.CAobligatorio
-		from FTCostoAdmin a
+		from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec"> a
         where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
        	order by a.CAdescripcion
 </cfquery>
@@ -249,7 +249,7 @@ returnvariable="BTN_Agregar"/>
 	<tr><td colspan="2" align="center">
 	<cfif isdefined ('form.Vcodigo') and len(trim(form.Vcodigo)) gt 0>
 		<cfquery name="rsCFid" datasource="#session.dsn#">
-			select Vid from FTVicerrectoria where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
+			select Vid from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
 		</cfquery>
 		<cfif rsCFid.recordcount gt 0>
 			<input type="hidden" name="Vid" value="#rsCFid.Vid#" />

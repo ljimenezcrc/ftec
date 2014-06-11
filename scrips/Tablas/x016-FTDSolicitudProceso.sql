@@ -32,16 +32,6 @@ SPid
 ,DScambiopaso
 ,DSPimpuesto
 
-from minisif..FTDSolicitudProceso
+from minisif_ft..FTDSolicitudProceso
 
 go
-
-select *
-from FTDSolicitudProceso
-
-select * 
-from ftec..FTDSolicitudProceso
-
-go
-
-sp_help FTDSolicitudProceso

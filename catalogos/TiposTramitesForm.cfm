@@ -13,7 +13,7 @@
 <cfif isDefined("session.Ecodigo") and isDefined("Form.TTcodigo") and len(trim(#Form.TTcodigo#)) NEQ 0>
 	<cfquery name="rsTipos" datasource="#Session.DSN#" >
 	Select *
-	from FTTipoTramite
+	from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
 		and TTcodigo = <cfqueryparam cfsqltype="cf_sql_char" value="#Form.TTcodigo#" >		  
 		order by TTcodigo asc

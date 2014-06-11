@@ -48,16 +48,6 @@ SPid
 ,SPfechaTrans
 ,SPobservacion
 
-from minisif..FTSolicitudProceso
+from minisif_ft..FTSolicitudProceso
 
 go
-
-select *
-from FTSolicitudProceso
-
-select * 
-from ftec..FTSolicitudProceso
-
-go
-
-sp_help FTSolicitudProceso

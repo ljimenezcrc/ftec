@@ -9,7 +9,7 @@
 
 <cfif isdefined('form.Agregar') and form.Agregar EQ 1>
 	<cfquery name="rsAddcuenta" datasource="#session.DSN#">
-    	insert into FTCuentasIndicadores (Iid,Cuenta,NivelDet,NivelTot,MesInicio,MesFinal
+    	insert into <cf_dbdatabase table="FTCuentasIndicadores" datasource="ftec"> (Iid,Cuenta,NivelDet,NivelTot,MesInicio,MesFinal
         			<cfif isdefined('form.GCid') and #form.GCid# GT 0>
 	                    ,GCid
                     </cfif>
@@ -26,7 +26,7 @@
 
 <cfif isdefined('form.Borrar') and form.Borrar EQ 1>
 	<cfquery name="rsAddcuenta" datasource="#session.DSN#">
-    	delete from FTCuentasIndicadores
+    	delete from <cf_dbdatabase table="FTCuentasIndicadores" datasource="ftec">
         where Iid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.Iid#">
         	and CIid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.CIid#">
     </cfquery>

@@ -9,7 +9,7 @@
 
 <cfquery name="rsInd" datasource="#session.DSN#">
 	select *
-    from FTIndicador
+    from <cf_dbdatabase table="FTIndicador " datasource="ftec">
     where Iid  = #form.Indicador#
 </cfquery>
 
@@ -22,6 +22,11 @@
     </cfcase>
     
     <cfcase value="F04">  
+    	<cfset pInicio 	= #form.PeriodoInicio# - 1>            
+		<cfset pFinal 	= #form.PeriodoFinal#>
+    </cfcase>
+    
+    <cfcase value="F08">  
     	<cfset pInicio 	= #form.PeriodoInicio# - 1>            
 		<cfset pFinal 	= #form.PeriodoFinal#>
     </cfcase>
@@ -41,9 +46,10 @@
 
 
 
+
 <cfset LvarSoloMes = false>
-<cfset LvarMesInicial = 1>
-<cfset LvarMesFinal   = 12>
+<cfset LvarMesInicial = #form.MesInicial#>
+<cfset LvarMesFinal   = #form.MesFinal#>
 <cfset LvarPeriodo    = 1000>
 
 <cfif LvarMesInicial EQ LvarMesFinal>
@@ -52,10 +58,18 @@
 
 
 <cfset fnProcesaReporte()>
+           
+<cfif isdefined('form.grafico')>
+	<cfset savedFile = getTempFile(getTempDirectory(),"Download") & "Grafico#NumGrafico#.jpg">
+    <cfset fileWrite(savedFile, F01)>
+    
+    <cfheader name="Content-Disposition" value="attachment;filename=Grafico#NumGrafico#.jpg">
+    <cfcontent type="image/jpeg" file="#savedFile#">
+</cfif>
 
 <!---<script type="text/javascript">location.href='Reporteimpreso.cfm';</script>--->
 
-<cffunction name="fnProcesaReporte" access="private" output="no">
+<cffunction name="fnProcesaReporte">
 
 	<cfquery name="rsCuentasContables" datasource="#session.dsn#">
 		select 
@@ -84,9 +98,12 @@
 	</cfquery>
 
 	<cfset fnPintaReporte()>
+    <cfreturn>
+    
+    
 </cffunction>
 
-<cffunction name="fnObtieneCuentaidList" access="private" output="no" returntype="any">
+<cffunction name="fnObtieneCuentaidList"  returntype="any">
 	<cfswitch expression="#form.ID_REPORTE#">
 		<cfcase value="1">
 			<cfset CuentaidList =  form.CtaFinal & '|' &form.nivelDet  & '|' & form.nivelTot >
@@ -115,7 +132,7 @@
         
             <cfquery name="rsCuentasIndicador" datasource="#session.DSN#">
                 select CIid, Indicador, Cuenta, NivelDet, NivelTot, MesInicio, MesFinal
-                from FTCuentasIndicadores
+                from <cf_dbdatabase table="FTCuentasIndicadores " datasource="ftec">
                 where Indicador = #form.Indicador#
             </cfquery>
 
@@ -423,7 +440,7 @@
 	</cfif>
 </cffunction>--->
 
-<cffunction name="fnCreaTablasTemporales" access="private" output="no" hint="Crea las tablas temporales para el procesamiento de la informacion">
+<cffunction name="fnCreaTablasTemporales"  hint="Crea las tablas temporales para el procesamiento de la informacion">
 	<cf_dbtemp name="ReporteConta" returnvariable="reporte">
 		<cf_dbtempcol name="Ecodigo"  		type="integer">
 		<cf_dbtempcol name="Ccuenta"  		type="numeric">
@@ -462,7 +479,7 @@
 	</cf_dbtemp>
 </cffunction>
 
-<cffunction name="fnInsertaCuentas" access="private" output="no" hint="Llena la tabla temporal con las cuentas que se seleccionaron" returntype="numeric">
+<cffunction name="fnInsertaCuentas"  hint="Llena la tabla temporal con las cuentas que se seleccionaron" returntype="numeric">
 	<cfswitch expression="#form.ID_REPORTE#">
 		<cfcase value="1">  <!--- 1 - SALDOS PARA 1 CUENTA           --->
 			<cfset Pcuentas = trim(form.CTAFINAL)>
@@ -568,16 +585,19 @@
 			<cfset Pcuentas = "">--->
             
             <cfquery name="rsCuentasIndicador" datasource="#session.DSN#">
-            	select CIid, Iid as Indicador, Cuenta, NivelDet, NivelTot,MesInicio, MesFinal, coalesce(GCid,-1) as GCid
-                from FTCuentasIndicadores
+            	select CIid, Iid as Indicador, Cuenta, NivelDet, NivelTot
+                ,#form.MesInicial# as MesInicio
+                , #form.MesFinal# as  MesFinal
+                <!---MesInicio, MesFinal--->
+                , coalesce(GCid,-1) as GCid
+                from <cf_dbdatabase table="FTCuentasIndicadores " datasource="ftec">
                 where Iid = #form.Indicador#
             </cfquery>
             
-            
             <cfloop index = "LvarPeriodo" from = #pInicio# to = #pFinal#>
 
-            <br><cfdump var="#LvarPeriodo#">
-            
+            <!---<br><cfdump var="#LvarPeriodo#">--->
+
             <cfloop query="rsCuentasIndicador">
             	<cfset cuenta = "#rsCuentasIndicador.Cuenta#">
                 <cfset cMayor = mid(cuenta,1,4)>
@@ -647,7 +667,7 @@
                                 and r2.Speriodo = <cf_jdbcquery_param value="#LvarPeriodo#" 	cfsqltype="cf_sql_integer">
 							)
 				</cfquery>
-			</cfloop>
+            </cfloop>
             </cfloop>
 		</cfcase>
 	</cfswitch>
@@ -658,7 +678,7 @@
 	<cfreturn rsCantidad.Cantidad>
 </cffunction>
 
-<cffunction name="fnActualizaDatos" access="private" output="no" hint="Actualiza los datos de la tabla temporal">
+<cffunction name="fnActualizaDatos"  hint="Actualiza los datos de la tabla temporal">
 	<!--- Actualizar los Saldos Iniciales de las Cuentas Seleccionadas --->
     <cfset mySLinicial = "SLinicialGE">
 	<cfquery datasource="#session.dsn#">
@@ -801,7 +821,7 @@
 	</cfquery>
 </cffunction>
 
-<cffunction name="fnInsertaPadres" access="private" output="no" hint="Inserta las Cuentas Padre para el informe">
+<cffunction name="fnInsertaPadres"   hint="Inserta las Cuentas Padre para el informe">
 	
 	<!---  Insertar las cuentas padre de las cuentas resultantes del proceso anterior --->
 
@@ -814,7 +834,7 @@
 			Speriodo, 
 			Smes1, 
 			Smes2,
-			Cdetalle)
+			Cdetalle,GCid)
 		select 
 			r.Ecodigo,
 			cu.Ccuentaniv, cu.PCDCniv,
@@ -822,15 +842,15 @@
 			r.Speriodo,
             r.Smes1, 
 			r.Smes2,
-			0
+			0,r.GCid
 		from #reporte# r
 			inner join PCDCatalogoCuenta cu
 				 on cu.Ccuenta = r.Ccuenta
 					and cu.PCDCniv in (12,12)
 		where cu.Ccuentaniv <> r.Ccuenta
-		group by r.Ecodigo, cu.Ccuentaniv, cu.PCDCniv, r.Speriodo, r.Smes1, r.Smes2
+		group by r.Ecodigo, cu.Ccuentaniv, cu.PCDCniv, r.Speriodo, r.Smes1, r.Smes2,r.GCid
 	</cfquery>
-	
+
 	<!---  Insertar la cuenta de mayor --->
 	<!---<cfif form.NIVELTOT neq 0>--->
 		<cfquery datasource="#Session.DSN#">
@@ -842,7 +862,7 @@
 				Speriodo, 
 				Smes1, 
 				Smes2,
-				Cdetalle)
+				Cdetalle,GCid)
 			select 
 				r.Ecodigo,
 				cu.Ccuentaniv, cu.PCDCniv,
@@ -850,14 +870,16 @@
 				r.Speriodo, 
 				r.Smes1, 
 				r.Smes2,
-				0
+				0,r.GCid
 			from #reporte# r
 				inner join PCDCatalogoCuenta cu
 					 on cu.Ccuenta = r.Ccuenta
 					and cu.PCDCniv = 0
 					and cu.Ccuentaniv <> r.Ccuenta
-			group by r.Ecodigo, cu.Ccuentaniv, cu.PCDCniv, r.Speriodo, r.Smes1, r.Smes2
+			group by r.Ecodigo, cu.Ccuentaniv, cu.PCDCniv, r.Speriodo, r.Smes1, r.Smes2,r.GCid
 		</cfquery>
+       
+        
 	<!---</cfif>--->
 
 	<!--- Borrar los registros que son mayores que el nivel de detalle seleccinado, Cuando el reporte no es por Asiento o Consecutivo --->

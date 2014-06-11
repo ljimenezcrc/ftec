@@ -37,7 +37,7 @@
 	where Ecodigo = #session.Ecodigo#
 	order by GOnombre
 </cfquery>
-
+--->
 <cfquery name="rsMes" datasource="#Session.DSN#">
 	select a.Speriodo, a.Smes, b.VSdesc as SmesDes
 	from CGPeriodosProcesados a
@@ -51,6 +51,7 @@
 	order by a.Speriodo, a.Smes
 </cfquery>
 
+<!---
 <cfset VCEcodigo = #Session.CEcodigo#>
 
 <cfquery name="rsNiveles" datasource="#Session.DSN#">
@@ -88,7 +89,7 @@ where A.PCEMid = B.PCEMid
 <cfquery name="rsListaIndicadores" datasource="#session.DSN#">
     Select Iid, Icodigo, Idescripcion,Ecodigo	
     	,Icodigo +' - ' +  <cf_dbfunction name="sPart" args="Idescripcion,1,80"> as descripcion
-    From FTIndicador
+    From <cf_dbdatabase table="FTIndicador " datasource="ftec">
     Where Ecodigo= #session.Ecodigo# 
     order by Icodigo 
 </cfquery>
@@ -183,7 +184,7 @@ where A.PCEMid = B.PCEMid
 		<tr>
 			<td ><strong>A&ntilde;o Inicio:</strong></td>
 			<td  >
-				<select name="PeriodoInicio"  tabindex="1"> 
+				<select name="PeriodoInicio"  onChange="javascript:cambiar_meses(this);"  tabindex="1"> 
 					<cfloop query="rsAno"> 
 						<option value="#rsAno.Speriodo#">#rsAno.Speriodo#</option>
 					</cfloop>
@@ -203,7 +204,7 @@ where A.PCEMid = B.PCEMid
 				
 			</td>			
 		</tr>		
-		<!---<tr>
+		<tr>
 			<td>
 				<strong>
 				<INPUT  tabindex="-1" 
@@ -238,12 +239,12 @@ where A.PCEMid = B.PCEMid
 					<option value="">-- seleccionar --</option>
 				</select>
 			</td>
-		</tr>--->
+		</tr>
 		<tr>  
 			<td   align="center" colspan="4">
 				<input type="submit" name="Reporte" value="Procesar" id="Procesar" onClick="" tabindex="1">
-				<input type="reset" name="Limpiar"  onClick="javascript: if (window.OcultarCeldas) return OcultarCeldas();"value="Limpiar" tabindex="1">
-			</td>
+				<input type="reset" name="Limpiar"  value="Limpiar" tabindex="1">
+			</td><!---onClick="javascript: if (window.OcultarCeldas) return OcultarCeldas();"--->
 		</tr> 
 	</table>
 
@@ -252,3 +253,286 @@ where A.PCEMid = B.PCEMid
 	<cf_qformsRequiredField name="Indicador"  description="Tipo de Indicador">
 </cf_qforms>
 </cfoutput>
+
+<script language="JavaScript1.2">
+function descarga(obj){
+	alert(obj);
+}
+
+	/*********************************************************************************************************/
+ 	function cambio_MESINI(obj){
+		var form = obj.form;
+		var combo = form.MesInicial;
+		combo.length = 0;
+		var i = 0;
+		<cfoutput query="rsMes">
+			var tmp = #rsMes.Speriodo# ;
+			if ( obj.value != '' && tmp != '' && parseFloat(obj.value) == parseFloat(tmp) ) {
+				combo.length++;
+				combo.options[i].text = '#rsMes.SmesDes#';
+				combo.options[i].value = '#rsMes.Smes#';
+				i++;
+			}
+		</cfoutput>
+	}
+	/*********************************************************************************************************/
+	function cambio_MESFIN(obj){
+		var form = obj.form;
+		var combo = form.MesFinal;
+		combo.length = 0;
+		var i = 0;
+		<cfoutput query="rsMes">
+			var tmp = #rsMes.Speriodo# ;
+			if ( obj.value != '' && tmp != '' && parseFloat(obj.value) == parseFloat(tmp) ) {
+				combo.length++;
+				combo.options[i].text = '#rsMes.SmesDes#';
+				combo.options[i].value = '#rsMes.Smes#';
+				i++;
+			}
+		</cfoutput>
+	}
+	/*********************************************************************************************************/
+	function cambiar_meses(obj){
+		cambio_MESINI(obj);
+		cambio_MESFIN(obj);
+	}
+	/*********************************************************************************************************/
+   
+	function validar() {
+		var errores = "";
+		 
+
+		
+		if (document.form1.MesInicial.value.length == 0) {
+			errores = errores + '- El campo mes inicial  es requerido.\n';
+		}
+		if (document.form1.MesFinal.value.length == 0) {
+			errores = errores + '- El campo mes final es requerido.\n';
+		}
+		if (errores != "") {
+			alert('Se presentaron los siguientes errores:\n' + errores);
+			return false;
+		}	
+		
+		document.form1.Procesar.disabled = true;
+		
+	}	
+	/*********************************************************************************************************/
+	function Precarga() {
+		cambiar_meses(document.form1.Periodos)
+	}
+	Precarga() ;
+	/*********************************************************************************************************/
+	   
+	/********************************************************************************************************/
+	function fnNuevaCuentaContable()	{	
+		var LvarTable 	= document.getElementById("tblcuenta");
+		var LvarTbody 	= LvarTable.tBodies[0];
+		var LvarTR    	= document.createElement("TR");
+		var Lclass 		= document.form1.LastOneCuenta;
+		FrameFunction();
+		var cuenta		 = document.form1.CtaFinal.value	
+		var vectorcuenta = cuenta.split('-');
+		var p1 = "";
+		for(i=0;i < vectorcuenta.length;i++) {
+			if(vectorcuenta[i].length > 0)
+				p1 = p1 + vectorcuenta[i] + '-';
+		}
+		p1 = p1.substring(0,p1.length-1) 
+
+		if (p1=="") {
+			return;
+		}	
+
+		if (existeCodigoCuenta(p1)) {
+			alert('La Cuenta Contable ya fue agregada.');
+			return;
+		}
+
+		if(document.form1.ID_REPORTE.value == '2' && p1.indexOf('_',0) > -1){
+			LimpiaCajas();
+			alert('Para este tipo de reporte no se pueden utilizar comodines');
+			return;
+		}
+
+		sbAgregaTdInput (LvarTR, Lclass.value, p1, "hidden", "CuentaidList");
+		sbAgregaTdText  (LvarTR, Lclass.value, p1);
+		sbAgregaTdImage (LvarTR, Lclass.value, "imgDel", "right");
+		if (document.all) {
+			GvarNewTD.attachEvent ("onclick", sbEliminarTR);
+		}
+		else {
+			GvarNewTD.addEventListener ("click", sbEliminarTR, false);
+		}
+		LvarTR.name = "XXXXX";
+		LvarTbody.appendChild(LvarTR);
+		if (Lclass.value=="ListaNon") {
+			Lclass.value="ListaPar";
+		}
+		else {
+			Lclass.value="ListaNon";
+		}
+		var cant = new Number(document.form1.CuentasADD.value);
+		cant = cant + 1;
+		document.form1.CuentasADD.value = cant;
+
+		if(document.form1.ID_REPORTE.value == '2' && cant >= 2)
+		{
+			document.form1.AGRE.disabled 	= true;		
+		}	
+				
+		LimpiaCajas();
+	}	
+	/*********************************************************************************************************/
+	function existeCodigoCuenta(v){
+		var LvarTable = document.getElementById("tblcuenta");
+		for (var i=0; i<LvarTable.rows.length; i++){
+			var value = new String(fnTdValue(LvarTable.rows[i]));
+			var data = value.split('|');
+			if (data[0] == v) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/*********************************************************************************************************/
+	function sbAgregaTdInput (LprmTR, LprmClass, LprmValue, LprmType, LprmName){
+		var LvarTD    = document.createElement("TD");
+		var LvarInp   = document.createElement("INPUT");
+		LvarInp.type = LprmType;
+		if (LprmName != "") {
+			LvarInp.name = LprmName;
+		}
+		
+		if (LprmValue != "") {
+			LvarInp.value = LprmValue +"|" 
+			+ document.form1.nivelDet.value +"|"		 
+			+ document.form1.nivelTot.value;
+
+		} 
+
+		LvarTD.appendChild(LvarInp);
+		if (LprmClass!="") { 
+			LvarTD.className = LprmClass;
+		}
+		GvarNewTD = LvarTD;
+		LprmTR.appendChild(LvarTD);
+	}
+	/*********************************************************************************************************/
+	function sbAgregaTdText (LprmTR, LprmClass, LprmValue){
+		var LvarTD    = document.createElement("TD");
+		var LvarTxt   = document.createTextNode(LprmValue);
+		LvarTD.appendChild(LvarTxt);
+		if (LprmClass!="") {
+			LvarTD.className = LprmClass;
+		}
+		GvarNewTD = LvarTD;
+		LvarTD.noWrap = true;
+		LprmTR.appendChild(LvarTD);
+	}
+	/*********************************************************************************************************/
+	function sbAgregaTdImage (LprmTR, LprmClass, LprmNombre, align){
+		var LvarTDimg 	= document.createElement("TD");
+		var LvarImg 	= document.getElementById(LprmNombre).cloneNode(true);
+		LvarImg.style.display="";
+		LvarImg.align=align;
+		LvarTDimg.appendChild(LvarImg);
+		if (LprmClass != "") {
+			LvarTDimg.className = LprmClass;
+		}
+		GvarNewTD = LvarTDimg;
+		LprmTR.appendChild(LvarTDimg);
+	}
+	/*********************************************************************************************************/
+	function sbEliminarTR(e){
+		var LvarTR;
+		if (document.all) {
+			LvarTR = e.srcElement;
+		}
+		else {
+			LvarTR = e.currentTarget;
+		}
+		while (LvarTR.name != "XXXXX") {
+			LvarTR = LvarTR.parentNode;
+		}
+		LvarTR.parentNode.removeChild(LvarTR);
+		var cant = new Number(document.form1.CuentasADD.value);
+		cant = cant -1;
+		document.form1.CuentasADD.value = cant;
+        if(document.form1.ID_REPORTE.value == '2' && cant < 2){
+			document.form1.AGRE.disabled 	= false;		
+		}		
+	}
+	/*********************************************************************************************************/
+	function fnTdValue(LprmNode){
+		var LvarNode = LprmNode;
+		while (LvarNode.hasChildNodes()) {
+			LvarNode = LvarNode.firstChild;
+			if (document.all == null) {
+				if (!LvarNode.firstChild && LvarNode.nextSibling != null && LvarNode.nextSibling.hasChildNodes()) {
+					LvarNode = LvarNode.nextSibling;
+				}
+			}
+		}
+		if (LvarNode.value) {
+			return LvarNode.value;
+		} 
+		else {
+			return LvarNode.nodeValue;
+		}
+	}
+	/*********************************************************************************************************/
+	function ACTIVAMESES(){
+		var ETQINI  	= document.getElementById("ETQINI");
+		var ETQFIN  	= document.getElementById("ETQFIN");
+		var MesInicial  = document.getElementById("MesInicial");
+		var MesFinal  	= document.getElementById("MesFinal");
+		switch(document.form1.TipoFormato.value) {
+			case '1': {
+					ETQFIN.style.visibility='hidden';
+					MesFinal.style.visibility='hidden';
+					MesInicial.style.visibility='visible';
+					ETQINI.style.visibility='visible';		
+					
+					document.form1.ETQINI.value ='Mes:';
+				break;
+			}
+			case '2': {
+					ETQINI.style.visibility='hidden';
+					ETQFIN.style.visibility='hidden';
+					MesInicial.style.visibility='hidden';
+					MesFinal.style.visibility='hidden';
+				break;
+			}
+			case '3': {
+					ETQFIN.style.visibility='visible';
+					MesFinal.style.visibility='visible';
+					MesInicial.style.visibility='visible';
+					ETQINI.style.visibility='visible';	
+					document.form1.ETQINI.value ='Mes Inicial:';
+				break;
+			}
+			case '4': {
+					ETQFIN.style.visibility='visible';
+					MesFinal.style.visibility='visible';
+					MesInicial.style.visibility='visible';
+					ETQINI.style.visibility='visible';	
+					document.form1.ETQINI.value ='Mes Inicial:';
+				break;
+			}		
+			case '5': {
+					ETQFIN.style.visibility='visible';
+					MesFinal.style.visibility='visible';
+					MesInicial.style.visibility='visible';
+					ETQINI.style.visibility='visible';	
+					document.form1.ETQINI.value ='Mes Inicial:';
+				break;
+			}									
+		}	
+	}
+	<cfif Form.Archivo eq 'S'>
+		ACTIVAMESES()
+	</cfif>	
+	
+	
+</script>

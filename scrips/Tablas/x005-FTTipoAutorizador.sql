@@ -17,16 +17,6 @@ TAid
 ,TAmontomax
 ,Ecodigo
 ,Usucodigo
-from minisif..FTTipoAutorizador
+from minisif_ft..FTTipoAutorizador
 
 go
-
-select *
-from FTTipoAutorizador
-
-select *
-from ftec..FTTipoAutorizador
-
-go
-
-sp_help FTTipoAutorizador

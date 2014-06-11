@@ -15,9 +15,9 @@
         
         <cfquery name="rsSiguientePasoH" datasource="#Session.DSN#">
             select Usucodigo,HTfecha ETid,TPid,SPid,HTpasosigue
-                from FTHistoriaTramite
+                from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec">
                 where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#">
-                and  HTfecha = (select max(a.HTfecha) from FTHistoriaTramite a where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#"> and HTcompleto = 1)
+                and  HTfecha = (select max(a.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#"> and HTcompleto = 1)
         </cfquery>
         
         <cfif isdefined('rsSiguientePasoH') and rsSiguientePasoH.recordCount EQ 0>
@@ -28,10 +28,10 @@
                     <cfelse>
                     	c.FTpasorechaza 
                     </cfif> as PasoSigue
-                    from FTSolicitudProceso a
-                        inner join FTTipoProceso b
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
+                        inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> b
                             on a.TPid = b.TPid
-                    inner join FTFlujoTramite c
+                    inner join <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> c
                         on b.TTid = c.TTid
                 where a.SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#">
                 order by c.FTpasoactual asc
@@ -45,10 +45,10 @@
                     	c.FTpasorechaza 
                     </cfif> as PasoSigue
                 		,c.*
-                    from FTSolicitudProceso a
-                        inner join FTTipoProceso b
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
+                        inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> b
                             on a.TPid = b.TPid
-                    inner join FTFlujoTramite c
+                    inner join <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> c
                         on b.TTid = c.TTid
                 where a.SPid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Arguments.SPid#">
                 	and c.FTpasoactual = #rsSiguientePasoH.HTpasosigue#
@@ -60,29 +60,29 @@
 <!---   <cfdump var="#rsSiguientePaso#">  --->
             <cfquery name="rsDetallesAplicar" datasource="#Session.DSN#">
                 select  a.TPid, a.SPid, b.DSPid
-                    from FTSolicitudProceso a
-                        inner join FTDSolicitudProceso b
+                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
+                        inner join <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> b
                             on a.SPid = b.SPid
                             and coalesce(b.DScambiopaso,0) = 0
                             <cfif isdefined('form.Tramite') and len(#form.Tramite#) GT 0>
                             	and b.Vid in (
                                             select e1.Vid
-                                            from FTHistoriaTramite a1
-                                                inner join FTTipoProceso b1
+                                            from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a1
+                                                inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> b1
                                                     on a1.TPid = b1.TPid
-                                                inner join FTFlujoTramite c1
+                                                inner join <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> c1
                                                     on b1.TTid = c1.TTid
-                                                inner join FTDFlujoTramite d1
+                                                inner join <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec"> d1
                                                     on c1.FTid = d1.FTid
-                                                inner join FTAutorizador e1
+                                                inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec"> e1
                                                     on d1.TAid = e1.TAid
                                                     and e1.Vid in (select b.Vid
-                                                                    from FTDSolicitudProceso a
+                                                                    from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a
                                                                     where a.SPid = a.SPid)
                                                     and a1.HTpasosigue = c1.FTpasoactual
                                                     and e1.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">
                                             where a1.SPid = a.SPid 
-                                                and a1.HTfecha = (select max(b11.HTfecha) from FTHistoriaTramite b11 where b11.SPid = a1.SPid and HTcompleto = 1)
+                                                and a1.HTfecha = (select max(b11.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> b11 where b11.SPid = a1.SPid and HTcompleto = 1)
                                             )
                             </cfif>
                 where a.SPid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rsSiguientePaso.SPid#">
@@ -101,7 +101,7 @@
                </cfloop>
                <cfquery name="rsCambioPaso" datasource="#Session.DSN#" result="res">
                		select 1
-                    from FTDSolicitudProceso
+                    from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
                     where SPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#">
                     and coalesce(DScambiopaso,0) = 0
                </cfquery>
@@ -117,7 +117,7 @@
                     
                     <cfquery name="rsPostearEcabezado" datasource="#Session.DSN#">
                         select * 
-                        from  FTHistoriaTramite
+                        from  <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec">
                         where SPid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#">
                         and HTcompleto = 1
                         and HTpasosigue = 0
@@ -138,7 +138,7 @@
                                     , 1 as EDtipocambio
                                     , (select sum(x.DSPmonto) from FTDSolicitudProceso x where x.SPid = a.SPid) as EDtotal
                                     ,  a.* 
-                            from  FTSolicitudProceso a
+                            from  <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                             inner join SNegocios b
                             	on a.SNcodigo = b.SNcodigo
                             where SPid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#">
@@ -191,7 +191,7 @@
          
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTHistoriaTramite (Usucodigo
+                insert into <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> (Usucodigo
 												,HTfecha
 												,ETid
 												,TPid
@@ -220,7 +220,7 @@
             <cfset Lvar_Iid = rsInsert.Identity>
             
             <cfquery name="rsUpdate" datasource="#Session.DSN#">
-            	update FTDSolicitudProceso set 
+            	update <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> set 
                 	DScambiopaso = 	<cfif #Arguments.HTcompleto# EQ 0> 1 <cfelse> 0 </cfif>
                     where SPid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#">
                     <cfif #Arguments.HTcompleto# EQ 0> 
@@ -231,7 +231,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select Usucodigo,HTfecha,ETid,TPid,SPid,HTpasosigue
-                    from FTHistoriaTramite
+                    from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec">
                     where HTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

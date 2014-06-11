@@ -28,8 +28,9 @@
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr> 
 				<td valign="top">
+                	<cf_dbdatabase table="FTLugarPago " datasource="ftec" returnvariable="FTLugarPago">
 					<cfinvoke component="sif.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
-                    	<cfinvokeargument name="tabla" 				value="FTLugarPago"/>
+                    	<cfinvokeargument name="tabla" 				value="#FTLugarPago#"/>
                         <cfinvokeargument name="columnas"			value="LPid, LPcodigo, LPdescripcion, Ecodigo"/>
                         <cfinvokeargument name="desplegar"			value="LPcodigo, LPdescripcion"/>
                         <cfinvokeargument name="etiquetas"			value="C&oacute;digo, Descripci&oacute;n"/>

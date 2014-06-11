@@ -15,16 +15,7 @@ ICid
 ,ICcodigo
 ,ICcomentario
 ,ICperiodo
-from minisif..FTIComentario
+from minisif_ft..FTIComentario
 
 go
-
-select *
-from FTIComentario
-
-select * 
-from ftec..FTIComentario
-
-go
-
-sp_help FTIComentario
+ 

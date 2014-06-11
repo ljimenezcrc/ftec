@@ -40,8 +40,10 @@
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr> 
 				<td valign="top">
+                	 <cf_dbdatabase table="FTCostoAdmin" datasource="ftec" returnvariable = "FTCostoAdmin">
+                     
 					<cfinvoke component="sif.Componentes.pListas" method="pListaRH" returnvariable="pListaRet">
-                    	<cfinvokeargument name="tabla" 				value="FTCostoAdmin"/>
+                    	<cfinvokeargument name="tabla" 				value="#FTCostoAdmin#"/>
                         <cfinvokeargument name="columnas"			value="CAid,Ecodigo,CAcodigo, CAdescripcion, CAporcentaje, case when CAobligatorio = 1 then 'X' else '' end as CAobligatorio "/>
                         <cfinvokeargument name="desplegar"			value="CAcodigo, CAdescripcion, CAporcentaje, CAobligatorio"/>
                         <cfinvokeargument name="etiquetas"			value="#LB_Codigo#,#LB_Descripcion#,#LB_Porcentaje#,#LB_Obligatorio#"/>

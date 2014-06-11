@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select TTid, TTcodigo, TTdescripcion, Ecodigo
-				from FTTipoTramite
+				from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
 				where TTcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TTcodigo#" voidnull>
 		</cfquery>
 
@@ -30,7 +30,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTTipoTramite(	  Ecodigo
+                insert into <cf_dbdatabase table="FTTipoTramite" datasource="ftec">(	  Ecodigo
                                                 , TTcodigo
                                                 , TTdescripcion
                                                 )
@@ -48,7 +48,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select TTid, TTcodigo, TTdescripcion, Ecodigo
-					from FTTipoTramite
+					from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
                     where TTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -69,7 +69,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTTipoTramite
+                from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and TTcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TTcodigo#" voidnull>
             </cfquery>	
@@ -88,7 +88,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTTipoTramite set
+                update <cf_dbdatabase table="FTTipoTramite" datasource="ftec"> set
 	                     TTcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TTcodigo#" 		voidnull>
                         , TTdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TTdescripcion#" 	voidnull>
                 where TTid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.TTid#" voidnull>
@@ -97,7 +97,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select TTid, TTcodigo, TTdescripcion, Ecodigo
-					from FTTipoTramite
+					from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
                     where TTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TTid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

@@ -20,7 +20,8 @@
             	<cfinvokeargument name="Iid" 			value="#form.Iid#">
             	<cfinvokeargument name="ICcodigo" 		value="#form.ICcodigo#">
                 <cfinvokeargument name="ICcomentario"	value="#form.ICcomentario#">
-                <cfinvokeargument name="ICfecha"		value="#form.ICfecha#">
+                <cfinvokeargument name="ICfechadesde"	value="#form.ICfechadesde#">
+                <cfinvokeargument name="ICfechahasta"	value="#form.ICfechahasta#">
                 <cfinvokeargument name="ICperiodo"		value="#form.ICperiodo#">
                 <cfinvokeargument name="Debug"			value="false">
             </cfinvoke>
@@ -43,7 +44,8 @@
             <cfinvokeargument name="Iid" 			value="#form.Iid#">
             <cfinvokeargument name="ICcodigo" 		value="#form.ICcodigo#">
             <cfinvokeargument name="ICcomentario"	value="#form.ICcomentario#">
-            <cfinvokeargument name="ICfecha"		value="#form.ICfecha#">
+            <cfinvokeargument name="ICfechadesde"	value="#form.ICfechadesde#">
+            <cfinvokeargument name="ICfechahasta"	value="#form.ICfechahasta#">
             <cfinvokeargument name="ICperiodo"		value="#form.ICperiodo#">
             <cfinvokeargument name="Debug"			value="false">
         </cfinvoke>

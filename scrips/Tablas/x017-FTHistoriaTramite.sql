@@ -21,16 +21,7 @@ HTid
 ,DSPid
 ,HTpasosigue
 ,HTcompleto
-from minisif..FTHistoriaTramite
+from minisif_ft..FTHistoriaTramite
 
 go
-
-select *
-from FTHistoriaTramite
-
-select * 
-from ftec..FTHistoriaTramite
-
-go
-
-sp_help FTHistoriaTramite
+ 

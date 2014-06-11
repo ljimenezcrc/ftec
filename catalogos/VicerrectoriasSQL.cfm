@@ -27,7 +27,7 @@
 
 <cfif isdefined('form.Vid')>
 	<cfquery name="rsCF" datasource="#session.dsn#">
-		select Vcodigo from FTVicerrectoria where Vid=#form.Vid# and Ecodigo=#session.Ecodigo#
+		select Vcodigo from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> where Vid=#form.Vid# and Ecodigo=#session.Ecodigo#
 	</cfquery>
 </cfif>
 
@@ -244,13 +244,14 @@
     
     
             <cfif isdefined('rsGet') and rsGet.RecordCount EQ 0>
+            
                 <cfinvoke component="ftec.Componentes.FTVicerectorias" method="Alta"  returnvariable="Lvar_Iid">
                     <cfinvokeargument name="Vcodigo" 			value="#form.Vcodigo#">
                     <cfinvokeargument name="Vdescripcion" 		value="#form.Vdescripcion#">
                     <cfif isdefined('form.Vpkresp')> 
                         <cfinvokeargument name="Vpadre" 		value="#form.Vpkresp#">
                     </cfif>
-                    <cfif isdefined('form.CFid')> 
+                    <cfif isdefined('form.CFid') and len(form.CFid) GT 0> 
                     	<cfinvokeargument name="CFid" 	value="#form.CFid#">
                     </cfif>
                     <!---<cfinvokeargument name="Vctaingreso" 		value="#form.Vctaingreso#">
@@ -262,6 +263,8 @@
                     <cfelse> 
                         <cfinvokeargument name="Vesproyecto" value="0">
                     </cfif>
+                    
+                   
                     <cfinvokeargument name="Vfinicio" 			value="#form.Vfinicio#">
                     <cfinvokeargument name="Vffinal" 			value="#form.Vffinal#">
                     <cfif isdefined('form.Vestado')> 
@@ -312,9 +315,9 @@
                 <cfif isdefined('form.Vpkresp')> 
                     <cfinvokeargument name="Vpadre" 			value="#form.Vpkresp#">
                 </cfif>
-				<cfif isdefined('form.CFid')> 
-                    <cfinvokeargument name="CFid" 	value="#form.CFid#">
-                </cfif>
+				<cfif isdefined('form.CFid') and len(form.CFid) GT 0> 
+                    	<cfinvokeargument name="CFid" 	value="#form.CFid#">
+                    </cfif>
                 <!---<cfinvokeargument name="Vctaingreso" 		value="#form.Vctaingreso#">
                 <cfinvokeargument name="Vctagasto" 			value="#form.Vctagasto#">
                 <cfinvokeargument name="Vctasaldoinicial" 	value="#form.Vctasaldoinicial#">--->

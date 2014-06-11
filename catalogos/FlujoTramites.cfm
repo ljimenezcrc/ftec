@@ -28,10 +28,10 @@
                 , b.ETcodigo #_Cat# ' - ' #_Cat#  b.ETdescripcion as Estado
                 , c.TTcodigo #_Cat# ' - ' #_Cat# c.TTdescripcion as Tramite
                <!--- , d.TAcodigo #_Cat# ' - ' #_Cat# d.TAdescripcion as Autorizados--->
-            from FTFlujoTramite a
-                inner join FTEstadoTramite b
+            from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> a
+                inner join <cf_dbdatabase table="FTEstadoTramite" datasource="ftec"> b
                     on a.ETid = b.ETid
-                inner join FTTipoTramite c
+                inner join <cf_dbdatabase table="FTTipoTramite" datasource="ftec"> c
                     on a.TTid = c.TTid
                 <!---inner join FTTipoAutorizador d
                     on a.TAid = d.TAid--->

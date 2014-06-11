@@ -27,7 +27,7 @@
         FPid                 
         ,FPcodigo     
         ,FPdescripcion 
-	from FTFormaPago
+	from <cf_dbdatabase table="FTFormaPago" datasource="ftec"> 
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Session.Ecodigo#">
 	order by FPdescripcion
 </cfquery>
@@ -38,7 +38,7 @@
         LPid                 
         ,LPcodigo     
         ,LPdescripcion 
-	from FTLugarPago
+	from <cf_dbdatabase table="FTLugarPago " datasource="ftec">
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Session.Ecodigo#">
 	order by LPdescripcion
 </cfquery>
@@ -84,11 +84,11 @@
             ,e.SNnumero
             ,e.SNnombre
             ,e.SNvencompras
-        from FTSolicitudProceso a
-        inner join FTFormaPago c
+        from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
+        inner join <cf_dbdatabase table="FTFormaPago " datasource="ftec"> c
         	on a.FPid = c.FPid
             and a.Ecodigo = c.Ecodigo
-        left outer join FTLugarPago d
+        left outer join <cf_dbdatabase table="FTLugarPago " datasource="ftec"> d
         	on a.LPid = d.LPid
             and a.Ecodigo = d.Ecodigo
         left outer join SNegocios e
@@ -107,8 +107,8 @@
     <cfquery name="rsDSolicitudProcesos" datasource="#Session.DSN#">
         select a.*, b.Vcodigo as Vcodigoresp, b.Vdescripcion as Vdescripcionresp , b.Vid as Vpkresp
         ,c.Ccodigo, c.Cdescripcion
-        from  FTDSolicitudProceso a
-        inner join FTVicerrectoria b
+        from  <cf_dbdatabase table="FTDSolicitudProceso " datasource="ftec"> a
+        inner join <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> b
 	        on a.Vid = b.Vid       
         inner join Conceptos c
         	on a.Cid = c.Cid
@@ -506,32 +506,32 @@
                         ,a.Icodigo
                         ,a.DSPmontototal
                         ,#preservesinglequotes(Lvar_editarregistro)# as editar
-                    from FTDSolicitudProceso a
-                        inner join FTSolicitudProceso b
+                    from <cf_dbdatabase table="FTDSolicitudProceso " datasource="ftec"> a
+                        inner join <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> b
                             on a.SPid = b.SPid
-                        inner join FTVicerrectoria c
+                        inner join <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> c
                             on a.Vid = c.Vid
                             and a.Ecodigo = c.Ecodigo
                             <cfif modo EQ 'CAMBIO' and isdefined('form.Tramite')>
                             	and a.Vid in (
                                             select e1.Vid
-                                            from FTHistoriaTramite a1
-                                                inner join FTTipoProceso b1
+                                            from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> a1
+                                                inner join <cf_dbdatabase table="FTTipoProceso " datasource="ftec"> b1
                                                     on a1.TPid = b1.TPid
-                                                inner join FTFlujoTramite c1
+                                                inner join <cf_dbdatabase table="FTFlujoTramite " datasource="ftec"> c1
                                                     on b1.TTid = c1.TTid
-                                                inner join FTDFlujoTramite d1
+                                                inner join <cf_dbdatabase table="FTDFlujoTramite " datasource="ftec"> d1
                                                     on c1.FTid = d1.FTid
-                                                inner join FTAutorizador e1
+                                                inner join <cf_dbdatabase table="FTAutorizador " datasource="ftec"> e1
                                                     on d1.TAid = e1.TAid
                                                     and e1.Vid in (select a.Vid
-                                                                    from FTDSolicitudProceso a
+                                                                    from <cf_dbdatabase table="FTDSolicitudProceso " datasource="ftec"> a
                                                                     where A.SPid = a.SPid
                                                                     and coalesce(a.DScambiopaso,0) = 0)
                                                     and a1.HTpasosigue = c1.FTpasoactual
                                                     and e1.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">
                                             where a1.SPid = a.SPid 
-                                                and a1.HTfecha = (select max(b11.HTfecha) from FTHistoriaTramite b11 where b11.SPid = a1.SPid and HTcompleto = 1)
+                                                and a1.HTfecha = (select max(b11.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> b11 where b11.SPid = a1.SPid and HTcompleto = 1)
                                             )
                             </cfif>
                                             
@@ -544,8 +544,8 @@
                 <cfquery name="rsListaTotal" datasource="#Session.DSN#">		
                     select 
                         sum(a.DSPmontototal) as Total
-                    from FTDSolicitudProceso a
-                        inner join FTSolicitudProceso b
+                    from <cf_dbdatabase table="FTDSolicitudProceso " datasource="ftec"> a
+                        inner join <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> b
                             on a.SPid = b.SPid
                     where b.SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.SPid#">
                 </cfquery>	

@@ -127,8 +127,8 @@
                                         , a.Mcodigo
                                         , a.Vmonto
                                         , a.Usucodigo
-                                	from FTVicerrectoria a
-                                    inner join FTAutorizador b
+                                	from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
+                                    inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec">  b
                                     	on a.Vid = b.Vid
                                     where  a.Ecodigo =  #session.Ecodigo# 
 										<cfif isdefined("form.Vcodigof") and len(trim(form.Vcodigof))NEQ 0>

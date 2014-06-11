@@ -1,7 +1,7 @@
 SET IDENTITY_INSERT ftec..FTTipoProceso ON
 go
 
-insert into ftec..FTSolicitudProceso 
+insert into ftec..FTTipoProceso 
 (TPid
 ,TPcodigo
 ,TPdescripcion
@@ -16,16 +16,8 @@ TPid
 ,TTid
 ,SPid
 
-from minisif..FTTipoProceso
+from minisif_ft..FTTipoProceso
 
 go
 
-select *
-from FTTipoProceso
-
-select * 
-from ftec..FTTipoProceso
-
-go
-
-sp_help FTTipoProceso
+ 

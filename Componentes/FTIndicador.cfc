@@ -23,7 +23,7 @@
                     ,Ivalormeta	
                     ,Irangoacepta	
                     ,Iobservacion
-				from FTIndicador
+				from <cf_dbdatabase table="FTIndicador" datasource="ftec">
 				where Icodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.Icodigo#" voidnull>
 		</cfquery>
 
@@ -59,7 +59,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTIndicador( Ecodigo
+                insert into <cf_dbdatabase table="FTIndicador" datasource="ftec">( Ecodigo
                                         ,Icodigo	
                                         ,Idescripcion	
                                         ,Ifecha	
@@ -116,7 +116,7 @@
                         ,Ivalormeta	
                         ,Irangoacepta	
                         ,Iobservacion
-                        from FTIndicador
+                        from <cf_dbdatabase table="FTIndicador" datasource="ftec">
                     where LPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -137,7 +137,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTIndicador
+                from <cf_dbdatabase table="FTIndicador" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and Icodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.Icodigo#" voidnull>
             </cfquery>	
@@ -168,7 +168,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTIndicador set
+                update <cf_dbdatabase table="FTIndicador" datasource="ftec"> set
 	                     Icodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.Icodigo#"			voidnull>
                         ,Idescripcion	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.Idescripcion#" 	voidnull>
                         ,Ifecha			= <cf_jdbcquery_param cfsqltype="cf_sql_date" 	value="#Arguments.Ifecha#"			voidnull>
@@ -204,7 +204,7 @@
                         ,Ivalormeta	
                         ,Irangoacepta	
                         ,Iobservacion
-					from FTIndicador
+					from <cf_dbdatabase table="FTIndicador" datasource="ftec">
                     where LPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.LPid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

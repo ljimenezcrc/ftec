@@ -34,14 +34,6 @@ Vid
 ,Mcodigo
 ,Vmonto
 ,Usucodigo
-,CFid from minisif..FTVicerrectoria
-
-go
-
-select *
-from FTVicerrectoria
-
-select *
-from ftec..FTVicerrectoria
+,CFid from minisif_ft..FTVicerrectoria
 
 go

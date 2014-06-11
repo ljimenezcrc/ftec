@@ -81,8 +81,8 @@
         <cfquery name="rsInsertDDocCP" datasource="#session.DSN#">
             select a.SPid,a.Vid,a.Cid,a.Ecodigo,a.Icodigo,a.DSPid,
                 a.DSPdocumento,a.DSPdescripcion,a.DSPobjeto,a.DSPmonto,a.DScambiopaso, c.CFid, a.Ccuenta, a.CFcuenta
-                from  FTDSolicitudProceso a
-                inner join FTVicerrectoria b
+                from  <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a
+                inner join <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> b
                     on a.Vid =  b.Vid
                 inner join CFuncional c
                     on b.CFid = c.CFid

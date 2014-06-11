@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			 select CAid, CAcodigo, CAdescripcion, CAporcentaje, CAobligatorio, Ecodigo
-                from FTCostoAdmin
+                from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">
 				where CAcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.CAcodigo#" voidnull>
 		</cfquery>
 
@@ -35,7 +35,7 @@
         
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTCostoAdmin(	  Ecodigo
+                insert into <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">(	  Ecodigo
                                                 , CAcodigo
                                                 , CAdescripcion
                                                 , CAporcentaje
@@ -59,7 +59,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CAid, CAcodigo, CAdescripcion, CAporcentaje, CAobligatorio, Ecodigo
-                    from FTCostoAdmin
+                    from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">
                     where CAid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -80,7 +80,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTCostoAdmin
+                from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and CAcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.CAcodigo#" voidnull>
             </cfquery>	
@@ -102,7 +102,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTCostoAdmin set
+                update <cf_dbdatabase table="FTCostoAdmin" datasource="ftec"> set
 	                     CAcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.CAcodigo#" 		voidnull>
                         , CAdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.CAdescripcion#" 	voidnull>
                         , CAporcentaje	= <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.CAporcentaje#" 		voidnull>
@@ -114,7 +114,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select CAid, CAcodigo, CAdescripcion, CAporcentaje, CAobligatorio, Ecodigo
-                    from FTCostoAdmin
+                    from <cf_dbdatabase table="FTCostoAdmin" datasource="ftec">
                     where CAid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

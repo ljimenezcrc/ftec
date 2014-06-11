@@ -41,16 +41,27 @@
         </tr>
         
         <tr>
-            <td align="right" nowrap>Fecha de actualización:</td>
+            <td align="right" nowrap>Fecha Inicio Análisis:</td>
             <td>
                 <cfif modoCO neq 'ALTA'>
-                    <cf_sifcalendario  form= "Fcomentario" name="ICfecha" value="#LSDateFormat(rsComentarios.ICfecha,'dd/mm/yyyy')#">
+                    <cf_sifcalendario  form= "Fcomentario" name="ICfechadesde" value="#LSDateFormat(rsComentarios.ICfechadesde,'dd/mm/yyyy')#">
                 <cfelse>
-                    <cf_sifcalendario  form= "Fcomentario" name="ICfecha" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
+                    <cf_sifcalendario  form= "Fcomentario" name="ICfechadesde" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
                 </cfif>
             </td>
 		</tr>
         
+        <tr>
+            <td align="right" nowrap>Fecha Final Análisis:</td>
+            <td>
+                <cfif modoCO neq 'ALTA'>
+                    <cf_sifcalendario  form= "Fcomentario" name="ICfechahasta" value="#LSDateFormat(rsComentarios.ICfechahasta,'dd/mm/yyyy')#">
+                <cfelse>
+                    <cf_sifcalendario  form= "Fcomentario" name="ICfechahasta" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
+                </cfif>
+            </td>
+		</tr>
+         
         <tr>
             <td align="right" nowrap>Periódo:</td>
            <td><input name="ICperiodo" type="text" id="ICperiodo" tabindex="1"value="<cfif #modoCO# NEQ "ALTA">#HTMLEditFormat(rsComentarios.ICperiodo)#</cfif>"  size="20" maxlength="20"  alt="Periódo" ></td>

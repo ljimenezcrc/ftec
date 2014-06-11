@@ -35,16 +35,7 @@ Iid
 ,Ivalormeta
 ,Irangoacepta
 ,Iobservacion
-from minisif..FTIndicador
+from minisif_ft..FTIndicador
 
 go
-
-select *
-from FTIndicador
-
-select * 
-from ftec..FTIndicador
-
-go
-
-sp_help FTIndicador
+ 

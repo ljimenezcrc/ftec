@@ -8,7 +8,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select ETid, ETcodigo, ETdescripcion, Ecodigo
-				from FTEstadoTramite
+				from <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">
 				where ETcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.ETcodigo#" voidnull>
 		</cfquery>
 
@@ -30,7 +30,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTEstadoTramite(	  Ecodigo
+                insert into <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">(	  Ecodigo
                                                 , ETcodigo
                                                 , ETdescripcion
                                                 )
@@ -48,7 +48,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select ETid, ETcodigo, ETdescripcion, Ecodigo
-					from FTEstadoTramite
+					from <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">
                     where ETid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
                 <cfdump var="#Arguments#">
@@ -69,7 +69,7 @@
         <cftransaction>   
             <cfquery name="rsDebug" datasource="#Session.DSN#">
                 delete 
-                from FTEstadoTramite
+                from <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">
                 where Ecodigo = #Session.Ecodigo#
                 	and ETcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.ETcodigo#" voidnull>
             </cfquery>	
@@ -88,7 +88,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTEstadoTramite set
+                update <cf_dbdatabase table="FTEstadoTramite" datasource="ftec"> set
 	                     ETcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ETcodigo#" 		voidnull>
                         , ETdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.ETdescripcion#" 	voidnull>
                 where ETid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.ETid#" voidnull>
@@ -97,7 +97,7 @@
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
                     select ETid, ETcodigo, ETdescripcion, Ecodigo
-					from FTEstadoTramite
+					from <cf_dbdatabase table="FTEstadoTramite" datasource="ftec">
                     where ETid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.ETid#">
                 </cfquery>
                 <cfdump var="#Arguments#">

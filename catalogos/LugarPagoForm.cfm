@@ -13,7 +13,7 @@
 <cfif isDefined("session.Ecodigo") and isDefined("Form.LPcodigo") and len(trim(#Form.LPcodigo#)) NEQ 0>
 	<cfquery name="rsTipos" datasource="#Session.DSN#" >
 	Select *
-	from FTLugarPago
+	from <cf_dbdatabase table="FTLugarPago " datasource="ftec">
 	where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
 		and LPcodigo = <cfqueryparam cfsqltype="cf_sql_char" value="#Form.LPcodigo#" >		  
 		order by LPcodigo asc

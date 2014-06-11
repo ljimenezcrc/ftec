@@ -102,12 +102,13 @@ MM_reloadPage(true);
 		and ltrim(rtrim(CFpath)) = 'RAIZ'
 </cfquery>
 
-<cf_dump var="#rsCFraiz#">
+<!---<cf_dump var="#rsCFraiz#">--->
 
 <!--- ================================================================ --->
 
 <cfif rsCFraiz.recordCount NEQ 1>
 	<cftransaction>
+
 	<cfquery name="rsDpto" datasource="#Session.DSN#">
 			select min(Dcodigo) as id from Departamentos where Ecodigo=#session.Ecodigo#
 	</cfquery>

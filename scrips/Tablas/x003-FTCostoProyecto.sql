@@ -23,16 +23,6 @@ CPid
 ,CPdistribuido
 ,CPvalorcatalogo
 ,Usucodigo
-from minisif..FTCostoProyecto
+from minisif_ft..FTCostoProyecto
 
 go
-
-select *
-from FTCostoProyecto
-
-select *
-from ftec..FTCostoProyecto
-
-go
-
-sp_help FTCostoProyecto

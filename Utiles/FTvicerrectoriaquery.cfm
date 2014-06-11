@@ -8,7 +8,7 @@
 	
     <cfquery name="rs" datasource="#url.conexion#">
         select Vid, rtrim(ltrim(Vcodigo)) as Vcodigo, Vdescripcion
-        from FTVicerrectoria
+        from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
         where Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.ecodigo#">
         and rtrim(ltrim(upper(Vcodigo))) = <cfqueryparam cfsqltype="cf_sql_char" value="#Ucase(Trim(url.dato))#">
         <cfif isdefined("url.excluir") and len(trim(url.excluir )) and url.excluir neq -1>

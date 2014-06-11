@@ -21,16 +21,6 @@ Aid
 ,Ecodigo
 ,Ainactivo
 ,TAresponsable
-from minisif..FTAutorizador
+from minisif_ft..FTAutorizador
 
 go
-
-select *
-from FTAutorizador
-
-select *
-from ftec..FTAutorizador
-
-go
-
-sp_help FTAutorizador

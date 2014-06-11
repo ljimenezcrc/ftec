@@ -32,7 +32,7 @@
             , ta.Ainactivo
             , ta.TAresponsable
             , z.TAcodigo #_Cat# ' - ' #_Cat# z.TAdescripcion as TipoAutorizador
-		from FTAutorizador ta
+		from <cf_dbdatabase table="FTAutorizador " datasource="ftec"> ta
 			inner join Usuario u
 				on u.Usucodigo=ta.Usucodigo
 					and u.Uestado = 1 
@@ -40,10 +40,10 @@
 					and u.CEcodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#session.CEcodigo#">
 			inner join DatosPersonales dp
 				on dp.datos_personales =u.datos_personales
-            inner join FTTipoAutorizador z
+            inner join <cf_dbdatabase table="FTTipoAutorizador " datasource="ftec"> z
             	on ta.TAid = z.TAid
 		where ta.Ecodigo=<cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
-			and Vid = (select Vid from FTVicerrectoria where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
+			and Vid = (select Vid from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
 			and ta.Usucodigo=<cfqueryparam cfsqltype="cf_sql_numeric" value="#form.Usucodigo#">
 	</cfquery>
 </cfif>
@@ -57,7 +57,7 @@
     ,TAmontomax	
     ,Ecodigo	
     ,Usucodigo	   
-    from FTTipoAutorizador
+    from <cf_dbdatabase table="FTTipoAutorizador " datasource="ftec">
     where Ecodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#session.Ecodigo#">
     order by TAdescripcion 
 </cfquery>
@@ -103,9 +103,9 @@
 		<cfelse>
 			<!--- Lista de Usuarios Autorizados --->
 			<cfquery name="rsUsuariosAutorizados" datasource="#Session.DSN#">
-				select distinct Usucodigo from FTAutorizador 
+				select distinct Usucodigo from <cf_dbdatabase table="FTAutorizador " datasource="ftec"> 
 				where Ecodigo = <cfqueryparam value="#session.Ecodigo#" cfsqltype="cf_sql_integer">
-				and Vid = (select Vid from FTVicerrectoria where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
+				and Vid = (select Vid from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec">  where Vcodigo ='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#)
 			</cfquery>
 	
 			<cfset filtroExtra = "">
@@ -272,7 +272,7 @@
 	<tr><td colspan="2" align="center">
 	<cfif isdefined ('form.Vcodigo') and len(trim(form.Vcodigo)) gt 0>
 		<cfquery name="rsCFid" datasource="#session.dsn#">
-			select Vid from FTVicerrectoria where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
+			select Vid from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> where Vcodigo='#form.Vcodigo#' and Ecodigo=#session.Ecodigo#
 		</cfquery>
 		<cfif rsCFid.recordcount gt 0>
 			<input type="hidden" name="Vid" value="#rsCFid.Vid#" />

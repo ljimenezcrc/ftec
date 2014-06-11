@@ -17,8 +17,10 @@ create table FTDSolicitudProceso (
    DSPmonto             money                          null,
    DScambiopaso         int                            null,
    DSPimpuesto          money                          null,
+   DSPmontototal        money                          null,
    constraint PK_FTDSOLICITUDPROCESO primary key (DSPid)
 )
+
 go
 
 alter table FTDSolicitudProceso

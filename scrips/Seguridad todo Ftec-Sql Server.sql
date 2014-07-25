@@ -1,3 +1,4 @@
+-- alter table SModulos add IconFonts   varchar(256) null
  -- Exportación del sistema FTEC
  -- SYBASE: isql -Usa -Ppasswd -Sserver_name -D asp -i framework-app.sql 
  

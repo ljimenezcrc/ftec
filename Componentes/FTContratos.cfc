@@ -41,7 +41,11 @@
 	<cffunction name="Delete" hint="Funcion para Eliminar los contratos">
 		<cfargument name="Cid" 		type="numeric" 	required="yes">
 		<cfargument name="conexion" type="string"  required="no" default="ftec">
-				
+		
+		<cfquery name="rssql" datasource="#Arguments.conexion#">
+			Delete from FTSecciones
+			where Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
+		</cfquery>	
 		<cfquery name="rssql" datasource="#Arguments.conexion#">
 			Delete from FTContratos
 			where Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">

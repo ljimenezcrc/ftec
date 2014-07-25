@@ -27,7 +27,7 @@
 			<td align="right">Trámite:</td>
 			<td>
 				<select name="CidTramite" id="CidTramite">
-					<option value="">Sin contrato</option>
+					<option value="">Sin Trámite</option>
 				</select>
 			</td>
 		</tr>	
@@ -81,14 +81,18 @@
 		<cf_tab text="Información Variable de la Sección">
 		</cf_tab>
 	</cf_tabs>
-<cfelse>
+<cfelseif LEN(TRIM(rsContrato.Cid))>
 	<div class="alert alert-info">
 		Pulse el boton "Agregar sección" para agregar nuevas clausulas
+	</div>
+<cfelse>
+	<div class="alert alert-info">
+		Pulse el boton "Guardar Encabezado Contrato" para agregar crear un contrato
 	</div>
 </cfif>
 COSAS QUE FALTAN:<br />
 -Mensajes de confirmación de las acciones<br />
--Al eliminar los contratos se debe eliminas las secciones y los datos variables asociados a las secciones<br />
+-Homologación de Variables del contrato<br />
 
 <script language="javascript" type="text/javascript">
 	function Editar(Sid){

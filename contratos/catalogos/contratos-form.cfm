@@ -42,37 +42,53 @@
 				<div class="btn-group">
 				<input type="submit" name="btnRegresar" class="btn btn-success"  value="Lista" />
 				<input type="submit" name="btnGuardar"  class="btn btn-primary"  value="Guardar Encabezado Contrato" />
+				<cfif LEN(TRIM(form.Cid))>
 				<input type="submit" name="btnGSeccion" class="btn btn-info"     value="Agregar Sección" />
 				<input type="submit" name="btnEliminar" class="btn btn-danger"   value="Eliminar Contrato" />
+				</cfif>
 				</div>
 			</td>
 		</tr>
 	</table>
 </form>
+
 <cfif rsSeccion.RecordCount>
-	<div class="alert alert-info">
-		<cfloop query="rsSeccion">
-			<div ondblclick="Editar(<cfoutput>#rsSeccion.Sid#</cfoutput>);">
-				<form name="formSeccion_<cfoutput>#rsSeccion.Sid#</cfoutput>" action="contratos.cfm" method="post">
-					<input type="hidden" name="Sid" 		value="<cfoutput>#rsSeccion.Sid#</cfoutput>">
-					<input type="hidden" name="Cid" 		value="<cfoutput>#rsSeccion.Cid#</cfoutput>">
-					<input type="hidden" name="btnGSeccion" value="<cfoutput>#rsSeccion.Sid#</cfoutput>">
-					<div id="Text_<cfoutput>#rsSeccion.Sid#</cfoutput>"><cfoutput>#rsSeccion.STexto#</cfoutput></div>
-					<div class="Editor" id="Edit_<cfoutput>#rsSeccion.Sid#</cfoutput>">
-						<div class="cke_inner cke_reset Controles">
-							<select name="Cpermisos" id="Cpermisos">
-								<option value="M" <cfif rsSeccion.Cpermisos EQ 'M'>selected="selected"</cfif>>Modificable</option>
-								<option value="N" <cfif rsSeccion.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
-								<option value="E" <cfif rsSeccion.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
-							</select>
-						</div>
-						<cf_rheditorhtml name="editor_#rsSeccion.Sid#" value="#rsSeccion.STexto#" height="400" toolbarset="Default" type="full">
+	<cf_tabs width="100%">
+		<cf_tab text="Secciones del Contrato">
+			<div class="alert alert-info">
+				<cfloop query="rsSeccion">
+					<div ondblclick="Editar(<cfoutput>#rsSeccion.Sid#</cfoutput>);">
+						<form name="formSeccion_<cfoutput>#rsSeccion.Sid#</cfoutput>" action="contratos.cfm" method="post">
+							<input type="hidden" name="Sid" 		value="<cfoutput>#rsSeccion.Sid#</cfoutput>">
+							<input type="hidden" name="Cid" 		value="<cfoutput>#rsSeccion.Cid#</cfoutput>">
+							<input type="hidden" name="btnGSeccion" value="<cfoutput>#rsSeccion.Sid#</cfoutput>">
+							<div id="Text_<cfoutput>#rsSeccion.Sid#</cfoutput>"><cfoutput>#rsSeccion.STexto#</cfoutput></div>
+							<div class="Editor" id="Edit_<cfoutput>#rsSeccion.Sid#</cfoutput>">
+								<div class="cke_inner cke_reset Controles">
+									<select name="Cpermisos" id="Cpermisos">
+										<option value="M" <cfif rsSeccion.Cpermisos EQ 'M'>selected="selected"</cfif>>Modificable</option>
+										<option value="N" <cfif rsSeccion.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
+										<option value="E" <cfif rsSeccion.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
+									</select>
+								</div>
+								<cf_rheditorhtml ControlsE="[ 'Save']," name="editor_#rsSeccion.Sid#" value="#rsSeccion.STexto#" height="400" toolbarset="Default" type="full">
+							</div>
+						</form>
 					</div>
-				</form>
+				</cfloop>
 			</div>
-		</cfloop>
+		</cf_tab>
+		<cf_tab text="Información Variable de la Sección">
+		</cf_tab>
+	</cf_tabs>
+<cfelse>
+	<div class="alert alert-info">
+		Pulse el boton "Agregar sección" para agregar nuevas clausulas
 	</div>
 </cfif>
+COSAS QUE FALTAN:<br />
+-Mensajes de confirmación de las acciones<br />
+-Al eliminar los contratos se debe eliminas las secciones y los datos variables asociados a las secciones<br />
 
 <script language="javascript" type="text/javascript">
 	function Editar(Sid){

@@ -26,11 +26,14 @@
 	</cffunction>	
 	<!---Funcion para la obtencion las secciones del contrato--->
 	<cffunction name="getSeccion" returntype="query" hint="Funcion para la obtencion las secciones del contrato">
-	<cfargument name="conexion" type="string"  required="no" default="ftec">
+		<cfargument name="Cid" 		type="numeric" 	required="yes">
+		<cfargument name="conexion" type="string"   required="no" default="ftec">
 	
 		<cfquery name="rssql" datasource="#Arguments.conexion#">
 			select Sid, Cid, STexto, SOrden,Cpermisos, Ecodigo, Usucodigo
-			from FTSecciones
+			 from FTSecciones
+			where 1 = 1
+			  and Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
 		</cfquery>
 		<cfreturn rssql>
 	</cffunction>
@@ -94,7 +97,7 @@
 	<cffunction name="SetSeccion" returntype="numeric" hint="Funcion paa crear y Actualizar Secciones del contrato">
 		<cfargument name="Sid" 			type="numeric" 	required="no">
 		<cfargument name="Cid" 			type="numeric" 	required="no">
-		<cfargument name="STexto" 		type="string" 	required="no" default="NUEVA SECION DEL CONTRATO.<BR> DOBLE CLICK PARA EDITAR">
+		<cfargument name="STexto" 		type="string" 	required="no" default="DOBLE CLICK PARA EDITAR">
 		<cfargument name="SOrden" 		type="numeric" 	required="no" default="1">
 		<cfargument name="Cpermisos" 	type="string" 	required="no" default="M">
 		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
@@ -106,6 +109,9 @@
 		</cfif>
 		<cfif isdefined('session.Usucodigo') and not isdefined('Arguments.Usucodigo')>
 			<cfset Arguments.Usucodigo = session.Usucodigo>
+		</cfif>
+		<cfif NOT LEN(TRIM(Arguments.STexto))>
+			<cfset Arguments.STexto = "DOBLE CLICK PARA EDITAR">
 		</cfif>
 
 		<cfif isdefined('Arguments.Sid')>

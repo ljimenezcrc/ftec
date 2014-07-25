@@ -15,16 +15,6 @@
 					</cfloop>
 				</select>
 			</td>
-			<td align="right">Permisos:</td>
-			<td>
-				<select name="Cpermisos" id="Cpermisos">
-					<option value="M" <cfif rsContrato.Cpermisos EQ 'M'>selected="selected"</cfif>>Modificable</option>
-					<option value="N" <cfif rsContrato.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
-					<option value="E" <cfif rsContrato.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
 			<td align="right">Estado:</td>
 			<td>
 				<select name="Cestado" id="Cestado">
@@ -32,6 +22,8 @@
 					<option value="A" <cfif rsContrato.Cestado EQ 'A'>selected="selected"</cfif>>Activo</option>
 				</select>
 			</td>
+		</tr>
+		<tr>
 			<td align="right">Trámite:</td>
 			<td>
 				<select name="CidTramite" id="CidTramite">
@@ -69,9 +61,9 @@
 					<div class="Editor" id="Edit_<cfoutput>#rsSeccion.Sid#</cfoutput>">
 						<div class="cke_inner cke_reset Controles">
 							<select name="Cpermisos" id="Cpermisos">
-								<option value="M" <cfif rsContrato.Cpermisos EQ 'M'>selected="selected"</cfif>>Modificable</option>
-								<option value="N" <cfif rsContrato.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
-								<option value="E" <cfif rsContrato.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
+								<option value="M" <cfif rsSeccion.Cpermisos EQ 'M'>selected="selected"</cfif>>Modificable</option>
+								<option value="N" <cfif rsSeccion.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
+								<option value="E" <cfif rsSeccion.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
 							</select>
 						</div>
 						<cf_rheditorhtml name="editor_#rsSeccion.Sid#" value="#rsSeccion.STexto#" height="400" toolbarset="Default" type="full">

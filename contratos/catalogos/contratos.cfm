@@ -1,7 +1,6 @@
 <cfparam name="rsContrato.Cid" 			default="">
 <cfparam name="rsContrato.TCid" 		default="">
 <cfparam name="rsContrato.Cdescripcion"	default="">
-<cfparam name="rsContrato.Cpermisos" 	default="">
 <cfparam name="rsContrato.Cestado" 		default="">
 <cfparam name="rsContrato.Ecodigo" 		default="">
 <cfparam name="rsContrato.Usucodigo" 	default="">
@@ -23,7 +22,6 @@
 			<cfinvokeargument name="TCid" 			value="#form.TCid#">
 		</cfif>
 			<cfinvokeargument name="Cdescripcion" 	value="#form.Cdescripcion#">
-			<cfinvokeargument name="Cpermisos" 		value="#form.Cpermisos#">
 			<cfinvokeargument name="Cestado" 		value="#form.Cestado#">
 	</cfinvoke>
 	<cfset form.Cid = LvarCid>
@@ -43,8 +41,9 @@
 			<cfinvokeargument name="Cid" value="#form.Cid#">
 		</cfif>
 		<cfif isdefined('form.Sid')>
-			<cfinvokeargument name="Sid" 	value="#form.Sid#">
-			<cfinvokeargument name="STexto" value="#Evaluate('form.Editor_' & form.Sid)#">
+			<cfinvokeargument name="Sid" 		value="#form.Sid#">
+			<cfinvokeargument name="Cpermisos" 	value="#form.Cpermisos#">
+			<cfinvokeargument name="STexto" 	value="#FORM['Editor_' & form.Sid]#">
 		</cfif>
 	</cfinvoke>
 </cfif>

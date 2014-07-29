@@ -8,10 +8,9 @@
 
 <cf_navegacion name="form.Cid" default="">
 <cf_importLibs>
-<cfinvoke component="ftec.Componentes.FTContratos" method="getTipo" returnvariable="rsTipoContrato">
-</cfinvoke>
-<cfinvoke component="ftec.Componentes.FTContratos" method="get" returnvariable="rsContratoAll">
-</cfinvoke>
+
+<cfinvoke component="ftec.Componentes.FTContratos" method="getTipo" returnvariable="rsTipoContrato"></cfinvoke>
+<cfinvoke component="ftec.Componentes.FTContratos" method="get" returnvariable="rsContratoAll"></cfinvoke>
 <!---Guarda el Contrato--->
 <cfif isdefined('form.btnGuardar')>
 	<cfinvoke component="ftec.Componentes.FTContratos" method="set" returnvariable="LvarCid">

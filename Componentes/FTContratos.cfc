@@ -16,14 +16,14 @@
 	</cffunction>
 	<!---Funcion para la obtencion de los datos del tipo de contrato--->
 	<cffunction name="getTipo" returntype="query" hint="Funcion para la obtencion de los datos del tipo de contrato">
-	<cfargument name="conexion" type="string"  required="no" default="ftec">
-			
+		<cfargument name="conexion" type="string"  required="no" default="ftec">
 		<cfquery name="rssql" datasource="#Arguments.conexion#">
 			select TCid,Ecodigo,TCcodigo,TCdescripcion,Usucodigo
 			from FTTipoContrato 
 		</cfquery>
 		<cfreturn rssql>
 	</cffunction>	
+    
 	<!---Funcion para la obtencion las secciones del contrato--->
 	<cffunction name="getSeccion" returntype="query" hint="Funcion para la obtencion las secciones del contrato">
 		<cfargument name="Cid" 		type="numeric" 	required="yes">

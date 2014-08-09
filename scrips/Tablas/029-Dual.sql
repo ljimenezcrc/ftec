@@ -1,0 +1,1 @@
+create table dual (dummy varchar(1) null)

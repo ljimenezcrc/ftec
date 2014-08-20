@@ -106,7 +106,7 @@
 		<cfargument name="Cpermisos" 	type="string" 	required="no" default="M">
 		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
 		<cfargument name="Usucodigo" 	type="numeric" 	required="no">
-		<cfargument name="conexion" type="string"  required="no" default="ftec">
+		<cfargument name="conexion" 	type="string"  required="no" default="ftec" hint="Nombre del Datasource">
 		
 		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
 			<cfset Arguments.Ecodigo = session.Ecodigo>
@@ -133,7 +133,7 @@
 					Usucodigo = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Usucodigo#">
 				  where   Sid = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Sid#">
 			</cfquery>
-			<cfreturn Arguments.Sid>
+			<cfset LvarSid =  Arguments.Sid>
 		<cfelse>
 			<cfquery name="rssql" datasource="#Arguments.Conexion#">
 				insert into FTSecciones (Cid, STexto, SOrden, Cpermisos, Ecodigo, Usucodigo)
@@ -148,7 +148,96 @@
 				<cf_dbidentity1 datasource="#Arguments.Conexion#">
 			</cfquery>
 				<cf_dbidentity2 datasource="#Arguments.Conexion#" name="rssql" returnVariable="LvarSid"> 
-			<cfreturn LvarSid>
+			
 		</cfif>
+		<cfset SetDatosVariable(LvarSid,Arguments.STexto)>
+		<cfreturn LvarSid>
+	</cffunction>
+	
+	<cffunction name="SetDatosVariable" access="public" hint="Funcion que recupera los datos variables de las secciones">
+		<cfargument name="Sid" 			type="numeric" 	required="no" hint="Id de la seccion del contrato">
+		<cfargument name='STexto' 	    type='string' 	required="yes">
+		<cfargument name="TVariables" 	type="numeric" 	required="no" default="1" hint="Tipo de Variable: 1 = dato variable">
+		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
+		<cfargument name="Usucodigo" 	type="numeric" 	required="no">
+		<cfargument name="conexion" 	type="string"  required="no" default="ftec" hint="Nombre del DataSource">
+		
+		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
+			<cfset Arguments.Ecodigo = session.Ecodigo>
+		</cfif>
+		<cfif isdefined('session.Usucodigo') and not isdefined('Arguments.Usucodigo')>
+			<cfset Arguments.Usucodigo = session.Usucodigo>
+		</cfif>
+			
+		<cfset texto          = Arguments.STexto>
+		<cfset cont           = 1>
+     	<cfset variblesNuevas = ArrayNew(1)>
+       	<cfset ch             =''>
+       	<cfset variable       ="" >
+     	<cfset inicia         = false>
+		
+        <cfloop from="0" to="#LEN(texto)-1#" index="i">
+       		<cfset ch = texto.charAt(i)>
+			<cfif ch eq '##' AND inicia EQ false>
+            	<cfset variable="">
+            	<cfset inicia = true> 
+            <cfelseif inicia EQ true AND  ch NEQ '##'>
+             	<cfset variable = variable & ch>
+            <cfelseif inicia EQ true AND  ch EQ '##'>
+            	<cfset variblesNuevas [cont]= variable>
+                <cfset cont = cont+1 >
+   
+				<cfquery datasource="#Arguments.conexion#" name="rsInserto">
+					INSERT INTO FTSeccionesD (Sid,TVariables,Variable,SDReport,Ecodigo,Usucodigo)
+					SELECT 
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#"> ,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric"   			value="#Arguments.TVariables#">,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="60"  	value="#variable#">,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric"				value="1">,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Ecodigo#">,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Usucodigo#">
+					 from dual
+					 where (select Count(1) 
+							 from FTSeccionesD 
+							where Sid      = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
+							  and Variable = <cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="100"  	value="#variable#">) = 0
+				</cfquery>
+                <cfset variable="" >
+                <cfset inicia = false>
+            </cfif>
+       </cfloop>
+	   <cfquery datasource="#Arguments.conexion#">
+	   		delete from FTSeccionesD
+			where Sid = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
+			  and Variable not in (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ArrayToList(variblesNuevas)#" list="yes">)			 
+	   </cfquery>
+	   
+	</cffunction>
+	
+	<!---Funcion que retorna todas las variables de las secciones--->
+	<cffunction name="getFTSeccionesD" returntype="query" hint="Funcion que retorna todas las variables de las secciones">
+		<cfargument name="Cid" 			type="numeric" 	required="no" hint="Id del contrato">
+		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
+		<cfargument name="Usucodigo" 	type="numeric" 	required="no">
+		<cfargument name="conexion" 	type="string"   required="no" default="ftec">
+		
+		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
+			<cfset Arguments.Ecodigo = session.Ecodigo>
+		</cfif>
+		<cfif isdefined('session.Usucodigo') and not isdefined('Arguments.Usucodigo')>
+			<cfset Arguments.Usucodigo = session.Usucodigo>
+		</cfif>
+		
+		<cfquery name="rsFTSeccionesD" datasource="#Arguments.Conexion#">
+			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo  
+   			from FTSeccionesD a
+				inner join FTSecciones b
+					on b.Sid = b.Sid
+			where 1 = 1
+			<cfif isdefined('Arguments.Cid')>
+				and b.Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
+			</cfif>
+		</cfquery>
+		<cfreturn rsFTSeccionesD>
 	</cffunction>
 </cfcomponent>

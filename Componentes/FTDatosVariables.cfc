@@ -491,4 +491,27 @@
 				  and DVVidTablaSec  = #Arguments.DVVidTablaSec#
 		</cfquery>
 	</cffunction>
+
+	<!---Funcion que retorna todos los Datos Variables--->
+	<cffunction name="getFTDatosVariables"  access="public" returntype="query" hint="Funcion que retorna todos los Datos Variables">
+		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
+		<cfargument name="conexion" 	type="string"  required="no" default="ftec" hint="Nombre del DataSource">
+		
+		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
+			<cfset Arguments.Ecodigo = session.Ecodigo>
+		</cfif>
+		
+		<cfquery name="ListaDV" datasource="#Arguments.conexion#">
+			select DVid , DVetiqueta,  DVexplicacion, DVobligatorio,
+			case when  DVtipoDato = 'C'  then 'Caracter' 
+				 when  DVtipoDato = 'N' then 'Numerico' 
+				 when  DVtipoDato = 'L' then 'Lista' 
+				 when  DVtipoDato = 'F' then 'Fecha' 
+				 when  DVtipoDato = 'H' then 'Hora' 
+				 when  DVtipoDato = 'K' then 'Logico' 
+				 else 'otro' end as DVtipoDato					
+			from FTDatosVariables
+		</cfquery>
+		<cfreturn ListaDV>
+	</cffunction>
 </cfcomponent>

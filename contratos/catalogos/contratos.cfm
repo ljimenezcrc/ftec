@@ -53,6 +53,11 @@
 	<cfinvoke component="ftec.Componentes.FTContratos" method="getSeccion" returnvariable="rsSeccion">
 		<cfinvokeargument name="Cid" value="#form.Cid#">
 	</cfinvoke>
+	<cfinvoke component="ftec.Componentes.FTContratos" method="getFTSeccionesD" returnvariable="rsFTSeccionesD">
+		<cfinvokeargument name="Cid" value="#form.Cid#">
+	</cfinvoke>	
+	<cfinvoke component="ftec.Componentes.FTDatosVariables" method="getFTDatosVariables" returnvariable="rsFTDatosVariables">
+	</cfinvoke>	
 </cfif>
 
 <cf_templateheader title="Contratos">

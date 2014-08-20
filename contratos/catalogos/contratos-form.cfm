@@ -79,6 +79,27 @@
 			</div>
 		</cf_tab>
 		<cf_tab text="Información Variable de la Sección">
+			<div class="alert alert-info">
+			<cfif rsFTSeccionesD.RecordCount>
+				<cfloop query="rsFTSeccionesD">
+					<div class="row">
+						<div class="col-xs-3"><cfoutput>#rsFTSeccionesD.Variable#</cfoutput></div>
+						<div class="col-xs-3">
+							<select>
+								<optgroup label="Datos Variables">
+									<cfloop query="rsFTDatosVariables">
+										<cfoutput><option>#rsFTDatosVariables.DVetiqueta#</option></cfoutput>
+									</cfloop>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+				</cfloop>
+			<cfelse>
+				Para crear variables, escriba en las secciones del contrato el nombre de la variable sin espacios y dentro de gatos.</br>
+				<strong>Ejemplo:</strong> Portador de la cedula de identifidad #NumeroCedula#.
+			</cfif>		
+			</div>	
 		</cf_tab>
 	</cf_tabs>
 <cfelseif LEN(TRIM(rsContrato.Cid))>

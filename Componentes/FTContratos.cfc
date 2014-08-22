@@ -246,7 +246,7 @@
 			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo  
    			from FTSeccionesD a
 				inner join FTSecciones b
-					on b.Sid = b.Sid
+					on b.Sid = a.Sid
 			where 1 = 1
 			<cfif isdefined('Arguments.Cid')>
 				and b.Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">

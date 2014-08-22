@@ -85,11 +85,37 @@
 					<div class="row">
 						<div class="col-xs-3"><cfoutput>#rsFTSeccionesD.Variable#</cfoutput></div>
 						<div class="col-xs-3">
-							<select>
+							<select onchange="SaveDataVar(this,<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>)" name="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>" id="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>">
+									<option value="">Seleccione un Valor</option>
+								<optgroup label="Datos Personales">
+									<option value="2" <cfif rsFTSeccionesD.TVariables EQ 2> selected="selected"</cfif>>Tipo de Identificación</option>
+									<option value="3" <cfif rsFTSeccionesD.TVariables EQ 3> selected="selected"</cfif>>Identificación</option>
+									<option value="4" <cfif rsFTSeccionesD.TVariables EQ 4> selected="selected"</cfif>>Nombre</option>
+									<option value="5" <cfif rsFTSeccionesD.TVariables EQ 5> selected="selected"</cfif>>Primer Apellido</option>
+									<option value="6" <cfif rsFTSeccionesD.TVariables EQ 6> selected="selected"</cfif>>Segundo Apellido</option>
+									<option value="7" <cfif rsFTSeccionesD.TVariables EQ 7> selected="selected"</cfif>>Sexo</option>
+									<option value="8" <cfif rsFTSeccionesD.TVariables EQ 8> selected="selected"</cfif>>Fecha Nacimiento</option>
+								</optgroup>
+								<optgroup label="Datos del Contrato">
+									<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9> selected="selected"</cfif>>Numero Contrato</option>
+									<option value="10" <cfif rsFTSeccionesD.TVariables EQ 10> selected="selected"</cfif>>Periodo Contratación</option>
+									<option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
+									<option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>
+									<option value="13" <cfif rsFTSeccionesD.TVariables EQ 13> selected="selected"</cfif>>Fecha de Firmas</option>
+								</optgroup>
+								
 								<optgroup label="Datos Variables">
-									<cfloop query="rsFTDatosVariables">
-										<cfoutput><option>#rsFTDatosVariables.DVetiqueta#</option></cfoutput>
-									</cfloop>
+									<cfif rsFTDatosVariables.RecordCount>
+										<cfloop query="rsFTDatosVariables">
+											<cfoutput>
+												<option value="1,#rsFTDatosVariables.DVid#" <cfif rsFTSeccionesD.TVariables EQ 1 AND rsFTSeccionesD.DVid eq rsFTDatosVariables.DVid> selected="selected"</cfif>>
+													#rsFTDatosVariables.DVetiqueta#
+												</option>
+											</cfoutput>
+										</cfloop>
+									<cfelse>
+										<option value="" disabled="disabled">No existen Datos Variables</option>	
+									</cfif>
 								</optgroup>
 							</select>
 						</div>
@@ -120,7 +146,43 @@ COSAS QUE FALTAN:<br />
 		 $('#Edit_'+Sid).show();
 		 $('#Text_'+Sid).hide();
 	}
-	 $('.Editor').hide();
+	function SaveDataVar(lvarSelect,SDid,DVid){
+		//Tipo de variable
+		TVariables = $(lvarSelect).val().split(',',2)[0];
+		//ID del dato Variable
+		if (TVariables == 1) 
+			DVid=$(lvarSelect).val().split(',',2)[1]; 
+		else 
+			DVid = -1;
+		//SE HACER EL AJAX PARA GUARDA EL VALOR
+  		var dataP = {
+			method: "updateDatosVariable",
+		 	SDid:  		SDid,
+		  	TVariables: TVariables,
+			DVid: 		DVid
+		}
+
+
+		try {
+			$.ajax ({
+				type: "get",
+				url: "/cfmx/ftec/Componentes/FTContratos.cfc",
+				data: dataP,
+				dataType: "json",
+				success: function( objResponse ){},
+				error:  function( objRequest, strError ){
+					alert('ERROR '+objRequest + ' - ' + strError);
+					console.log(objRequest);
+					console.log(strError);
+					}
+			});
+		} catch(ss){
+		 alert('FALLO Inesperado');
+		 console.log(ss);
+		}
+		}
+	$('.Editor').hide();
+	
 </script>
 <style type="text/css">
 	border: 1px solid #b6b6b6;

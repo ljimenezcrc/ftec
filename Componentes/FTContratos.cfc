@@ -213,6 +213,20 @@
 	   </cfquery>
 	   
 	</cffunction>
+	<cffunction name="updateDatosVariable" access="remote" returntype="string" output="false" returnformat="JSON">
+		<cfargument name="SDid" 	  type="numeric" required="yes">
+		<cfargument name="TVariables" type="numeric" default="1">
+		<cfargument name="DVid" 	  type="numeric" default="-1">				
+		<cfargument name="conexion"    type="string"  required="no" default="ftec" hint="Nombre del DataSource">
+		
+		<cfquery datasource="#Arguments.conexion#" name="rsInserto">
+			update FTSeccionesD
+			 set TVariables = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TVariables#">,
+			     DVid 	    = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.DVid#" null="#Arguments.DVid EQ -1#">
+			where SDid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SDid#">
+		</cfquery>	
+		<cfreturn 'OK'>
+	</cffunction>
 	
 	<!---Funcion que retorna todas las variables de las secciones--->
 	<cffunction name="getFTSeccionesD" returntype="query" hint="Funcion que retorna todas las variables de las secciones">

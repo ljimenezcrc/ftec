@@ -8,8 +8,15 @@
 <!--- instantiate the data source object --->
 <cfset Datasource = CreateObject("component","CFIDE.adminapi.datasource")/>
 
+ 
+
 <!---lista de bases de datos--->
-<cfset myListDataBase 	=  'asp,aspmonitor,minisif,sif_control,sif_interfaces,sif_publica'>
+<cfif form.server1 eq 6>
+	<cfset myListDataBase 	=  'asp_ft,aspmonitor_ft,minisif_ft,sif_control_ft,sif_interfaces_ft,sif_publica_ft'>
+<cfelse>
+	<cfset myListDataBase 	=  'asp,aspmonitor,minisif,sif_control,sif_interfaces,sif_publica'>
+</cfif>
+
 <cfset myDatabase 	= listtoarray(myListDataBase,',')>
 
 <!---lista de nombres para los datasources--->

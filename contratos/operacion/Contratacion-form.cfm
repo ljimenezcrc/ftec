@@ -1,7 +1,18 @@
 ﻿
-	<!---<cfif LEN(TRIM(rsContrato.Cid))>
-		<input type="hidden" name="Cid" id="Cid" value="<cfoutput>#rsContrato.Cid#</cfoutput>" />
-	</cfif>--->
+<cfif isdefined('form.modo') and form.modo eq 'CAMBIO'>
+    <cfquery name="rsForm" datasource="ftec">
+        select a.*,b.TCid ,b.Cdescripcion
+        from FTPContratacion a
+        inner join FTContratos b
+			on b.Cid = a.Cid
+        where a.PCid = #form.PCid#
+    </cfquery>
+</cfif>
+
+
+	<cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
+		<input type="hidden" name="PCid" id="PCid" value="<cfoutput>#rsForm.PCid#</cfoutput>" />
+	</cfif>
 	<table align="center">
     	<!---Contrato--->
         <tr> 
@@ -20,6 +31,7 @@
                         <cfset ArrayAppend(arrValuesCambio, rsForm.TCid)>
                         <cfset ArrayAppend(arrValuesCambio, rsForm.Cdescripcion)>							
                     </cfif>
+                </cfif>
        
                     <cfset filtroExtra = "">
                     <cfset select = " b.TCcodigo, b.TCdescripcion,a.Cid, a.TCid, a.Cdescripcion" >
@@ -51,8 +63,6 @@
                         showEmptyListMsg="true"
                         Cortes="TCdescripcion"
                         EmptyListMsg=" --- No Existen Contratos definidos --- "/>		
-        
-                </cfif>	  
               </td>
             </tr>
             

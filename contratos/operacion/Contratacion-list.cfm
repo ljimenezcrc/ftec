@@ -1,21 +1,41 @@
-﻿<div class="row">
+﻿<cf_dbfunction name="op_concat" returnvariable="_cat">
+
+<div class="row">
     <div class="col-sm-12">
-        <cfquery name="rsLista" datasource="#session.DSN#">
-            select 
-             '' as RHIECfecha, '' as CentroFuncional, 0 as RHIECmonto,'' as Adelanto,'' as Provision, '' as Carga
-            from dual
+        <cfquery name="rsLista" datasource="ftec">
+            select a.PCid
+                , a.Cid
+                ,a.PCTidentificacion
+                ,a.PCIdentificacion
+                ,a.PCApellido1 #_cat# ' ' #_cat#  a.PCApellido2  #_cat# ' ' #_cat# a.PCNombre as Nombre
+                ,case 
+                    when a.PCEstado = 'P' then 'Proceso'
+                    when a.PCEstado = 'T' then 'Tramite'
+                    when a.PCEstado = 'A' then 'Aprobado'
+                    when a.PCEstado = 'R' then 'Rechazado'
+                    when a.PCEstado = 'F' then 'Finiquito'
+                end as PCEstado
+                
+                ,a.PCEnumero
+                ,a.PCEPeriodo
+                ,b.Cdescripcion
+            from FTPContratacion a
+                inner join FTContratos b
+                    on b.Cid = a.Cid
         </cfquery>
 
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
             <cfinvokeargument name="query" value="#rsLista#"/>
-            <cfinvokeargument name="desplegar" value=" RHIECfecha, CentroFuncional, RHIECmonto,Adelanto,Provision, Carga"/>
-            <cfinvokeargument name="etiquetas" value="#LB_Fecha#, #LB_CentroFuncional#, #LB_Monto#, #LB_Adelanto#, #LB_Provision#, #LB_CargaProvision# "/>
-            <cfinvokeargument name="formatos" value=" D, S, M, S,S,S"/>
-            <cfinvokeargument name="align" value="left, left, right, center, center, left"/>
+            <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado"/>
+            <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado"/>
+            <cfinvokeargument name="formatos" value=" S, S, S, S"/>
+            <cfinvokeargument name="align" value="left, left, left,  left"/>
             <cfinvokeargument name="ajustar" value="N"/>
-            <cfinvokeargument name="irA" value="RegistroInfCesantiaHist.cfm"/>
-            <cfinvokeargument name="keys" value="RHIECmonto"/>
+            <cfinvokeargument name="irA" value="Contratacion.cfm"/>
+            <cfinvokeargument name="keys" value="PCid"/>
+            <cfinvokeargument name="formName" 	value="fmContratacion"/>
         </cfinvoke>
+        <!---<cfinvokeargument name="cortes" value="NombreC"/>--->
         
 <!---<cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
 <cfinvokeargument name="query" 		value="#rsContratoAll#"/>
@@ -31,16 +51,11 @@
 <cfinvokeargument name="formName" 	value="listaAcciones"/>
 </cfinvoke>
 --->        
-	</div><!---<cfinvokeargument name="cortes" value="NombreC"/>--->
+	</div>
 </div>
 
 <div class="row">
     <div class="col-sm-12" align="center">
-        <!---<input type="submit" name="btnRegresar" class="btn btn-success"  value="Lista" />
-        <input type="submit" name="btnGuardar"  class="btn btn-primary"  value="Guardar Encabezado Contrato" />
-        <cfif len(trim(form.Cid))>--->
-            <input type="submit" name="btnNContracion" class="btn btn-info"     value="Nueva Contración" />
-            <!---<input type="submit" name="btnEliminar" class="btn btn-danger"   value="Eliminar Contrato" />
-		</cfif> --->
+		<input type="submit" name="btnNContracion" class="btn btn-info"     value="Nueva Contración" />
     </div>
 </div> 

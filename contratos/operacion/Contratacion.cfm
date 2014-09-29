@@ -49,22 +49,28 @@
             <cfinvokeargument name="Identificacion"	value="#form.PCIdentificacion#">
         </cfinvoke>
     </cfif>
-    
-    <cfquery name="rsForm"  datasource="ftec">
-        select #form.Cid# as Cid
-            ,#form.TCid# as TCid
-            ,'#form.Cdescripcion#' as Cdescripcion
-            ,'#rsOferente.PCTidentificacion#' as PCTidentificacion
-            ,'#rsOferente.PCIdentificacion#' as PCIdentificacion   
-            ,'#rsOferente.PCSexo#' as PCSexo
-            ,'#rsOferente.PCEstadoCivil#' as PCEstadoCivil
-            ,'#rsOferente.PCnombre#' as PCnombre
-            ,'#rsOferente.PCapellido1#' as PCapellido1
-            ,'#rsOferente.PCapellido2#' as PCapellido2
-            , getdate() as PCFechaN
-            
-        from dual
-    </cfquery>    
+
+	<cfif isdefined('rsOferente') and rsOferente.RecordCount>
+        <cfquery name="rsForm"  datasource="ftec">
+            select #form.Cid# as Cid
+                <cfif isdefined('form.PCid') and len(#form.PCid#)>
+                    ,#form.PCid# as PCid
+                <cfelse>
+                    , NULL as PCid
+                </cfif>
+                ,#form.TCid# as TCid
+                ,'#form.Cdescripcion#' as Cdescripcion
+                ,'#rsOferente.PCTidentificacion#' as PCTidentificacion
+                ,'#rsOferente.PCIdentificacion#' as PCIdentificacion   
+                ,'#rsOferente.PCSexo#' as PCSexo
+                ,'#rsOferente.PCEstadoCivil#' as PCEstadoCivil
+                ,'#rsOferente.PCnombre#' as PCnombre
+                ,'#rsOferente.PCapellido1#' as PCapellido1
+                ,'#rsOferente.PCapellido2#' as PCapellido2
+                , getdate() as PCFechaN
+            from dual
+        </cfquery>    
+    </cfif>    
 </cfif>
 
 
@@ -85,14 +91,16 @@
         <cfinvokeargument name="PCEstadoCivil" 		value="#form.PCEstadoCivil#">
         <cfinvokeargument name="PCFechaN" 			value="#form.PCFechaN#">
 	</cfinvoke>
+    
 	<cfset form.PCid = LvarPCid>
+    <cfset form.modo = 'CAMBIO'>
     
 <!---Elimina el contrato--->
 <cfelseif isdefined('form.BtnEliminar')>
-	<cfinvoke component="ftec.Componentes.FTContratos" method="delete">
+	<cfinvoke component="ftec.Componentes.FTPContratacion" method="delete">
 		<cfinvokeargument name="PCid" value="#form.PCid#">
 	</cfinvoke>
-	<cfset form.Cid = "">
+	<cfset form.PCid = "">
     
 <!---Regresa a la lista--->	
 <cfelseif isdefined('form.btnRegresar')>
@@ -115,85 +123,19 @@
 
 </cfoutput>
 
+
+
 <cf_templateheader title="Contratos">
 	<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Creación de Contrato'>
 		<form name="fmContratacion" action="Contratacion.cfm" method="post">
-			<cfif LEN(TRIM(rsContrato.Cid)) OR isdefined('form.btnNContracion') OR isdefined('form.btnBuscarOferente') >
+			<cfif (isdefined('form.modo') and form.modo EQ 'CAMBIO' ) OR isdefined('form.btnNContracion') OR isdefined('form.btnBuscarOferente')>
                 <cfinclude template="Contratacion-form.cfm">
             <cfelse>
-                <cfinclude template="Contratacion-list.cfm">
+                <cfinclude template="Contratacion-list.cfm">	
             </cfif>		
         </form>
-	<cf_web_portlet_end>	
+	<cf_web_portlet_end>																			
 <cf_templatefooter>
 
 
  
-
-
-
-<!---
-
-<cf_templateheader title="#LB_RegistroInformacionCesantia#"> 
-	  <cf_web_portlet_start titulo="#LB_RegistroInformacionCesantia#" >
-      
-	      <cf_translatedata name="get" tabla="CFuncional c" col="c.CFdescripcion" returnvariable="LvarCFdescripcion">
-          <cf_translatedata name="get" tabla="DCargas d" col="d.DCdescripcion" returnvariable="LvarDCdescripcion">
-
-          <cf_dbfunction name="op_concat" returnvariable="_cat">  
-
-            <div class="row well">	
-            
-            <div class="row">
-                <div class="col-sm-12">
-                    <cfinclude template="Contratacion-list.cfm">
-                </div>
-            </div>
-
-	  <cf_web_portlet_end>
-<cf_templatefooter>--->
-
-
-<!---
-<cfparam name="rsContrato.Cid" 			default="">
-<cfparam name="rsContrato.TCid" 		default="">
-<cfparam name="rsContrato.Cdescripcion"	default="">
-<cfparam name="rsContrato.Cestado" 		default="">
-<cfparam name="rsContrato.Ecodigo" 		default="">
-<cfparam name="rsContrato.Usucodigo" 	default="">
-<cfparam name="rsSeccion" 				default="#QueryNew('Sid')#">
-
-<cfdump var="#form#">
-<cf_templateheader title="Proceso de Contratación">
-	<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Proceso de Contración'>
-		<cfif LEN(TRIM(rsContrato.Cid)) OR isdefined('form.BtnNuevo')>
-			<cfinclude template="Contratacion-form.cfm">
-		<cfelse>
-			<cfinclude template="Contratacion-list.cfm">
-		</cfif>		
-	<cf_web_portlet_end>	
-<cf_templatefooter>--->
-
-<!---
-<input name="PCTidentificacion" type="text" value="1" />
-
-
-PCid
-Cid
-PCTidentificacion
-PCIdentificacion
-PCNombre
-PCApellido1
-PCApellido2
-PCSexo
-PCFechaN
-PCEstado
-PCEnumero
-PCEPeriodo
-PCFechaC
-PCFechaA
-PCFechaF
-PCUsucodigoC
-PCUsucodigoA
-PCUsucodigoF
-   --->

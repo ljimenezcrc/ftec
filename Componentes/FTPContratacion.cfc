@@ -25,13 +25,9 @@ Cid 				<!---tipo de Contrato--->
 
 --->
 
-
-
-
 	<cffunction access="public" name="Get" returntype="query">
     	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
-<!---        <cfargument name="TTcodigo" 		required="true" 	type="string">
---->        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
+        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select Cid 					<!---tipo de Contrato--->
 					,PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
@@ -66,7 +62,7 @@ Cid 				<!---tipo de Contrato--->
 	</cffunction>
     
 	<!--- *************************** --->
-	<!--- Alta Contratacion			--->
+	<!--- Alta y Cambio Contratacion  --->
 	<!--- *************************** --->
 
     
@@ -85,8 +81,10 @@ Cid 				<!---tipo de Contrato--->
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
 
+
         <cftransaction>   
             <cfif isdefined('Arguments.PCid')>
+             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
             	update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set
                     Cid 				= <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Cid#">
                     ,PCTidentificacion 	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCTidentificacion#" 	voidnull>
@@ -96,9 +94,12 @@ Cid 				<!---tipo de Contrato--->
                     ,PCApellido2		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCApellido2#" 		voidnull>
                     ,PCSexo				= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCSexo#" 				voidnull>
                     ,PCEstadoCivil		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCEstadoCivil#" 		voidnull>
-                    <!---,PCFechaN			= --->
+                    ,PCFechaN			= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>
                     ,PCUsucodigoC		= <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
-              where PCid = Arguments.PCid
+              where PCid = #Arguments.PCid#
+            </cfquery>
+            <cfset Lvar_Iid = #Arguments.PCid#>
+             
             <cfelse>
                 <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                     insert into <cf_dbdatabase table="FTPContratacion" datasource="ftec">(	  
@@ -136,8 +137,7 @@ Cid 				<!---tipo de Contrato--->
                 <cf_dbidentity2 datasource="#session.DSN#" name="rsInsert" verificar_transaccion="false"> 
                 
                 <cfset Lvar_Iid = rsInsert.Identity>
-                
-        
+
                 <cfif Arguments.Debug>
                     <cfquery name="rsDebug" datasource="#Session.DSN#">
                         select *
@@ -153,52 +153,16 @@ Cid 				<!---tipo de Contrato--->
 		<cfreturn Lvar_Iid>
 	</cffunction>
     
-    <!--- ********************* --->
-	<!--- Baja tipo Tramite --->
-	<!--- ********************* --->
-    <cffunction access="public" name="Baja">
-		<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
-        <cfargument name="TTcodigo" 		required="true" 	type="string">
+    <cffunction access="public" name="delete">
+        <cfargument name="PCid" 			required="true" 	type="numeric">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
-            <cfquery name="rsDebug" datasource="#Session.DSN#">
+            <cfquery datasource="ftec">
                 delete 
-                from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
-                where Ecodigo = #Session.Ecodigo#
-                	and TTcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TTcodigo#" voidnull>
+                from FTPContratacion
+                where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
             </cfquery>	
         </cftransaction>
         <cfreturn>
-	</cffunction>
-    
-    <!--- *************************** --->
-	<!--- Cambio Tipos de Tramite --->
-	<!--- *************************** --->
-	<cffunction access="public" name="Cambio">
-    	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
-        <cfargument name="TTid" 			required="true" 	type="numeric">
-        <cfargument name="TTcodigo" 		required="true" 	type="string">
-    	<cfargument name="TTdescripcion" 	required="true" 	type="string">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
-        <cftransaction>   
-            <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update <cf_dbdatabase table="FTTipoTramite" datasource="ftec"> set
-	                     TTcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TTcodigo#" 		voidnull>
-                        , TTdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TTdescripcion#" 	voidnull>
-                where TTid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.TTid#" voidnull>
-            </cfquery>
-    
-            <cfif Arguments.Debug>
-                <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select TTid, TTcodigo, TTdescripcion, Ecodigo
-					from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
-                    where TTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TTid#">
-                </cfquery>
-                <cfdump var="#Arguments#">
-                <cfdump var="#rsDebug#">
-                <cfabort>
-            </cfif>
-		</cftransaction>
-		<cfreturn>
 	</cffunction>
 </cfcomponent>

@@ -1,15 +1,15 @@
+
 /*==============================================================*/
 /* Table: FTPDContratacion                                      */
 /*==============================================================*/
 create table FTPDContratacion (
-   PCid                 numeric                        not null,
+   PCid                 numeric                        null,
    PCDid                numeric                        identity,
-   SDid                 numeric                        not null,
+   SDid                 numeric                        null,
    DVLcodigo            char(10)                       null,
    DVid                 numeric                        null,
    PCDValor             varchar(1024)                  null,
-   constraint FTPDContratacion_PK primary key (PCDid),
-   constraint FTPDContratacion_UK unique (PCid, SDid)
+   constraint PK_FTPDCONTRATACION primary key (PCDid)
 )
 go
 

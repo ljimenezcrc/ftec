@@ -15,7 +15,7 @@ go
 
 alter table FTPDContratacion
    add constraint FK_FTPDCONT_REFERENCE_FTPCONTR foreign key (PCid)
-      references FTPContratacion (Id_del_proceso_e_contratacion)
+      references FTPContratacion (PCid)
 go
 
 alter table FTPDContratacion

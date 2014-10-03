@@ -1,8 +1,9 @@
+
 *==============================================================*/
 /* Table: FTPContratacion                                       */
 /*==============================================================*/
 create table FTPContratacion (
-   Id_del_proceso_e_contratacion numeric                        identity,
+   PCid numeric                        identity,
    Cid                  numeric                        not null,
    PCTidentificacion    char(1)                        default 'F' not null
          constraint CKC_PCTIDENTIFICACION_FTPCONTR check (PCTidentificacion in ('F','J')),
@@ -25,7 +26,7 @@ create table FTPContratacion (
    PCUsucodigoF         numeric                        null,
    PCEstadoCivil        char(1)                        default 'S' null
          constraint CKC_PCESTADOCIVIL_FTPCONTR check (PCEstadoCivil is null or (PCEstadoCivil in ('C','S','D','V'))),
-   constraint PK_FTPCONTRATACION primary key (Id_del_proceso_e_contratacion)
+   constraint PK_FTPCONTRATACION primary key (PCid)
 )
 go
 

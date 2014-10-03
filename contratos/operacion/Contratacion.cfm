@@ -127,7 +127,7 @@
 
 <cf_templateheader title="Contratos">
 	<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Creación de Contrato'>
-		<form name="fmContratacion" action="Contratacion.cfm" method="post">
+		<form name="fmContratacion" class="form-inline"  role="form" action="Contratacion.cfm" method="post">
 			<cfif (isdefined('form.modo') and form.modo EQ 'CAMBIO' ) OR isdefined('form.btnNContracion') OR isdefined('form.btnBuscarOferente')>
                 <cfinclude template="Contratacion-form.cfm">
             <cfelse>

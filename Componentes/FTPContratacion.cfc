@@ -155,11 +155,13 @@ Cid 				<!---tipo de Contrato--->
     
     <cffunction access="public" name="delete">
         <cfargument name="PCid" 			required="true" 	type="numeric">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
+			 <cfquery datasource="ftec">
+                delete from FTPDContratacion
+                where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
+            </cfquery>	
             <cfquery datasource="ftec">
-                delete 
-                from FTPContratacion
+                delete from FTPContratacion
                 where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
             </cfquery>	
         </cftransaction>

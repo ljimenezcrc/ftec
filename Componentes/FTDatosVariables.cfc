@@ -211,6 +211,9 @@
 					</cfif>
 				 <!---Tipo Calendario--->
 				 <cfelseif DatoVariable.DVtipoDato EQ 'F'>
+				 	<cfif isnumeric(DatoVariable.PCDValor) or NOT LEN(TRIM(DatoVariable.PCDValor)) EQ 10>
+						<cfset DatoVariable.PCDValor = "">
+					</cfif>
 				 	 <div class="col-sm-4"> 
 						<cfif Arguments.readonly>
 							<cf_sifcalendario form="#Arguments.form#" value="#DatoVariable.PCDValor#" name="#name#" readOnly="true" class="datoVariableCalendario" obligatorio="#DatoVariable.DVobligatorio#">
@@ -244,9 +247,9 @@
 							 obligatorio="<cfoutput>#DatoVariable.DVobligatorio#</cfoutput>"
 							>
 							</div>
-							<div class="col-sm-1"> 
+							<!---<div class="col-sm-1"> 
 							<cfoutput>#DatoVariable.DVmascara#</cfoutput>
-							</div>
+							</div>--->
 							<cfif LEN(TRIM(DatoVariable.DVmascara))>
 								<script language="JavaScript" type="text/javascript">
 									<cfoutput>
@@ -265,7 +268,7 @@
 						<cfif Arguments.readonly>
 							<cfoutput>#DatoVariable.PCDValor#</cfoutput>
 						<cfelse>
-							<cfif len(trim(DatoVariable.PCDValor)) eq 0>
+							<cfif len(trim(DatoVariable.PCDValor)) eq 0 or NOT isnumeric(DatoVariable.PCDValor)>
 								<cfset DatoVariable.PCDValor= 0>
 							</cfif>
 							<cf_monto name="#name#" decimales="#DatoVariable.DVdecimales#" value="#lsparsenumber(DatoVariable.PCDValor)#" size="#DatoVariable.DVlongitud#" form="#Arguments.form#" class="datoVariableNumerico"  obligatorio="#DatoVariable.DVobligatorio#">
@@ -314,41 +317,22 @@
 	<!---==================AGREGAR UN VALOR DEL DATO VARIABLE==================--->
 	<cffunction name="SETVALOR"  access="public" returntype="string">
 		<cfargument name="Conexion" 	  type="string"  required="false" default="ftec">
-		<cfargument name="BMUsucodigo"    type="numeric" required="false" default="#Session.Usucodigo#">
-		<cfargument name="DVTcodigoValor" type="string"  required="true">
-		<cfargument name="DVid" 	  	  type="numeric" required="true">
-		<cfargument name="DVVidTablaVal"  type="numeric" required="true">
-		<cfargument name="DVVidTablaSec"  type="numeric" required="false" default="0"><!---0= tabla Final, cualquier otro son tablas de Trabajo--->
+		<cfargument name="form"    		  type="struct"  required="false">
 		
 		<cfquery name="valores" datasource="#Arguments.Conexion#">	
-			select count(1) cantidad  from DVvalores 
-			 where rtrim(DVTcodigoValor) = '#Arguments.DVTcodigoValor#' 
-			   and DVid                  = #Arguments.DVid#
-			   and DVVidTablaVal         = #Arguments.DVVidTablaVal#
-		 	  and DVVidTablaSec			 = #Arguments.DVVidTablaSec#
+			select a.PCDid, a.PCid,a.SDid,a.DVid,a.DVLcodigo,a.PCDValor
+			 from FTPDContratacion a
+			where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.form.PCid#">
 		</cfquery>
-		<cfif valores.cantidad>
+		
+		<cfloop query="valores">
+			<cfparam name="Arguments.form['V' & valores.PCDid]" default="">
 			<cfquery datasource="#Arguments.Conexion#">	
-			   update DVvalores set 
-				 PCDValor 	  = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.PCDValor)#">,
-				 BMUsucodigo  = #Arguments.BMUsucodigo#
-			  where rtrim(DVTcodigoValor) = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.DVTcodigoValor)#">
-			    and DVid 		          = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#TRIM(Arguments.DVid)#">
-			    and DVVidTablaVal         = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#TRIM(Arguments.DVVidTablaVal)#">
+				update FTPDContratacion
+					set PCDValor = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#Arguments.form['V' & valores.PCDid]#" voidnull>
+				where PCDid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#valores.PCDid#">
 			</cfquery>
-		<cfelse>
-			<cfquery datasource="#Arguments.Conexion#">	
-				insert into DVvalores (DVTcodigoValor,DVid,DVVidTablaVal,DVVidTablaSec,PCDValor,BMUsucodigo)
-				values(
-					<cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.DVTcodigoValor)#">,
-					<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#TRIM(Arguments.DVid)#">,
-					<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#TRIM(Arguments.DVVidTablaVal)#">,
-					<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#TRIM(Arguments.DVVidTablaSec)#">,
-					<cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.PCDValor)#">,
-					#Arguments.BMUsucodigo#
-					 )
-			</cfquery>
-		</cfif>
+		</cfloop>
 	</cffunction>
 	<!---==================Obteniene todos los campos que correspondientes a estructura enviada==================--->
 	<cffunction name="GETVALOR"  access="public" returntype="query">

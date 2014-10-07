@@ -80,12 +80,13 @@ Cid 				<!---tipo de Contrato--->
         <cfargument name="PCFechaN" 			required="true" 	type="string">
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
+		<cfargument name="Conexion" 			required="false" 	type="string" 	default="ftec">  
 
 
         <cftransaction>   
             <cfif isdefined('Arguments.PCid')>
-             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-            	update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set
+             <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
+            	update FTPContratacion set
                     Cid 				= <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Cid#">
                     ,PCTidentificacion 	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCTidentificacion#" 	voidnull>
                     ,PCIdentificacion 	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCIdentificacion#" 	voidnull>
@@ -98,11 +99,11 @@ Cid 				<!---tipo de Contrato--->
                     ,PCUsucodigoC		= <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
               where PCid = #Arguments.PCid#
             </cfquery>
-            <cfset Lvar_Iid = #Arguments.PCid#>
+            <cfset Lvar_Iid = Arguments.PCid>
              
             <cfelse>
-                <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                    insert into <cf_dbdatabase table="FTPContratacion" datasource="ftec">(	  
+                <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
+                    insert into FTPContratacion (	  
                             Cid 				<!---tipo de Contrato--->
                             ,PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
                             ,PCIdentificacion 	<!---Identificacion oferente--->
@@ -132,16 +133,16 @@ Cid 				<!---tipo de Contrato--->
                             , year(getdate())
                             , <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
                             )
-                    <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
+                    <cf_dbidentity1 datasource="#Arguments.Conexion#" verificar_transaccion="false">
                 </cfquery>
-                <cf_dbidentity2 datasource="#session.DSN#" name="rsInsert" verificar_transaccion="false"> 
+                <cf_dbidentity2 datasource="#Arguments.Conexion#" name="rsInsert" verificar_transaccion="false"> 
                 
                 <cfset Lvar_Iid = rsInsert.Identity>
 
                 <cfif Arguments.Debug>
-                    <cfquery name="rsDebug" datasource="#Session.DSN#">
+                    <cfquery name="rsDebug" datasource="#Arguments.Conexion#">
                         select *
-                        from <cf_dbdatabase table="FTPContratacion" datasource="ftec">
+                        from FTPContratacion
                         where PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                     </cfquery>
                     <cfdump var="#Arguments#">

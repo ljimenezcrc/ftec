@@ -155,19 +155,17 @@
                    </select>
                </div>
 </div>
-        <!---     
-            <tr>
-            	<td colspan="6" rowspan="2" valign="middle" align="center"><br/>
-                    <div class="btn-group">
-                    <input type="submit" name="btnRegresar" class="btn btn-success"  value="Regresar a la Lista" />
-                    <cfif LEN(TRIM(form.Cid))>
-                        <input type="submit" name="btnGContrato" class="btn btn-info"     value="Guardar Contrato" />
-                        <input type="submit" name="btnTramite" class="btn btn-danger"   value="Enviar a Tramite" />
-                        <input type="submit" name="btnEliminar" class="btn btn-danger"   value="Eliminar Contrato" />
-                    </cfif>
-                    </div>
-                </td>
-            </tr>--->        
+
+<div class="btn-group"> 
+  <button type="submit" name="btnRegresar" class="btn btn-success">Regresar a la Lista</button>
+  <cfif LEN(TRIM(form.Cid))>
+  <button type="submit" name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
+  <button type="submit"  name="btnTramite" class="btn btn-danger">Enviar a Tramite</button>
+   <button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
+   </cfif>
+</div>
+
+
 </cfif>
         
 

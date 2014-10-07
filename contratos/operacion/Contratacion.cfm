@@ -1,7 +1,7 @@
 ﻿<cfset t = createObject("component", "sif.Componentes.Translate")>
-<cfif not REFind('erp.css',session.sitio.CSS)>
-	<cf_importLibs>
-</cfif>
+<cf_importLibs>
+
+
 
 <!---Etiquetas del Form--->
 <cfset LB_RegistroInformacionCesantia = t.translate('LB_RegistroInformacionCesantia','Registro de Información para Estimación de Cesantia','/rh/generales.xml')>
@@ -90,6 +90,10 @@
         <cfinvokeargument name="PCSexo" 			value="#form.PCSexo#">
         <cfinvokeargument name="PCEstadoCivil" 		value="#form.PCEstadoCivil#">
         <cfinvokeargument name="PCFechaN" 			value="#form.PCFechaN#">
+	</cfinvoke>
+	
+	<cfinvoke component="ftec.Componentes.FTDatosVariables" method="SETVALOR">
+		<cfinvokeargument name="form" value="#form#">
 	</cfinvoke>
     
 	<cfset form.PCid = LvarPCid>

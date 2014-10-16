@@ -129,16 +129,17 @@
 							<select onchange="SaveDataVar(this,<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>)" name="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>" id="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>">
 									<option value="">Seleccione un Valor</option>
 								<optgroup label="Datos Personales">
-									<option value="2" <cfif rsFTSeccionesD.TVariables EQ 2> selected="selected"</cfif>>Tipo de Identificación</option>
-									<option value="3" <cfif rsFTSeccionesD.TVariables EQ 3> selected="selected"</cfif>>Identificación</option>
-									<option value="4" <cfif rsFTSeccionesD.TVariables EQ 4> selected="selected"</cfif>>Nombre</option>
-									<option value="5" <cfif rsFTSeccionesD.TVariables EQ 5> selected="selected"</cfif>>Primer Apellido</option>
-									<option value="6" <cfif rsFTSeccionesD.TVariables EQ 6> selected="selected"</cfif>>Segundo Apellido</option>
-									<option value="7" <cfif rsFTSeccionesD.TVariables EQ 7> selected="selected"</cfif>>Sexo</option>
-									<option value="8" <cfif rsFTSeccionesD.TVariables EQ 8> selected="selected"</cfif>>Fecha Nacimiento</option>
+									<option value="2"  <cfif rsFTSeccionesD.TVariables EQ 2>  selected="selected"</cfif>>Tipo de Identificación</option>
+									<option value="3"  <cfif rsFTSeccionesD.TVariables EQ 3>  selected="selected"</cfif>>Identificación</option>
+									<option value="4"  <cfif rsFTSeccionesD.TVariables EQ 4>  selected="selected"</cfif>>Nombre</option>
+									<option value="5"  <cfif rsFTSeccionesD.TVariables EQ 5>  selected="selected"</cfif>>Primer Apellido</option>
+									<option value="6"  <cfif rsFTSeccionesD.TVariables EQ 6>  selected="selected"</cfif>>Segundo Apellido</option>
+									<option value="7"  <cfif rsFTSeccionesD.TVariables EQ 7>  selected="selected"</cfif>>Sexo</option>
+									<option value="8"  <cfif rsFTSeccionesD.TVariables EQ 8>  selected="selected"</cfif>>Fecha Nacimiento</option>
+									<option value="14" <cfif rsFTSeccionesD.TVariables EQ 14> selected="selected"</cfif>>Estado Civil</option>
 								</optgroup>
 								<optgroup label="Datos del Contrato">
-									<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9> selected="selected"</cfif>>Numero Contrato</option>
+									<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9>  selected="selected"</cfif>>Numero Contrato</option>
 									<option value="10" <cfif rsFTSeccionesD.TVariables EQ 10> selected="selected"</cfif>>Periodo Contratación</option>
 									<option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
 									<option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>

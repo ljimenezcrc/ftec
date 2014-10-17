@@ -5,7 +5,7 @@
 		<cfargument name="conexion" type="string"  required="no" default="ftec">			
 				
 		<cfquery name="rssql" datasource="#Arguments.conexion#">
-			select Cid,TCid,Cdescripcion,Cestado,Ecodigo,Usucodigo
+			select Cid,TCid,TTid,Cdescripcion,Cestado,Ecodigo,Usucodigo
 			from FTContratos
 			where 1 = 1
 			<cfif isdefined('Arguments.Cid')>
@@ -56,12 +56,13 @@
 	<cffunction name="set" returntype="numeric" hint="Funcion para Insertar o Actualizar contratos">
 		<cfargument name="Cid"	 		type="numeric" 	required="no">
 		<cfargument name="TCid" 		type="numeric" 	required="no" default="-1">
+		<cfargument name="TTid" 		type="numeric" 	required="no" default="-1">
 		<cfargument name="Cdescripcion" type="string" 	required="no" default="">
 		<cfargument name="Cestado" 		type="string" 	required="no" default="I">
 		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
 		<cfargument name="Usucodigo" 	type="numeric" 	required="no">
 		<cfargument name="conexion" type="string"  required="no" default="ftec">
-		
+
 		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
 			<cfset Arguments.Ecodigo = session.Ecodigo>
 		</cfif>
@@ -73,6 +74,7 @@
 			<cfquery name="rssql" datasource="#Arguments.Conexion#">
 				update FTContratos set 
 					TCid 			= <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TCid#" null="#Arguments.TCid EQ -1#">,
+					TTid 			= <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TTid#" null="#Arguments.TTid EQ -1#">,
 					Cdescripcion 	= <cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.Cdescripcion#">,
 					Cestado 		= <cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.Cestado#">,
 					Ecodigo 		= <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Ecodigo#">,
@@ -82,9 +84,10 @@
 			<cfreturn Arguments.Cid>
 		<cfelse>
 			<cfquery name="rssql" datasource="#Arguments.Conexion#">
-				insert into FTContratos (TCid,Cdescripcion,Cestado,Ecodigo,Usucodigo) 
+				insert into FTContratos (TCid,TTid,Cdescripcion,Cestado,Ecodigo,Usucodigo) 
 				values(
 					<cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TCid#" null="#Arguments.TCid EQ -1#">,
+					<cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TTid#" null="#Arguments.TTid EQ -1#">,
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.Cdescripcion#">,
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.Cestado#">,
 					<cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Ecodigo#">,

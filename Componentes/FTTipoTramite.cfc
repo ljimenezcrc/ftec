@@ -4,12 +4,14 @@
 	<!--- *************************** --->
 	<cffunction access="public" name="Get" returntype="query">
     	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
-        <cfargument name="TTcodigo" 		required="true" 	type="string">
+        <cfargument name="TTcodigo" 		required="false" 	type="string">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
 			select TTid, TTcodigo, TTdescripcion, Ecodigo
 				from <cf_dbdatabase table="FTTipoTramite" datasource="ftec">
-				where TTcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TTcodigo#" voidnull>
+				<cfif isdefined('Arguments.TTcodigo')>
+	                where TTcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TTcodigo#" voidnull>
+                </cfif>
 		</cfquery>
 
 		<cfif Arguments.Debug>

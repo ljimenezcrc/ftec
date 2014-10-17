@@ -130,28 +130,40 @@
     <cffunction access="public" name="Baja">
         <cfargument name="SPid" 			required="true" 	type="numeric" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
-        
+
         <cftransaction>  
         	<cfquery name="rsGet" datasource="#Session.DSN#">
                 select * 
                 from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
                 where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                and SPestado = 1
+                and SPestado = 1 <!---ya  aplicado por lo tanto  no se debe eliminar--->
             </cfquery>
-            
+ 
         	<cfif isdefined('rsGet') and rsGet.RecordCount EQ 0>
-            	<cfquery name="rsDeleteDet" datasource="#Session.DSN#">
-                    delete 
-                    from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
-                    where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
+            	<cfquery name="rsGet" datasource="#Session.DSN#">
+                   select SPid
+                    from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec">
+                    where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#">
                 </cfquery>
-                
-            	<cfquery name="rsDeleteEnc" datasource="#Session.DSN#">
-                    delete 
-                    from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
-                    where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                    and  SPestado = 0
-                </cfquery>
+                <cfif isdefined('rsGet') and rsGet.RecordCount EQ 0> 
+                    <cfquery name="rsDeleteDet" datasource="#Session.DSN#">
+                        delete 
+                        from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">
+                        where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
+                    </cfquery>
+                    
+                    <cfquery name="rsDeleteEnc" datasource="#Session.DSN#">
+                        delete 
+                        from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
+                        where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
+                        and  SPestado = 0
+                    </cfquery>
+                <cfelse>
+           			<cfquery datasource="#Session.DSN#">
+                		update <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> set SPestado = -1 	<!---borrado logico para que no se muestre en la lista--->
+                        where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
+                    </cfquery>
+                </cfif>
             <cfelse>
 				<cfset TitleErrs = 'Mensaje'>
                 <cfset MsgErr	 = 'Solicitudes'>

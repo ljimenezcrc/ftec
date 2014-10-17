@@ -1,6 +1,4 @@
 ﻿<cfcomponent name="FTTramites"  output="true">
-
-    
 	<!--- *************************** --->
 	<!--- Aplica Tramite  --->
 	<!--- *************************** --->
@@ -8,8 +6,6 @@
 		<cfargument name="SPid"				required="true" 	type="any">
         <cfargument name="TPid"				required="true" 	type="any">
         <cfargument name="HTcompleto"		required="no" 		type="any">
-        
-        <!---<cfargument name="Vid"				required="true" 	type="any">--->
         <cfargument name="Aprueba"			required="true" 	type="any">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
         
@@ -17,7 +13,10 @@
             select Usucodigo,HTfecha ETid,TPid,SPid,HTpasosigue
                 from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec">
                 where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#">
-                and  HTfecha = (select max(a.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#"> and HTcompleto = 1)
+                and  HTfecha = (select max(a.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a 
+                				where SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.SPid#"> 
+                                	and HTcompleto = 1
+                                )
         </cfquery>
         
         <cfif isdefined('rsSiguientePasoH') and rsSiguientePasoH.recordCount EQ 0>
@@ -132,11 +131,11 @@
                                     , 0 as EDselect
                                     , 0 as Interfaz
                                     , 0 as EDtipocambio
-                                    , (select sum(x.DSPimpuesto) from FTDSolicitudProceso x where x.SPid = a.SPid) as EDimpuesto
+                                    , (select sum(x.DSPimpuesto) from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> x where x.SPid = a.SPid) as EDimpuesto
                                     , 0 as EDporcdescuento
                                     , 0 as EDdescuento
                                     , 1 as EDtipocambio
-                                    , (select sum(x.DSPmonto) from FTDSolicitudProceso x where x.SPid = a.SPid) as EDtotal
+                                    , (select sum(x.DSPmonto) from  <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> x where x.SPid = a.SPid) as EDtotal
                                     ,  a.* 
                             from  <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                             inner join SNegocios b
@@ -253,209 +252,5 @@
         </cfquery>
         <cfreturn rs.Email>
 	</cffunction>
-    
-    
-    <!---    
-    <!--- ********************* --->
-	<!--- Baja tipo Autorizador --->
-	<!--- ********************* --->
-    <cffunction access="public" name="Baja">
-        <cfargument name="SPid" 			required="true" 	type="numeric" default="0">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
-        
-        <cftransaction>  
-        	<cfquery name="rsGet" datasource="#Session.DSN#">
-                select * 
-                from FTSolicitudProceso
-                where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                and SPestado = 1
-            </cfquery>
-            
-        	<cfif isdefined('rsGet') and rsGet.RecordCount EQ 0>
-            	<cfquery name="rsDeleteDet" datasource="#Session.DSN#">
-                    delete 
-                    from FTDSolicitudProceso
-                    where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                </cfquery>
-                
-            	<cfquery name="rsDeleteEnc" datasource="#Session.DSN#">
-                    delete 
-                    from FTSolicitudProceso
-                    where  SPid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                    and  SPestado = 0
-                </cfquery>
-            <cfelse>
-				<cfset TitleErrs = 'Mensaje'>
-                <cfset MsgErr	 = 'Solicitudes'>
-                <cfset DetErrs 	 = 'La solicitud ya fue aplicada, no se puede eliminar.'>
-                <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
-            </cfif>	
-        </cftransaction>
-        <cfreturn>
-	</cffunction>
-    
-    
-    <!--- *************************** --->
-	<!--- Cambio Encabezado solicitud --->
-	<!--- *************************** --->
-	<cffunction access="public" name="Cambio">
-    	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
-
-        <cfargument name="TPid"				required="true" 	type="numeric" default="0">
-        <cfargument name="Vid"				required="true" 	type="numeric" default="0">
-        <cfargument name="FPid"				required="true" 	type="numeric" default="0">
-        <cfargument name="SPfecha"			required="true" 	type="date">
-        <cfargument name="Usucodigo"		required="true" 	type="numeric" default="#session.Usucodigo#">
-        <cfargument name="SPestado"			required="true" 	type="numeric" default="0">
-        <cfargument name="SPacta"			required="true" 	type="string" default="NDF">
-        <cfargument name="LPid"				required="false" 	type="numeric" >
-        <cfargument name="Mcodigo"			required="false" 	type="numeric" >
-        <cfargument name="SPobservacion"	required="false" 	type="string" >
-        <cfargument name="SPctacliente"		required="false" 	type="string" >
-        <cfargument name="Bid"				required="false" 	type="numeric">
-        <cfargument name="SPfechaTrans"		required="false" 	type="date">
-        <cfargument name="SNcodigo"			required="false" 	type="numeric" >
-        <cfargument name="SPfechaReg"		required="false" 	type="date">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
-        
-       
-
-        <cftransaction>   
-            <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                update FTSolicitudProceso set 
-                    TPid		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.TPid#" 		voidnull>
-                    ,Vid  	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#" 		voidnull>
-                    ,FPid   = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.FPid#" 		voidnull>
-                    <cfif isdefined('Arguments.LPid')>
-                    	,LPid 	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.LPid#" 		voidnull>
-                    <cfelse>
-                    	,LPid 	= null
-                    </cfif>              
-                    <cfif isdefined('Arguments.Mcodigo')>
-                    	,Mcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Mcodigo#" 	voidnull>
-                    <cfelse>
-                    	,Mcodigo = null
-                    </cfif>               
-                    ,SPfecha 	= <cf_jdbcquery_param cfsqltype="cf_sql_date"	value="#Arguments.SPfecha#" 	voidnull>            
-                    ,SPfechaReg = <cf_dbfunction name="today">        
-                    ,Usucodigo  = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Usucodigo#" 	voidnull>         
-                    ,SPestado   = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPestado#" 	voidnull>        
-                    ,SPacta  	= <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.SPacta#" 		voidnull>
-                    <cfif isdefined('Arguments.SPobservacion')>
-                        ,SPobservacion =  <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.SPobservacion#" 	voidnull>
-                    <cfelse>
-                        ,SPobservacion =  null
-                    </cfif>
-                    
-                    <cfif isdefined('Arguments.SPctacliente')>
-                       ,SPctacliente =   <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.SPctacliente#" 	voidnull>
-                    <cfelse>
-                       ,SPctacliente =  null
-                    </cfif>
-                    
-                    <cfif isdefined('Arguments.Bid')>
-                       , Bid =   <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Bid#" 	voidnull>
-                    <cfelse>
-                       , Bid =  null
-                    </cfif>
-                    <cfif isdefined('Arguments.SPfechaTrans')>
-                        ,SPfechaTrans =   <cf_jdbcquery_param cfsqltype="cf_sql_date"	value="#Arguments.SPfechaTrans#" 	voidnull>
-                    <cfelse>
-                       , SPfechaTrans =  null
-                    </cfif>
-                    <cfif isdefined('Arguments.SNcodigo')>
-                        ,SNcodigo =   <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SNcodigo#" 	voidnull>
-                    <cfelse>
-                       , SNcodigo =  null
-                    </cfif>
-                where SPid=  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#" voidnull>
-            </cfquery>
-    
-            <cfif Arguments.Debug>
-                <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select  
-                        SPid
-                        TPid
-                        ,Vid  
-                        ,FPid                 
-                        ,LPid                 
-                        ,Mcodigo              
-                        ,SPfecha              
-                        ,SPfechaReg           
-                        ,Usucodigo            
-                        ,SPestado             
-                        ,SPacta 
-                        ,Ecodigo
-                    from FTSolicitudProceso
-                    where SPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.SPid#" voidnull> 
-                </cfquery>
-                <cfdump var="#Arguments#">
-                <cfdump var="#rsDebug#">
-                <cfabort>
-            </cfif>
-		</cftransaction>
-		<cfreturn>
-	</cffunction>
-	    
-    <!---detalle de solicitud--->
-       
-    
-    <cffunction access="public" name="AltaDetalle" returntype="numeric">
-        <cfargument name="SPid"				required="true" 	type="numeric" >
-        <cfargument name="DSPdocumento"		required="true" 	type="string" >
-        <cfargument name="DSPdescripcion"	required="true" 	type="string" >
-        <cfargument name="DSPobjeto"		required="false" 	type="string" >
-        <cfargument name="DSPmonto"			required="false" 	type="numeric" default="0.00" >
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
-        <cftransaction> 
-        <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into FTDSolicitudProceso (SPid
-                                                ,DSPdocumento  
-                                                ,DSPdescripcion                 
-                                                ,DSPobjeto                   
-                                                ,DSPmonto            
-                                          	)
-                                        values(	<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.SPid#" 			voidnull>
-                                                , <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdocumento#" 	voidnull>
-                                                , <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdescripcion#" 	voidnull>
-                                                , <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPobjeto#" 		voidnull>                                               
-                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.DSPmonto#" 	voidnull>
-                                                )
-                <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
-            </cfquery>
-            <cf_dbidentity2 datasource="#session.DSN#" name="rsInsert" verificar_transaccion="false"> 
-            
-            <cfset Lvar_Iid = rsInsert.Identity>
-    
-            <cfif Arguments.Debug>
-                <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select DSPid,SPid,DSPdocumento,DSPdescripcion,DSPobjeto,DSPmonto
-                    from FTDSolicitudProceso
-                    where DSPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
-                </cfquery>
-                <cfdump var="#Arguments#">
-                <cfdump var="#rsDebug#">
-                <cfabort>
-            </cfif>
-      		</cftransaction>
-		<cfreturn Lvar_Iid>
-	</cffunction>
-    
-    <!--- ********************* --->
-	<!--- Baja detalle --->
-	<!--- ********************* --->
-    <cffunction access="public" name="BajaDetalle">
-        <cfargument name="DSPid" 			required="true" 	type="any" default="0">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
-        <cftransaction>   
-            <cfquery name="rsDebug" datasource="#Session.DSN#">
-                delete 
-                from FTDSolicitudProceso
-                where  DSPid in (<cfqueryparam cfsqltype="cf_sql_varchar"  list="yes" value="#Arguments.DSPid#"> )
-            </cfquery>	
-        </cftransaction>
-        <cfreturn>
-	</cffunction>--->
-    
 
 </cfcomponent>

@@ -122,7 +122,7 @@
                                                 and a11.HTfecha = (select max(b11.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> b11 where b11.SPid = a11.SPid and HTcompleto = 1)
                                                 and HTcompleto = 1                                                
                                             )
-                            )
+                            ) 
                         )    
                 
                     inner join <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> ht
@@ -130,6 +130,7 @@
                             and ht.HTfecha = (select max(b1.HTfecha) from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> b1 where ht.SPid = b1.SPid)
                             and ht.HTpasosigue > 0   
                     where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
+                    
                     and e.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">
                     
                 
@@ -143,6 +144,8 @@
                     and b.Vcodigo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Form.Vcodigoresp#">
                 </cfif>--->
             </cfquery>  
+
+            
             
             
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">

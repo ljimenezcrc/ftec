@@ -93,9 +93,16 @@
                     on a.TPid = d.TPid
                     and a.Ecodigo = c.Ecodigo
                 where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
-                and not exists (select 1 from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> h where h.SPid = a.SPid)
-                
-                <cfif isdefined("Form.TipoProceso") and Len(Trim(Form.TipoProceso)) NEQ 0>
+                and not exists (select 1 from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> h 
+                                where h.SPid = a.SPid
+                                and h.HTfecha = (select max(h1.HTfecha) 
+                                                from <cf_dbdatabase table="FTHistoriaTramite " datasource="ftec"> h1  
+                                                where h1.SPid = h.SPid)
+                                and h.HTpasosigue <> 1
+                                
+                                )
+
+                    <cfif isdefined("Form.TipoProceso") and Len(Trim(Form.TipoProceso)) NEQ 0>
                     <cfif Form.TipoProceso NEQ "-1">
                         and d.TPcodigo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Form.TipoProceso#">
                     </cfif>
@@ -104,6 +111,7 @@
                     and b.Vcodigo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Form.Vcodigoresp#">
                 </cfif>
                 and a.Usucodigo = #session.Usucodigo#
+                and a.SPestado <> -1
             </cfquery>  
             
             

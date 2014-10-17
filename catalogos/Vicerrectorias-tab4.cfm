@@ -158,7 +158,7 @@ returnvariable="LB_UsuarioAutorizadores"/>
                 <cf_dbdatabase table="FTTipoAutorizador " datasource="ftec" returnvariable="FTTipoAutorizador">
                 
                 
-				<cfinvoke component="rh.Componentes.pListas" method="pListaRH" returnvariable="pListaRet" >
+				<cfinvoke component="commons.Componentes.pListas" method="pListaRH" returnvariable="pListaRet" >
 					<cfinvokeargument name="tabla" value="#FTAutorizador# aut, Usuario a, DatosPersonales b ,#FTTipoAutorizador# z "/>
 					<cfinvokeargument name="columnas" value="
 							a.Usucodigo, a.Usulogin, aut.Aid as Apk

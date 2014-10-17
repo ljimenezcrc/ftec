@@ -1,4 +1,5 @@
 <cfif not isdefined("Form.NuevoEnc")>
+
 	<cfif isdefined("Form.AplicarEnc") or isdefined("Form.RechazarEnc")>
     	
     	<cfinvoke component="ftec.Componentes.FTTramites" method="AplicaTramite" >
@@ -39,13 +40,14 @@
         
         <cfset modo = 'CAMBIO'>
         <cfset SPid = #Lvar_ID#>
-    <cfelseif isdefined("Form.BajaEnc")>
-    	<cfset modo = 'ALTA'>
+    <cfelseif isdefined("Form.EliminarEnc")>
+    	
        
         <cfinvoke component="ftec.Componentes.FTSolicitudProceso" method="Baja" returnvariable="rsGet" >
             <cfinvokeargument name="SPid" 		value="#form.SPid#">
             <cfinvokeargument name="Debug"		value="false">
         </cfinvoke>
+        <cfset modo = 'ALTA'>
 	    <cflocation url="Solicitudes-lista.cfm">
 	<cfelseif isdefined("Form.CambioEnc")>
        

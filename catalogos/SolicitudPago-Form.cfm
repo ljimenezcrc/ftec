@@ -371,7 +371,7 @@
                                 <cfif isdefined('form.Tramite') and #modo# EQ 'CAMBIO'>
                                 	<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Rechazar,Regresar" >
 								<cfelseif #modo# EQ 'CAMBIO'>
-	                               	<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Regresar" exclude="BAJA" >
+	                               	<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Eliminar,Regresar" exclude="BAJA" >
                                 <cfelse>
                                 	<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" >
                                 </cfif>

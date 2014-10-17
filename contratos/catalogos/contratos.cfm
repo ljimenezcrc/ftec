@@ -1,5 +1,6 @@
 <cfparam name="rsContrato.Cid" 			default="">
 <cfparam name="rsContrato.TCid" 		default="">
+<cfparam name="rsContrato.TTid" 		default="">
 <cfparam name="rsContrato.Cdescripcion"	default="">
 <cfparam name="rsContrato.Cestado" 		default="">
 <cfparam name="rsContrato.Ecodigo" 		default="">
@@ -11,6 +12,10 @@
 
 <cfinvoke component="ftec.Componentes.FTContratos" method="getTipo" returnvariable="rsTipoContrato"></cfinvoke>
 <cfinvoke component="ftec.Componentes.FTContratos" method="get" returnvariable="rsContratoAll"></cfinvoke>
+<cfinvoke component="ftec.Componentes.FTTipoTramite" method="Get" returnvariable="rsTipoTramite"></cfinvoke>
+
+
+
 <!---Guarda el Contrato--->
 <cfif isdefined('form.btnGuardar')>
 	<cfinvoke component="ftec.Componentes.FTContratos" method="set" returnvariable="LvarCid">
@@ -19,6 +24,9 @@
 		</cfif>
 		<cfif LEN(TRIM(form.TCid))>
 			<cfinvokeargument name="TCid" 			value="#form.TCid#">
+		</cfif>
+		<cfif LEN(TRIM(form.TTid))>
+			<cfinvokeargument name="TTid" 			value="#form.TTid#">
 		</cfif>
 			<cfinvokeargument name="Cdescripcion" 	value="#form.Cdescripcion#">
 			<cfinvokeargument name="Cestado" 		value="#form.Cestado#">

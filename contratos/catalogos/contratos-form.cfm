@@ -67,8 +67,15 @@
 		<tr>
 			<td align="right">Trámite:</td>
 			<td>
-				<select name="CidTramite" id="CidTramite">
+
+				<!--- Id de tipo de tramite --->
+				<select name="TTid" id="TTid">
 					<option value="">Sin Trámite</option>
+					<cfloop query="rsTipoTramite">
+						<cfoutput>
+							<option value="#rsTipoTramite.TTid#" <cfif rsContrato.TTid EQ rsTipoTramite.TTid>selected="selected"</cfif>>#rsTipoTramite.TTdescripcion#</option>
+						</cfoutput>
+					</cfloop>
 				</select>
 			</td>
 		</tr>	

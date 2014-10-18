@@ -19,15 +19,29 @@
 		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	}
 </style>
+
+
+
 <cfif isdefined('form.modo') and form.modo eq 'CAMBIO'>
     <cfquery name="rsForm" datasource="ftec">
         select a.*,b.TCid ,b.Cdescripcion
         from FTPContratacion a
         inner join FTContratos b
 			on b.Cid = a.Cid
-        where a.PCid = #form.PCid#
+		left join FTVicerrectoria c 
+			on c.Vid = a.Vid
+        where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
+    </cfquery>
+
+    <cfquery name="rsProyectos" datasource="#Session.DSN#">
+        select a.*, b.Vcodigo as Vcodigoresp, b.Vdescripcion as Vdescripcionresp , b.Vid as Vpkresp
+        from  <cf_dbdatabase table="FTPContratacion " datasource="ftec"> a
+        inner join <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> b
+	        on a.Vid = b.Vid       
+        where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
     </cfquery>
 </cfif>
+
 <cfset arrValuesCambio = ArrayNew(1)>
 <cfif isdefined('modo') and modo NEQ 'ALTA'>
 	<cfif len(trim(rsForm.Cid))>
@@ -80,6 +94,17 @@
 				showEmptyListMsg="true"
 				Cortes="TCdescripcion"
 				EmptyListMsg=" --- No Existen Contratos definidos --- "/>	
+	</div>
+</div>
+
+<div class="row">
+	<label for="Vcodigoresp" style="text-align:right" class="col-sm-2">Proyecto:</label>
+	<div class="col-sm-4">
+		<cfif isdefined('rsForm') and isdefined('rsProyectos')>
+	        <cf_FTvicerrectoria form="fmContratacion"  size="30"  name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1" query="#rsProyectos#"> 
+	    <cfelse>
+	        <cf_FTvicerrectoria tabindex="1" form="fmContratacion" size="30" id="Vpkresp" name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1">
+	    </cfif>
 	</div>
 </div>
 

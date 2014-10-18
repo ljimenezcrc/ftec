@@ -34,6 +34,7 @@
             <option value="4" >IICA - Pruebas SQL Server</option>
             <option value="5" >IICA - Produccion SQL Server</option>
             <option value="6" >FundaTec - SQL Server - SOIN</option>
+            <option value="7" >IICA - Certificacion SQL Server</option>
         </select>
     </td>
     <tr>
@@ -112,6 +113,15 @@
 					document.getElementById("pass").value = "cfusion5";
 					document.getElementById("port").value = "1433";
 					document.getElementById("server").value = "sqlserver2008";
+				}
+				break;
+				
+				case '7':{
+					document.getElementById("Database").value = "2";
+					document.getElementById("user").value = "cfusion5";
+					document.getElementById("pass").value = "cfusion5";
+					document.getElementById("port").value = "5050";
+					document.getElementById("server").value = "rhiicabdtest.cloudapp.net";
 				}
 				break;
 			}

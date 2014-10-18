@@ -2,7 +2,6 @@
 <cf_importLibs>
 
 
-
 <!---Etiquetas del Form--->
 <cfset LB_RegistroInformacionCesantia = t.translate('LB_RegistroInformacionCesantia','Registro de Información para Estimación de Cesantia','/rh/generales.xml')>
 <cfset LB_Empleado = t.translate('LB_Empleado','Empleado','/rh/generales.xml')>
@@ -14,6 +13,7 @@
 <cfset LB_Provision = t.translate('LB_Provision','Provisión','/rh/generales.xml')>
 <cfset LB_Cesantia = t.translate('LB_Cesantia','Cesantia','/rh/generales.xml')>
 <cfset LB_Adelanto = t.translate('LB_Adelanto','Adelanto','/rh/generales.xml')>
+<cfset LB_Proyecto = t.translate('LB_Proyecto','Proyecto','/rh/generales.xml')>
 <cfset LB_ListaContratos = t.translate('LB_ListaContratos','Lista de Contratos','/rh/generales.xml')>
 
 <cfparam name="rsContrato.Cid" 			default="">
@@ -81,6 +81,7 @@
 		<cfif isdefined('form.PCid') and LEN(TRIM(form.PCid))>
 			<cfinvokeargument name="PCid" value="#form.PCid#">
 		</cfif>
+        <cfinvokeargument name="Vid"                value="#form.Vid#">
         <cfinvokeargument name="Cid" 				value="#form.Cid#">
         <cfinvokeargument name="PCTidentificacion" 	value="#form.PCTidentificacion#">
         <cfinvokeargument name="PCIdentificacion" 	value="#form.PCIdentificacion#">
@@ -109,6 +110,15 @@
 <!---Regresa a la lista--->	
 <cfelseif isdefined('form.btnRegresar')>
 	<cfset form.PCid = "">
+
+<!---Ènvia al tramite el contrato---> 
+<cfelseif isdefined('form.btnTramite')>
+    <cfinvoke component="ftec.Componentes.FTTramitesContratacion" method="AplicaTramite" returnvariable="rsContrato">
+        <cfinvokeargument name="PCid" value="#form.PCid#">
+        <cfinvokeargument name="Aprueba" value="1"> <!--- lo esta enviando al tramite --->
+        
+    </cfinvoke>
+
 </cfif>
 
 <cfif LEN(TRIM(form.Cid))>

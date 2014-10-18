@@ -22,6 +22,7 @@
             from FTPContratacion a
                 inner join FTContratos b
                     on b.Cid = a.Cid
+            where a.PCEstado = 'T'
         </cfquery>
 
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">

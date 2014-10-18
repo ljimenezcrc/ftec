@@ -1,8 +1,8 @@
 ﻿<cfcomponent name="FTPContratacion"  output="true">
 <!---    
 PCid				<!--- Id de la  Tabla --->
-
-Cid 				<!---tipo de Contrato--->
+,Vid                <!--- Id de Proycto --->
+,Cid 				<!---tipo de Contrato--->
 ,PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
 ,PCIdentificacion 	<!---Identificacion oferente--->
 ,PCNombre			<!---Nombre Oferente cuando es fisico / Nombre Empresa es Juridico--->
@@ -22,34 +22,40 @@ Cid 				<!---tipo de Contrato--->
 ,PCUsucodigoC		<!--- Usuario creo Contrato --->
 ,PCUsucodigoA		<!--- Usuario que apruebo Contrato --->
 ,PCUsucodigoF		<!--- Usuario que Finiquito/cancelo Contrato --->
-
 --->
+
 
 	<cffunction access="public" name="Get" returntype="query">
     	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
+        <cfargument name="PCid" 			required="false" 	type="numeric">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
+        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
-			select Cid 					<!---tipo de Contrato--->
-					,PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
-					,PCIdentificacion 	<!---Identificacion oferente--->
-					,PCNombre			<!---Nombre Oferente cuando es fisico / Nombre Empresa es Juridico--->
-					,PCApellido1		<!--- apellido1 del oferente fisico / Razon Social es Jurico --->
-					,PCApellido2		<!--- Apellido2 oferente --->
-					,PCSexo				<!--- F=Femenino, M=Masculino--->
-					,PCEstadoCivil		<!--- Estado Civil del  oferente  1=soltero, 2=casado, 3=divorciado, 4=union libre, 5=separado --->
-					,PCFechaN			<!--- Fecha Nacimiento oferente--->
-					,PCEstado 			<!--- Estado del Contrato P=Proceso edicion, T= en tramite, A=Aprobado, R=Rechazado,F=Finiquito del contrato(Cancelado)--->
-					,PCEnumero			<!--- Numero del contrato se asigna una ves aprobado --->
-					,PCEPeriodo			<!--- Año aprobacion contrato se asigna una ves aprobado --->
+			select a.Cid 					<!---tipo de Contrato--->
+                    ,a.Vid                <!--- Id de Proycto --->
+					,a.PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
+					,a.PCIdentificacion 	<!---Identificacion oferente--->
+					,a.PCNombre			<!---Nombre Oferente cuando es fisico / Nombre Empresa es Juridico--->
+					,a.PCApellido1		<!--- apellido1 del oferente fisico / Razon Social es Jurico --->
+					,a.PCApellido2		<!--- Apellido2 oferente --->
+					,a.PCSexo				<!--- F=Femenino, M=Masculino--->
+					,a.PCEstadoCivil		<!--- Estado Civil del  oferente  1=soltero, 2=casado, 3=divorciado, 4=union libre, 5=separado --->
+					,a.PCFechaN			<!--- Fecha Nacimiento oferente--->
+					,a.PCEstado 			<!--- Estado del Contrato P=Proceso edicion, T= en tramite, A=Aprobado, R=Rechazado,F=Finiquito del contrato(Cancelado)--->
+					,a.PCEnumero			<!--- Numero del contrato se asigna una ves aprobado --->
+					,a.PCEPeriodo			<!--- Año aprobacion contrato se asigna una ves aprobado --->
 					
-					,PCFechaC			<!--- Fecha Contrato --->
-					,PCFechaA			<!--- Fecha Aprobado Contrato --->
-					,PCFechaF			<!--- Fecha Finiquito Contrato --->
+					,a.PCFechaC			<!--- Fecha Contrato --->
+					,a.PCFechaA			<!--- Fecha Aprobado Contrato --->
+					,a.PCFechaF			<!--- Fecha Finiquito Contrato --->
 					
-					,PCUsucodigoC		<!--- Usuario creo Contrato --->
-					,PCUsucodigoA		<!--- Usuario que apruebo Contrato --->
-					,PCUsucodigoF		<!--- Usuario que Finiquito/cancelo Contrato --->
-				from <cf_dbdatabase table="FTPContratacion" datasource="ftec">
+					,a.PCUsucodigoC		<!--- Usuario creo Contrato --->
+					,a.PCUsucodigoA		<!--- Usuario que apruebo Contrato --->
+					,a.PCUsucodigoF		<!--- Usuario que Finiquito/cancelo Contrato --->
+                    ,b.TTid				<!---tipo de tramite--->
+				from <cf_dbdatabase table="FTPContratacion" datasource="ftec"> a
+                left join <cf_dbdatabase table="FTContratos" datasource="ftec"> b
+                	on b.Cid = a.Cid
 				where PCid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
 		</cfquery>
 
@@ -69,6 +75,7 @@ Cid 				<!---tipo de Contrato--->
     
 	<cffunction access="public" name="set" returntype="numeric"  hint="Funcion para Insertar o Actualizar contratos">
         <cfargument name="PCid" 				required="false" 	type="numeric">
+        <cfargument name="Vid"                  required="true"     type="numeric">
         <cfargument name="Cid" 					required="true" 	type="numeric">
     	<cfargument name="PCTidentificacion" 	required="true" 	type="string">
         <cfargument name="PCIdentificacion" 	required="true" 	type="string">
@@ -88,6 +95,7 @@ Cid 				<!---tipo de Contrato--->
              <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
             	update FTPContratacion set
                     Cid 				= <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Cid#">
+                    ,Vid                = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"  value="#Arguments.Vid#" voidnull>
                     ,PCTidentificacion 	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCTidentificacion#" 	voidnull>
                     ,PCIdentificacion 	= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCIdentificacion#" 	voidnull>
                     ,PCNombre			= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCNombre#" 			voidnull>
@@ -105,9 +113,10 @@ Cid 				<!---tipo de Contrato--->
                 <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
                     insert into FTPContratacion (	  
                             Cid 				<!---tipo de Contrato--->
-                            ,PCTidentificacion 	<!---tipo Identificacion oferente F=fisica, J=juridica--->
-                            ,PCIdentificacion 	<!---Identificacion oferente--->
-                            ,PCNombre			<!---Nombre Oferente cuando es fisico / Nombre Empresa es Juridico--->
+                            ,Vid                <!--- Id Proyecto --->
+                            ,PCTidentificacion 	<!--- tipo Identificacion oferente F=fisica, J=juridica--->
+                            ,PCIdentificacion 	<!--- Identificacion oferente--->
+                            ,PCNombre			<!--- Nombre Oferente cuando es fisico / Nombre Empresa es Juridico--->
                             ,PCApellido1		<!--- apellido1 del oferente fisico / Razon Social es Jurico --->
                             ,PCApellido2		<!--- Apellido2 oferente --->
                             ,PCSexo				<!--- F=Femenino, M=Masculino--->
@@ -119,6 +128,7 @@ Cid 				<!---tipo de Contrato--->
                             ,PCUsucodigoC		<!--- Usuario creo Contrato --->
                             )
                     values(	  <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#Arguments.Cid#">
+                            , <cf_jdbcquery_param cfsqltype="cf_sql_numeric"  value="#Arguments.Vid#" voidnull>
                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.PCTidentificacion#" 		voidnull>
                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.PCIdentificacion#" 		voidnull>
                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.PCNombre#" 		voidnull>

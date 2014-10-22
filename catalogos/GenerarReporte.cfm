@@ -96,6 +96,8 @@
 		</cfif>
 		order by c.Cformato
 	</cfquery>
+	
+	<!--- <cf_dump var="#rsCuentasContables#"> --->
 
 	<cfset fnPintaReporte()>
     <cfreturn>
@@ -671,6 +673,7 @@
             </cfloop>
 		</cfcase>
 	</cfswitch>
+
 	<cfquery name="rsCantidad" datasource="#session.dsn#">
 		select count(1) as Cantidad
 		from #reporte#
@@ -680,51 +683,37 @@
 
 <cffunction name="fnActualizaDatos"  hint="Actualiza los datos de la tabla temporal">
 	<!--- Actualizar los Saldos Iniciales de las Cuentas Seleccionadas --->
-    <cfset mySLinicial = "SLinicialGE">
+
 	<cfquery datasource="#session.dsn#">
 		update #reporte#
 		set saldoini = coalesce((
 				select 
-				<cfif isdefined("form.Mcodigo") and  len(trim(form.Mcodigo))>
-					sum(s.#mySOinicial#) 
-				<cfelse>
-					sum(s.#mySLinicial#)
-				</cfif>
+					sum(s.SLinicial)
 				from SaldosContables s
 				where s.Ccuenta  = #reporte#.Ccuenta
 				  and s.Speriodo = #reporte#.Speriodo
 				  and s.Smes     = #reporte#.Smes1
-				<!---<cfif Oficina eq true>
-					and s.Ocodigo in (#ListaOficinas#)
-				</cfif>--->
-				<cfif isdefined("form.Mcodigo") and  len(trim(form.Mcodigo))>
-					and s.Mcodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.Mcodigo#">
-				</cfif>
 				) , 0.00)
 	</cfquery>
 
+
+<!--- 	<cfquery name="rsxx" datasource="#session.dsn#">
+		select *
+		from #reporte#
+	</cfquery>
+<cf_dump var="#rsxx#"> --->
 	
 		<!--- Actualizar los Debitos de las Cuentas --->
 		<cfquery datasource="#session.dsn#">
 			update #reporte#
 			set debitos = coalesce((
 					select 
-					<cfif isdefined("form.Mcodigo") and  len(trim(form.Mcodigo))>
-						sum(s.DOdebitos) 
-					<cfelse>
 						sum(s.DLdebitos)
-					</cfif>
 					from SaldosContables s
 					where s.Ccuenta  =  #reporte#.Ccuenta
 					  and s.Speriodo =  #reporte#.Speriodo
 					  and s.Smes     >= #reporte#.Smes1
 					  and s.Smes     <= #reporte#.Smes2
-					<!---<cfif Oficina eq true>
-						and s.Ocodigo in (#ListaOficinas#)
-					</cfif>	--->
-					<cfif isdefined("form.Mcodigo") and  len(trim(form.Mcodigo))>
-						and s.Mcodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.Mcodigo#">
-					</cfif>
 					) , 0.00)
 		</cfquery>
 		<!--- Actualizar los Debitos de las Cuentas para asientos de cierre--->
@@ -894,4 +883,6 @@
 			where nivel > 12
 		</cfquery>
 	</cfif>
+
+
 </cffunction>

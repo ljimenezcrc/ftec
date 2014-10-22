@@ -165,8 +165,11 @@
 	        </tr>
             <cfloop from="#form.PeriodoInicio#" to ="#form.PeriodoFinal#" index="i">	
             	<cfset fcinicio = createdate(#i#,#form.MesInicial#,01)>
-				<cfset fcfin = createdate(#i#,#form.MesFinal#,Day(DateAdd("d", -1, #fcinicio#)))> 
- 
+
+                <cfset dia = day(dateadd("s",-1,dateadd("m", datediff("m",0,createdate(#i#,#form.MesFinal#,01))+1,0)))>
+				
+                <cfset fcfin = createdate(#i#,#form.MesFinal#,#dia#)>
+
                 <cfquery name="rsComentarios" datasource="#session.dsn#">
                     select *
                     from <cf_dbdatabase table="FTIComentario" datasource="ftec">

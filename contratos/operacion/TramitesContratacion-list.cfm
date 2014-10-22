@@ -1,14 +1,50 @@
-﻿<cf_templateheader title="Contratos">
+﻿
+<cf_templateheader title="Contratos">
     <cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Creación de Contrato'>
+        <cf_importLibs>
+        <!---<script src="/cfmx/jquery/librerias/jquery.blockUI2.66.js"></script> --->
+        <script language="JavaScript1.2" type="text/javascript">
+ 
+        
+            function VerContrato(PCid) 
+            { 
+              window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid='+PCid,'mywindow');
+            }
 
-        <script language="JavaScript" type="text/JavaScript">
-        <!--
-        function VerContrato(var) {  //reloads the window if Nav4 resized
-          alert(PCid);
-          <!---window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid=<cfoutput>#PCid#</cfoutput>','mywindow')"--->
-        }
+        function Aprueba(PCid){ 
+            var Aprueba = 1
+            var dataP = {
+                method: "AplicaTramite",
+                 PCid:  PCid,
+                 Aprueba:  Aprueba     
+                }
 
 
+                try {
+                    $.ajax ({
+                        type: "get",
+                        url: "FTTramitesContratacion.cfc",
+                        data: dataP,
+                        dataType: "json",
+                        success: function( objResponse ){
+
+                         var lista = objResponse.DATA;
+
+                                
+                            },
+                        error:  function( objRequest, strError ){
+                            alert('ERROR'+objRequest + ' - ' + strError);
+                            console.log(objRequest);
+                            console.log(strError);
+                            }
+                    });
+                } catch(ss){
+                 alert('FALLO Inesperado');
+                 console.log(ss);
+                }
+            }
+
+ 
         </script>
         <form name="fmContratacion" class="form-inline"  role="form" action="TramitesContratacion-list.cfm" method="post">
             <cf_dbfunction name="op_concat" returnvariable="_cat">
@@ -34,7 +70,7 @@
                             ,b.Cdescripcion
                             ,{fn concat('<img border=''0'' width= ''15%'' onClick=''eliminar(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/rechaza.png''>')})}  as RechazaStr
 
-                            ,{fn concat('<img border=''0''  width= ''15%''  onClick=''eliminar(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/aprueba.png''>')})}  as ApruebaStr
+                            ,{fn concat('<img border=''0''  width= ''15%''  onClick=''Aprueba(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/aprueba.png''>')})}  as ApruebaStr
 
                             ,{fn concat('<img border=''0''  width= ''30%''  onClick=''VerContrato(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as VerStr
                         from FTPContratacion a

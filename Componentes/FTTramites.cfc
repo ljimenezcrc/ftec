@@ -18,6 +18,7 @@
                                 	and HTcompleto = 1
                                 )
         </cfquery>
+ 
         
         <cfif isdefined('rsSiguientePasoH') and rsSiguientePasoH.recordCount EQ 0>
         	<cfquery name="rsSiguientePaso" datasource="#Session.DSN#">
@@ -123,18 +124,45 @@
                     </cfquery>
 
                     <cfif isdefined('rsPostearEcabezado') and rsPostearEcabezado.RecordCount EQ 1>
+                        <cfquery name="rsSP" datasource="#Session.DSN#">
+                            select Mcodigo ,SPfechaarribo 
+                            from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a 
+                            where a.SPid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.SPid#">
+                        </cfquery>
+                        
+                        <cfquery name="TCsug" datasource="#Session.DSN#">
+                            select tc.Mcodigo,tc.TCcompra,tc.TCventa,tc.Hfecha,tc.Hfechah
+                            from Htipocambio tc
+                            where tc.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
+                                and tc.Mcodigo =  <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsSP.Mcodigo#">
+                                and tc.Hfecha <= '#dateformat(rsSP.SPfechaarribo,'yyyymmdd')#'
+                                and tc.Hfechah > '#dateformat(rsSP.SPfechaarribo,'yyyymmdd')#'
+                        </cfquery>
+                        
+                        <cfif isdefined('TCsug') and TCsug.RecordCount GT 0>
+                        	<cfset LvarTC = TCsug.TCcompra>
+                        <cfelse>
+	                        <cfset LvarTC = 1>
+                        </cfif>
+                    
                         <cfquery name="rsEncabezado" datasource="#Session.DSN#">
                             select b.CFcuentaCxP
                             		,'FC' as CPTcodigo
                                     , 0 as EDexterno
-                                    , 0 as Ocodigo
+                                    , (select min(cf.Ocodigo)
+                                        from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec">  a1
+                                        inner join <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">  b1
+                                        on b1.Vid = a1.Vid
+                                        inner join CFuncional cf
+                                        on cf.CFid = b1.CFid
+                                        where a1.SPid = a.SPid) as Ocodigo
                                     , 0 as EDselect
                                     , 0 as Interfaz
-                                    , 0 as EDtipocambio
+                                    <!---, 0 as EDtipocambio--->
                                     , (select sum(x.DSPimpuesto) from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> x where x.SPid = a.SPid) as EDimpuesto
                                     , 0 as EDporcdescuento
                                     , 0 as EDdescuento
-                                    , 1 as EDtipocambio
+                                    , #LvarTC# as EDtipocambio
                                     , (select sum(x.DSPmonto) from  <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> x where x.SPid = a.SPid) as EDtotal
                                     ,  a.* 
                             from  <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a

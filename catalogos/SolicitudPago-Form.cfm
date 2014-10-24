@@ -390,6 +390,9 @@
 
 
 
+<!--- <cfif form.modo neq 'ALTA'></cfif> --->
+    
+
 <form  name="fDetalle" method="post" action="SolicitudPago-Sql.cfm">
 	<input type="hidden" name="modo" value="#modo#">
     <input type="hidden" name="SPid" value="#form.SPid#">
@@ -484,7 +487,10 @@
 <cf_dbfunction name="to_char" args="a.DSPid" returnvariable="Lvar_DSPid">
 <cf_dbfunction name="concat" args="'<img src=/cfmx/rh/imagenes/edit_o.gif  onclick=editarlinea(' | #Lvar_DSPid# |') style=cursor:pointer />'" delimiters="|"  returnvariable="Lvar_editarregistro">
   
-<cfif isdefined('form.SPid') and form.SPid GT 0>
+<cfif isdefined('form.SPid') and form.SPid GT 0  and modo EQ 'CAMBIO' >
+    <!--- and not isdefined('form.Tramite') --->
+ <!---    <cfdump var="#form#"> --->
+    <!--- <cfif modo EQ 'CAMBIO' and not isdefined('form.Tramite') > --->
     <table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
         <tr>
             <td align="center">

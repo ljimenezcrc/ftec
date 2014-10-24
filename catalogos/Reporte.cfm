@@ -80,7 +80,7 @@
                     order by Speriodo
                 </cfquery> 
                 
-                <!---<cf_dump var="#rsCuentasContables#">--->
+                <!--- <cf_dump var="#rsDatos#"> --->
                 
                 <cfquery  dbtype="query" name = "rsMinPeriodo"> 
                     select min(Speriodo) desde from rsCuentasContables

@@ -41,8 +41,6 @@
 <cfset fnActualizaDatos()>
 <cfset fnInsertaPadres()>
 
-<!---<cfdump var="#pInicio#">
-<cfdump var="#pFinal#">--->
 
 
 
@@ -595,6 +593,12 @@
                 from <cf_dbdatabase table="FTCuentasIndicadores " datasource="ftec">
                 where Iid = #form.Indicador#
             </cfquery>
+
+<!--- 
+rsCuentasIndicador<cfdump var="#rsCuentasIndicador#"><br>
+            pInicio<cfdump var="#pInicio#"><br>
+            pFinal<cf_dump var="#pFinal#"><br> --->
+
             
             <cfloop index = "LvarPeriodo" from = #pInicio# to = #pFinal#>
 
@@ -678,6 +682,7 @@
 		select count(1) as Cantidad
 		from #reporte#
 	</cfquery>
+
 	<cfreturn rsCantidad.Cantidad>
 </cffunction>
 

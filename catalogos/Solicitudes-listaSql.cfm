@@ -15,7 +15,6 @@
 
 
 <cfif  isdefined("Form.btnNuevo") >
-	<!---<cfinclude template="/commons/Tags/Confirm.cfm">--->
 	<cfset action = "/cfmx/ftec/catalogos/SolicitudPago.cfm">
 </cfif>
 
@@ -32,6 +31,7 @@
     
 	<cfif isdefined("Form.btnNuevo")>
 		<input name="modo" type="hidden" value="ALTA">
+		<input name="SPid" type="hidden" value="">
 	</cfif>
 <!---	<input name="Pagina" type="hidden" value="<cfif isdefined("Form.Pagina")>#Form.Pagina#</cfif>">	--->
 </form>

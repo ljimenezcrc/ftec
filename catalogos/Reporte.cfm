@@ -79,7 +79,34 @@
                     where nivel = 0
                     order by Speriodo
                 </cfquery> 
+
+                <cfif rsDatos.Smes1 NEQ rsDatos.Smes2>
+                    <cfquery  dbtype="query" name = "rsDatos"> 
+                        select 
+                        <!---Ccuenta, 
+                        Ecodigo, 
+                        Cformato, 
+                        Cdescripcion, 
+                        nivel, 
+                        (saldoini) *-1 as saldoini, 
+                        debitos, 
+                        creditos, 
+                        (saldofin) * -1 as saldofin,
+                        Cdetalle,
+                        Speriodo, 
+                        Smes1, 
+                        Smes2,--->
+                        Speriodo,
+                        sum(Creditos - Debitos) as saldofin
+                        from rsCuentasContables
+                        where nivel <> 0
+                        group by Speriodo
+                    </cfquery> 
+                    <!--- <cf_dump var="#rsDatos#"> --->
+
+                </cfif>
                 
+                <!--- group by Debitos,Creditos --->
                 <!--- <cf_dump var="#rsDatos#"> --->
                 
                 <cfquery  dbtype="query" name = "rsMinPeriodo"> 

@@ -1,7 +1,9 @@
 <cf_navegacion name="PCid">
+<!---Se valida que se envie el Id del contrato--->
 <cfif not isdefined('form.PCid')>
 	No se envio el ID del proceso de contratación<cfabort>
 </cfif>
+<!---Se Obtiene la Informacion del contrato y sus secciones--->
 <cfquery name="rsContrato" datasource="ftec">
 	select c.STexto, c.Sid, a.PCIdentificacion, a.PCNombre,a.PCFechaN,a.PCEnumero,a.PCEPeriodo, a.PCFechaC, a.PCFechaA, a.PCFechaF,
 		   a.PCApellido1,PCApellido2,
@@ -19,17 +21,22 @@
 				on c.Cid = b.Cid
 	where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
 </cfquery>
+
 <cfdocument format="pdf" bookmark="yes">
 <cfdocumentsection name="1">
-	<cfloop query="rsContrato">
-		<cfquery name="rsVariable" datasource="ftec">
-			select a.Variable, a.TVariables, b.PCDValor
-			 from FTSeccionesD a
-				LEFT OUTER JOIN FTPDContratacion b
-					on b.SDid = a.SDid
-			where a.Sid  = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsContrato.Sid#">
-			  and b.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
-		</cfquery>
+<!---Se recorren cada una de las secciones--->
+<cfloop query="rsContrato">
+	<!---Se Obtienen las variables de las secciones--->
+    <cfquery name="rsVariable" datasource="ftec">
+        select a.Variable, a.TVariables, b.PCDValor
+         from FTSeccionesD a
+            LEFT OUTER JOIN FTPDContratacion b
+                on b.SDid = a.SDid
+               and b.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
+        where a.Sid  = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsContrato.Sid#">
+    </cfquery>
+
+        
 			<cfset Seccion = rsContrato.STexto>
 		<cfloop query="rsVariable">
 			<cfswitch expression="#rsVariable.TVariables#"> 
@@ -70,7 +77,7 @@
 		
 		
 			<div class="row">
-				<div class="col-xs-12"><cfoutput>#Seccion#</cfoutput></div>
+				<div class="col-xs-12"><cfoutput>#Replace(Seccion,'DOBLE CLICK PARA EDITAR','','ALL')#</cfoutput></div>
 			</div>
 
 	</cfloop>

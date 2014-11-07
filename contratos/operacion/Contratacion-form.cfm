@@ -22,6 +22,7 @@
 
 
 
+
 <cfif isdefined('form.modo') and form.modo eq 'CAMBIO'>
     <cfquery name="rsForm" datasource="ftec">
         select a.*,b.TCid ,b.Cdescripcion
@@ -41,6 +42,18 @@
         where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
     </cfquery>
 </cfif>
+
+
+
+<cfif isdefined('rsForm')>
+    <cfquery name="rsProyectos" datasource="#Session.DSN#">
+        select b.Vcodigo as Vcodigoresp, b.Vdescripcion as Vdescripcionresp , b.Vid as Vpkresp, b.Vid
+        from  <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> b
+	    where b.Vid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsForm.Vid#">
+    </cfquery>
+    
+</cfif>
+
 
 <cfset arrValuesCambio = ArrayNew(1)>
 <cfif isdefined('modo') and modo NEQ 'ALTA'>
@@ -103,7 +116,7 @@
 		<cfif isdefined('rsForm') and isdefined('rsProyectos')>
 	        <cf_FTvicerrectoria form="fmContratacion"  size="30"  name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1" query="#rsProyectos#"> 
 	    <cfelse>
-	        <cf_FTvicerrectoria tabindex="1" form="fmContratacion" size="30" id="Vpkresp" name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1">
+	        <cf_FTvicerrectoria tabindex="1" form="fmContratacion" size="30" id="Vid" name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1">
 	    </cfif>
 	</div>
 </div>
@@ -205,5 +218,6 @@
 	<cfinvoke component="ftec.Componentes.FTDatosVariables" method="PrintDatoVariable">
 		<cfinvokeargument name="ID_Table" value="#rsForm.PCid#">
 		<cfinvokeargument name="ID_Tipo"  value="#rsForm.Cid#">
+        <cfinvokeargument name="form"     value="fmContratacion">
 	</cfinvoke>
 </cfif>

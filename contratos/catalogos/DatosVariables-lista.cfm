@@ -1,11 +1,13 @@
 ﻿<cfset checked   = "<img border=0 src=/cfmx/sif/imagenes/checked.gif>" >
 <cfset unchecked = "<img border=0 src=/cfmx/sif/imagenes/unchecked.gif>" >
 <cfset filtro    = "where Ecodigo = #Session.Ecodigo# ">
-<cfif isdefined('form.Filtro_DVcodigo') and len(trim(form.Filtro_DVcodigo))>
-	<cfset filtro = filtro & " and upper(DVetiqueta) like '%#ucase(form.Filtro_DVcodigo)#%'">
+
+<cfif isdefined('form.filtro_DVetiqueta') and len(trim(form.filtro_DVetiqueta))>
+	<cfset filtro = filtro & " and upper(DVetiqueta) like '%#ucase(form.filtro_DVetiqueta)#%'">
 </cfif>
-<cfif isdefined('form.Filtro_DVdescripcion') and len(trim(form.Filtro_DVdescripcion))>
-	<cfset filtro = filtro & " and upper(DVexplicacion) like '%#ucase(form.Filtro_DVdescripcion)#%'">
+<cfif isdefined('form.filtro_DVexplicacion') and len(trim(form.filtro_DVexplicacion))>
+	<cf_dbfunction name="sPart"		args="DVexplicacion,1,80" returnVariable="DVexplicacion">
+	<cfset filtro = filtro & " and upper(#DVexplicacion#) like '%#ucase(form.filtro_DVexplicacion)#%'">
 </cfif>	
 <cfif isdefined('form.Filtro_DVtipoDato') and form.Filtro_DVtipoDato NEQ -1>
 	<cfset filtro = filtro & " and upper(DVtipoDato) =  '#ucase(form.Filtro_DVtipoDato)#'">

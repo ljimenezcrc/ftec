@@ -19,7 +19,9 @@
 <cfquery name="rsDVtipoDato" datasource="#session.DSN#">
 	select '-1' as value, '-- Todos -- ' as description from dual
 	union all
-	select 'C' as value, 'Caracter' as description from dual
+	select 'C' as value, 'Texto Corto' as description from dual
+	union all
+	select 'v' as value, 'Texto Largo' as description from dual
 	union all
 	select 'N' as value, 'Numerico' as description from dual
 	union all
@@ -43,7 +45,8 @@
 <cfquery name="ListaDV" datasource="#session.dsn#">
 	select DVid , DVetiqueta,  <cf_dbfunction name="sPart"		args="DVexplicacion,1,80" > as DVexplicacion, 
 	case when DVobligatorio = 0 then '#unchecked#' else '#checked#' end as DVobligatorio,
-    case when  DVtipoDato = 'C'  then 'Caracter' 
+    case when  DVtipoDato = 'C'  then 'Texto Corto' 
+		 when  DVtipoDato = 'V'  then 'Texto Largo' 
 	     when  DVtipoDato = 'N' then 'Numerico' 
 		 when  DVtipoDato = 'L' then 'Lista' 
 		 when  DVtipoDato = 'F' then 'Fecha' 

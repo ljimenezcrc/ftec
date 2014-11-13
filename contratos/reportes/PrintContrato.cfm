@@ -28,11 +28,16 @@
 <cfloop query="rsContrato">
 	<!---Se Obtienen las variables de las secciones--->
     <cfquery name="rsVariable" datasource="ftec">
-        select a.Variable, a.TVariables, b.PCDValor
+        select a.Variable, a.TVariables, CASE WHEN d.DVtipoDato = 'L' then c.DVLdescripcion else b.PCDValor end as PCDValor
          from FTSeccionesD a
             LEFT OUTER JOIN FTPDContratacion b
                 on b.SDid = a.SDid
                and b.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
+			 LEFT OUTER JOIN FTListaValores c
+			 	on c.DVid       = b.DVid
+				and c.DVLcodigo = b.PCDValor	
+			 LEFT OUTER JOIN FTDatosVariables d
+			 	on d.DVid = b.DVid
         where a.Sid  = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsContrato.Sid#">
     </cfquery>
 
@@ -77,7 +82,7 @@
 		
 		
 			<div class="row">
-				<div class="col-xs-12"><cfoutput>#Replace(Seccion,'DOBLE CLICK PARA EDITAR','','ALL')#</cfoutput></div>
+				<div class="col-xs-12" style="text-align: justify;"><cfoutput>#Replace(Seccion,'DOBLE CLICK PARA EDITAR','','ALL')#</cfoutput></div>
 			</div>
 
 	</cfloop>

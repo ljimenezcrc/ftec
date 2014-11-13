@@ -177,12 +177,14 @@
 		<cfset DatoVariable= GETVALOR(Arguments.Conexion, Arguments.Tipo, Arguments.ID_Table, Arguments.ID_Tipo)>
 		<cfset CurrentColumn = 1>
 
-	
-		<cfloop query="DatoVariable">
+	<div class="alert alert-info">
+		<cfoutput query="DatoVariable" group="Sid">
+			
+			<hr>
+			<cfoutput>
 			<div class="row">
 				<cfset name="V#DatoVariable.PCDid#">
-				<label  style="text-align:right" class="col-sm-3"><cfoutput>#DatoVariable.DVetiqueta#</cfoutput></label>
-				
+				<label  style="text-align:right" class="col-sm-3">#DatoVariable.DVetiqueta#</label>				
 			
 			  	 <!---Tipo Listas--->
 				 <cfif DatoVariable.DVtipoDato EQ 'L'>
@@ -194,17 +196,17 @@
 					<cfif Arguments.readonly>
                     	<cfloop query="ValorDatoVariable">
 							<cfif ValorDatoVariable.DVLcodigo EQ DatoVariable.PCDValor>
-                                <cfoutput>#ValorDatoVariable.DVLdescripcion#</cfoutput>
+                                #ValorDatoVariable.DVLdescripcion#
                             </cfif>
                         </cfloop>
 					<cfelse>
 						 <div class="col-sm-4"> 
-							<select name="<cfoutput>#name#</cfoutput>" class="datoVariableLista" obligatorio="<cfoutput>#DatoVariable.DVobligatorio#</cfoutput>">
+							<select name="#name#" class="datoVariableLista" obligatorio="#DatoVariable.DVobligatorio#">
 								<cfif DatoVariable.DVobligatorio EQ 0>
 									<option value="">--Ninguno--</option>
 								</cfif>
 								<cfloop query="ValorDatoVariable">
-									<option value="<cfoutput>#ValorDatoVariable.DVLcodigo#</cfoutput>" <cfif ValorDatoVariable.DVLcodigo EQ DatoVariable.PCDValor>selected="true"</cfif>><cfoutput>#ValorDatoVariable.DVLdescripcion#</cfoutput></option>
+									<option value="#ValorDatoVariable.DVLcodigo#" <cfif ValorDatoVariable.DVLcodigo EQ DatoVariable.PCDValor>selected="true"</cfif>>#ValorDatoVariable.DVLdescripcion#</option>
 								</cfloop>
 							</select>
 						  </div>
@@ -231,42 +233,42 @@
 								<img border=0 src=/cfmx/sif/imagenes/unchecked.gif>
 							</cfif>						
 						<cfelse>
-							<input type="checkbox" name="<cfoutput>#name#</cfoutput>" value="1" <cfif #DatoVariable.PCDValor# EQ 1>checked="true" </cfif>
-								<!--- NO lleva validacion --->
-							/>					
+							<!--- NO lleva validacion --->
+							<input type="checkbox" name="#name#" value="1" <cfif DatoVariable.PCDValor EQ 1>checked="true" </cfif>/>					
 						</cfif>
 					</div>
 				<!---Tipo Caracter--->
 				<cfelseif DatoVariable.DVtipoDato EQ 'C'>
 					 <div class="col-sm-4"> 
 						<cfif Arguments.readonly>
-							<cfoutput>#DatoVariable.PCDValor#</cfoutput>
+							#DatoVariable.PCDValor#
 						<cfelse>
-							<input type="text" placeholder="<cfoutput>#DatoVariable.DVetiqueta#</cfoutput>" class="form-control" size="100" maxlength="100" name="<cfoutput>#name#</cfoutput>" value="<cfoutput>#DatoVariable.PCDValor#</cfoutput>"
-							 class="datoVariableCaracter"
-							 obligatorio="<cfoutput>#DatoVariable.DVobligatorio#</cfoutput>"
-							>
-							</div>
-							<!---<div class="col-sm-1"> 
-							<cfoutput>#DatoVariable.DVmascara#</cfoutput>
-							</div>--->
+							<input type="text" placeholder="#DatoVariable.DVetiqueta#" class="form-control" size="100" maxlength="100" name="#name#" value="#DatoVariable.PCDValor#"
+							 class="datoVariableCaracter" obligatorio="#DatoVariable.DVobligatorio#">					
 							<cfif LEN(TRIM(DatoVariable.DVmascara))>
 								<script language="JavaScript" type="text/javascript">
-									<cfoutput>
 										<cfset varMask_= #Replace(DatoVariable.DVmascara,'X','x','ALL')#>
 										<cfset varMask_= #Replace(varMask_,'?','##','ALL')#>
 										var Mask_1 = new Mask("#varMask_#", "string");
 										Mask_1.attach(document.#Arguments.form#.#name#, Mask_1.mask, "string");
-									</cfoutput>
 								</script>
 							</cfif>
-						
+						</div>
 					</cfif>
+				<!---Tipo Caracter--->
+				<cfelseif DatoVariable.DVtipoDato EQ 'V'>
+					 <div class="col-sm-4"> 
+						<cfif Arguments.readonly>
+							#DatoVariable.PCDValor#
+						<cfelse>
+							<textarea placeholder="#DatoVariable.DVetiqueta#" class="form-control datoVariableCaracter" obligatorio="#DatoVariable.DVobligatorio#" name="#name#">#DatoVariable.PCDValor#</textarea>
+						</cfif>
+					</div>	
 				<!---Tipo Numerico--->
 				<cfelseif DatoVariable.DVtipoDato EQ 'N'>
 					<div class="col-sm-4"> 
 						<cfif Arguments.readonly>
-							<cfoutput>#DatoVariable.PCDValor#</cfoutput>
+							#DatoVariable.PCDValor#
 						<cfelse>
 							<cfif len(trim(DatoVariable.PCDValor)) eq 0 or NOT isnumeric(DatoVariable.PCDValor)>
 								<cfset DatoVariable.PCDValor= 0>
@@ -284,11 +286,14 @@
 						</cfif>
 					</div>
 				 <cfelse>
-				 	Error en la invocacion PrintDatoVariable, el Tipo de dato <cfoutput><strong>#DatoVariable.DVtipoDato#</strong></cfoutput> no esta implementado
+				 	Error en la invocacion PrintDatoVariable, el Tipo de dato <strong>#DatoVariable.DVtipoDato#</strong> no esta implementado
 				 </cfif>
 			
 			  </div>
-		</cfloop>
+			  
+			</cfoutput>
+		</cfoutput>
+		</div>
 		
 		
 		<cfreturn DatoVariable.RecordCount>
@@ -342,12 +347,15 @@
 		<cfargument name="ID_Tipo"   	  type="numeric"  required="true"  hint="ID del Tipo.    Contratos: FTContratos.Cid">		
 
 		<cfquery name="DatoVariable" datasource="#Arguments.Conexion#">	
-			select a.PCDid, a.PCid,a.SDid,a.DVid,a.DVLcodigo,a.PCDValor, b.Ecodigo,b.DVetiqueta,b.DVexplicacion,b.DVtipoDato,
+			select a.PCDid, a.PCid,c.Sid, a.SDid,a.DVid,a.DVLcodigo,a.PCDValor, b.Ecodigo,b.DVetiqueta,b.DVexplicacion,b.DVtipoDato,
 				   b.DVlongitud,b.DVdecimales,b.DVmascara,b.DVobligatorio,b.BMUsucodigo
 				from FTPDContratacion a
 					inner join FTDatosVariables b
 						on b.DVid = a.DVid
+					inner join FTSeccionesD c
+						on c.SDid = a.SDid
 			where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.ID_Table#">
+			order by c.Sid
 		</cfquery>
 		<cfreturn DatoVariable>
 	</cffunction>

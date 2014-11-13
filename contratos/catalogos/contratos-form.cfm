@@ -1,44 +1,3 @@
-<!---<cfloop query="rsFTSeccionesD">
-    <div class="row">
-        <div class="col-xs-3"><cfoutput>#rsFTSeccionesD.Variable#</cfoutput></div>
-        <div class="col-xs-3">
-            <select onchange="SaveDataVar(this,<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>)" name="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>" id="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>">
-                    <option value="">Seleccione un Valor</option>
-                <optgroup label="Datos Personales">
-                    <option value="2" <cfif rsFTSeccionesD.TVariables EQ 2> selected="selected"</cfif>>Tipo de Identificación</option>
-                    <option value="3" <cfif rsFTSeccionesD.TVariables EQ 3> selected="selected"</cfif>>Identificación</option>
-                    <option value="4" <cfif rsFTSeccionesD.TVariables EQ 4> selected="selected"</cfif>>Nombre</option>
-                    <option value="5" <cfif rsFTSeccionesD.TVariables EQ 5> selected="selected"</cfif>>Primer Apellido</option>
-                    <option value="6" <cfif rsFTSeccionesD.TVariables EQ 6> selected="selected"</cfif>>Segundo Apellido</option>
-                    <option value="7" <cfif rsFTSeccionesD.TVariables EQ 7> selected="selected"</cfif>>Sexo</option>
-                    <option value="8" <cfif rsFTSeccionesD.TVariables EQ 8> selected="selected"</cfif>>Fecha Nacimiento</option>
-                </optgroup>
-                <optgroup label="Datos del Contrato">
-                    <option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9> selected="selected"</cfif>>Numero Contrato</option>
-                    <option value="10" <cfif rsFTSeccionesD.TVariables EQ 10> selected="selected"</cfif>>Periodo Contratación</option>
-                    <option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
-                    <option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>
-                    <option value="13" <cfif rsFTSeccionesD.TVariables EQ 13> selected="selected"</cfif>>Fecha de Firmas</option>
-                </optgroup>
-                
-                <optgroup label="Datos Variables">
-                    <cfif rsFTDatosVariables.RecordCount>
-                        <cfloop query="rsFTDatosVariables">
-                            <cfoutput>
-                                <option value="1,#rsFTDatosVariables.DVid#" <cfif rsFTSeccionesD.TVariables EQ 1 AND rsFTSeccionesD.DVid eq rsFTDatosVariables.DVid> selected="selected"</cfif>>
-                                    #rsFTDatosVariables.DVetiqueta#
-                                </option>
-                            </cfoutput>
-                        </cfloop>
-                    <cfelse>
-                        <option value="" disabled="disabled">No existen Datos Variables</option>	
-                    </cfif>
-                </optgroup>
-            </select>
-        </div>
-    </div>
-</cfloop>
---->
 <form name="fmContratos" action="contratos.cfm" method="post">
 	<cfif LEN(TRIM(rsContrato.Cid))>
 		<input type="hidden" name="Cid" id="Cid" value="<cfoutput>#rsContrato.Cid#</cfoutput>" />
@@ -129,47 +88,48 @@
 		<cf_tab text="Información Variable de la Sección">
 			<div class="alert alert-info">
 			<cfif rsFTSeccionesD.RecordCount>
-				<cfloop query="rsFTSeccionesD">
-					<div class="row">
-						<div class="col-xs-3"><cfoutput>#rsFTSeccionesD.Variable#</cfoutput></div>
-						<div class="col-xs-3">
-							<select onchange="SaveDataVar(this,<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>)" name="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>" id="<cfoutput>#rsFTSeccionesD.SDid#</cfoutput>">
-									<option value="">Seleccione un Valor</option>
-								<optgroup label="Datos Personales">
-									<option value="2"  <cfif rsFTSeccionesD.TVariables EQ 2>  selected="selected"</cfif>>Tipo de Identificación</option>
-									<option value="3"  <cfif rsFTSeccionesD.TVariables EQ 3>  selected="selected"</cfif>>Identificación</option>
-									<option value="4"  <cfif rsFTSeccionesD.TVariables EQ 4>  selected="selected"</cfif>>Nombre</option>
-									<option value="5"  <cfif rsFTSeccionesD.TVariables EQ 5>  selected="selected"</cfif>>Primer Apellido</option>
-									<option value="6"  <cfif rsFTSeccionesD.TVariables EQ 6>  selected="selected"</cfif>>Segundo Apellido</option>
-									<option value="7"  <cfif rsFTSeccionesD.TVariables EQ 7>  selected="selected"</cfif>>Sexo</option>
-									<option value="8"  <cfif rsFTSeccionesD.TVariables EQ 8>  selected="selected"</cfif>>Fecha Nacimiento</option>
-									<option value="14" <cfif rsFTSeccionesD.TVariables EQ 14> selected="selected"</cfif>>Estado Civil</option>
-								</optgroup>
-								<optgroup label="Datos del Contrato">
-									<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9>  selected="selected"</cfif>>Numero Contrato</option>
-									<option value="10" <cfif rsFTSeccionesD.TVariables EQ 10> selected="selected"</cfif>>Periodo Contratación</option>
-									<option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
-									<option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>
-									<option value="13" <cfif rsFTSeccionesD.TVariables EQ 13> selected="selected"</cfif>>Fecha de Firmas</option>
-								</optgroup>
-								
-								<optgroup label="Datos Variables">
-									<cfif rsFTDatosVariables.RecordCount>
-										<cfloop query="rsFTDatosVariables">
-											<cfoutput>
-												<option value="1,#rsFTDatosVariables.DVid#" <cfif rsFTSeccionesD.TVariables EQ 1 AND rsFTSeccionesD.DVid eq rsFTDatosVariables.DVid> selected="selected"</cfif>>
-													#rsFTDatosVariables.DVetiqueta#
-												</option>
-											</cfoutput>
-										</cfloop>
-									<cfelse>
-										<option value="" disabled="disabled">No existen Datos Variables</option>	
-									</cfif>
-								</optgroup>
-							</select>
+				<cfoutput query="rsFTSeccionesD" group="Sid">
+						<hr />
+					<cfoutput>
+						<div class="row">
+							<div class="col-xs-3">#rsFTSeccionesD.Variable#</div>
+							<div class="col-xs-3">
+								<select onchange="SaveDataVar(this,#rsFTSeccionesD.SDid#)" name="#rsFTSeccionesD.SDid#" id="#rsFTSeccionesD.SDid#">
+										<option value="">Seleccione un Valor</option>
+									<optgroup label="Datos Personales">
+										<option value="2"  <cfif rsFTSeccionesD.TVariables EQ 2>  selected="selected"</cfif>>Tipo de Identificación</option>
+										<option value="3"  <cfif rsFTSeccionesD.TVariables EQ 3>  selected="selected"</cfif>>Identificación</option>
+										<option value="4"  <cfif rsFTSeccionesD.TVariables EQ 4>  selected="selected"</cfif>>Nombre</option>
+										<option value="5"  <cfif rsFTSeccionesD.TVariables EQ 5>  selected="selected"</cfif>>Primer Apellido</option>
+										<option value="6"  <cfif rsFTSeccionesD.TVariables EQ 6>  selected="selected"</cfif>>Segundo Apellido</option>
+										<option value="7"  <cfif rsFTSeccionesD.TVariables EQ 7>  selected="selected"</cfif>>Sexo</option>
+										<option value="8"  <cfif rsFTSeccionesD.TVariables EQ 8>  selected="selected"</cfif>>Fecha Nacimiento</option>
+										<option value="14" <cfif rsFTSeccionesD.TVariables EQ 14> selected="selected"</cfif>>Estado Civil</option>
+									</optgroup>
+									<optgroup label="Datos del Contrato">
+										<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9>  selected="selected"</cfif>>Numero Contrato</option>
+										<option value="10" <cfif rsFTSeccionesD.TVariables EQ 10> selected="selected"</cfif>>Periodo Contratación</option>
+										<option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
+										<option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>
+										<option value="13" <cfif rsFTSeccionesD.TVariables EQ 13> selected="selected"</cfif>>Fecha de Firmas</option>
+									</optgroup>
+									
+									<optgroup label="Datos Variables">
+										<cfif rsFTDatosVariables.RecordCount>
+											<cfloop query="rsFTDatosVariables">
+													<option value="1,#rsFTDatosVariables.DVid#" <cfif rsFTSeccionesD.TVariables EQ 1 AND rsFTSeccionesD.DVid eq rsFTDatosVariables.DVid> selected="selected"</cfif>>
+														#rsFTDatosVariables.DVetiqueta#
+													</option>
+											</cfloop>
+										<cfelse>
+											<option value="" disabled="disabled">No existen Datos Variables</option>	
+										</cfif>
+									</optgroup>
+								</select>
+							</div>
 						</div>
-					</div>
-				</cfloop>
+					</cfoutput>
+				</cfoutput>
 			<cfelse>
 				Para crear variables, escriba en las secciones del contrato el nombre de la variable sin espacios y dentro de gatos.</br>
 				<strong>Ejemplo:</strong> Portador de la cedula de identifidad #NumeroCedula#.

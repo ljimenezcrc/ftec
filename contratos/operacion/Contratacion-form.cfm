@@ -20,9 +20,6 @@
 	}
 </style>
 
-
-
-
 <cfif isdefined('form.modo') and form.modo eq 'CAMBIO'>
     <cfquery name="rsForm" datasource="ftec">
         select a.*,b.TCid ,b.Cdescripcion

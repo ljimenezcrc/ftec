@@ -32,28 +32,12 @@
 </div>
 <cfif modo EQ 'CAMBIO'>
 
+<cfquery name="DV" datasource="ftec">
+	select DVid, DVetiqueta,  DVtipoDato, DVlongitud, DVdecimales, DVmascara, DVobligatorio, <cf_dbfunction name="sPart"	args="DVexplicacion,1,80" > as DVexplicacion
+	 from FTDatosVariables
+	where DVid = #form.DVid#
+</cfquery>
 
-<!---DVid
-,DVetiqueta
-,DVexplicacion
-,DVtipoDato
-,DVlongitud
-,DVdecimales
-,DVmascara
-,DVobligatorio--->
-
-
-<!---DVid
-,DVLcodigo
-,DVLdescripcion--->
-
-	<cfquery name="DV" datasource="#session.dsn#">
-		select DVid, DVetiqueta,  
-        <cf_dbfunction name="sPart"		args="DVexplicacion,1,80" > as DVexplicacion
-        , DVtipoDato, DVlongitud, DVdecimales, DVmascara, DVobligatorio
-		from <cf_dbdatabase table="FTDatosVariables" datasource="ftec">
-		where DVid = #form.DVid#
-	</cfquery>
 	<cfquery name="DVL" datasource="#session.dsn#">
 		select DVid idDVL,rtrim(DVLcodigo) codigoDVL,DVLdescripcion descripcionDVL
 		from <cf_dbdatabase table="FTListaValores" datasource="ftec">
@@ -85,7 +69,8 @@
 	
 	<tr><td>Tipo de Dato:</td><td>
 		    <select name="DVtipoDato" onChange="javascript: showChkbox(this.form);">
-		      <option value="C" <cfif DV.DVtipoDato EQ 'C'> selected="true"</cfif>>Caracter</option>
+		      <option value="C" <cfif DV.DVtipoDato EQ 'C'> selected="true"</cfif>>Texto Corto</option>
+		      <option value="V" <cfif DV.DVtipoDato EQ 'V'> selected="true"</cfif>>Texto Largo</option>			  
 			  <option value="N" <cfif DV.DVtipoDato EQ 'N'> selected="true"</cfif>>Numérico</option>
 			  <option value="L" <cfif DV.DVtipoDato EQ 'L'> selected="true"</cfif>>Lista</option>
 			  <option value="F" <cfif DV.DVtipoDato EQ 'F'> selected="true"</cfif>>Fecha</option>
@@ -177,6 +162,13 @@
 			TR_DVdecimales.style.display = "none";
 			f.DVlongitud.value="0";
 			f.DVdecimales.value="0";
+		} else if(f.DVtipoDato.value == 'V') {
+			TR_DVlongitud.style.display = "none";
+			TR_DVdecimales.style.display = "none";
+			TR_DVmascara.style.display   = "none";
+			f.DVlongitud.value="0";
+			f.DVdecimales.value="0";
+			f.DVmascara.value="";
 		} else if(f.DVtipoDato.value == 'N') {
 			TR_DVmascara.style.display   = "none";
 			f.DVmascara.value="";

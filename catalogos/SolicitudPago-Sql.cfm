@@ -1,4 +1,4 @@
-<cfif not isdefined("Form.NuevoEnc")>
+﻿<cfif not isdefined("Form.NuevoEnc")>
 
 	<cfif isdefined("Form.AplicarEnc") or isdefined("Form.RechazarEnc")>
     	
@@ -17,6 +17,12 @@
         </cfinvoke>
     
 	<cfelseif isdefined("Form.AltaEnc")>
+        <cfinvoke component="ftec.Componentes.FTSolicitudProceso" method="get" returnvariable="LvarExiste" >
+            <cfinvokeargument name="SPdocumento"    value="#ltrim(rtrim(form.SPdocumento))#">
+            <cfinvokeargument name="SNcodigo"       value="#form.SNcodigo#">
+        </cfinvoke>
+
+        <cfif not LvarExiste>
         <cfinvoke component="ftec.Componentes.FTSolicitudProceso" method="Alta" returnvariable="Lvar_ID" >
             <cfinvokeargument name="TPid" 			value="1">
             <cfinvokeargument name="SPdocumento"	value="#form.SPdocumento#">
@@ -40,6 +46,12 @@
         
         <cfset modo = 'CAMBIO'>
         <cfset SPid = #Lvar_ID#>
+        <cfelse>
+            <cfset TitleErrs = 'Operación Inválida'>
+            <cfset MsgErr    = 'Registro Ordenes de Pago'>
+            <cfset DetErrs   = 'El Numero de documento ya existe para el proveedor, Verificar.'>
+            <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
+        </cfif>
     <cfelseif isdefined("Form.EliminarEnc")>
     	
        

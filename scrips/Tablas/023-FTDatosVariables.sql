@@ -4,7 +4,7 @@ create table FTDatosVariables (
    DVetiqueta           varchar(40)                    not null,
    DVexplicacion        text                           null,
    DVtipoDato           char(1)                        not null
-         constraint FTDatosVariables_CK check (DVtipoDato in ('C','N','L','F','H','K')),
+         constraint FTDatosVariables_CK check (DVtipoDato in ('C','N','L','F','H','K','V')),
    DVlongitud           int                            default 0 not null,
    DVdecimales          int                            default 0 not null,
    DVmascara            varchar(20)                    null,

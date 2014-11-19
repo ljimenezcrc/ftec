@@ -209,6 +209,16 @@
                 <cfset inicia = false>
             </cfif>
        </cfloop>
+	    
+		<cfquery datasource="#Arguments.conexion#">
+	   		delete from FTPDContratacion
+			where SDid in (select SDid 
+							from FTSeccionesD
+						where Sid = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
+						  and Variable not in (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ArrayToList(variblesNuevas)#" list="yes">)
+						  )			 
+	   </cfquery>
+	   
 	   <cfquery datasource="#Arguments.conexion#">
 	   		delete from FTSeccionesD
 			where Sid = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
@@ -254,6 +264,7 @@
 			<cfif isdefined('Arguments.Cid')>
 				and b.Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
 			</cfif>
+			Order by a.Sid
 		</cfquery>
 		<cfreturn rsFTSeccionesD>
 	</cffunction>

@@ -1,6 +1,22 @@
 ﻿<cfcomponent name="FTSolicitudProceso"  output="true">
 
-    
+    <cffunction access="public" name="get" returntype="numeric">
+    	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
+        <cfargument name="SPdocumento"		required="true" 	type="string" default="NDF">
+        <cfargument name="SNcodigo"			required="false" 	type="numeric" >
+        
+        <cfquery name="rsExiste" datasource="#Session.DSN#">
+            select SPdocumento,SNcodigo
+            from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec">
+            where SPdocumento = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.SPdocumento#">
+            	and SNcodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Arguments.SNcodigo#">
+        </cfquery>
+ 
+        <cfif isdefined('rsExiste') and rsExiste.RecordCount GT 0>
+        	<cfreturn 1>
+        </cfif>
+        <cfreturn 0>
+    </cffunction>
 	<!--- *************************** --->
 	<!--- Alta solicitudes  --->
 	<!--- *************************** --->

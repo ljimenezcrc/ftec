@@ -1,4 +1,6 @@
-﻿<cfinclude template="Reporte.cfm">
+﻿		
+
+<cfinclude template="Reporte.cfm">
 <cfsetting requesttimeout="2700">
 
 <!--- Verifica que el usuario no esté procesando ningún otro reporte o que esté abierto--->
@@ -97,8 +99,17 @@
 	
 	<!--- <cf_dump var="#rsCuentasContables#"> --->
 
-	<cfset fnPintaReporte()>
-    <cfreturn>
+	
+
+
+<cf_templateheader title="Contratos">
+	<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Gráfico indicadores'>
+		<cfset fnPintaReporte()>
+		<cfreturn>
+	<cf_web_portlet_end>	
+<cf_templatefooter>
+
+
     
     
 </cffunction>
@@ -891,3 +902,4 @@ rsCuentasIndicador<cfdump var="#rsCuentasIndicador#"><br>
 
 
 </cffunction>
+

@@ -23,3 +23,13 @@ alter table FTContratos
    add constraint FK_FTCONTRA_REFERENCE_FTTIPOTR foreign key (TTid)
       references FTTipoTramite (TTid)
 go
+
+alter table FTPContratacion add  Vid numeric(18) null
+go
+alter table FTPContratacion
+   add constraint FK_FTPCONTR_REFERENCE_FTVICERR foreign key (Vid)
+      references FTVicerrectoria (Vid)
+go
+
+
+

@@ -302,79 +302,105 @@
     <!---detalle de solicitud--->
      
     
-    <cffunction access="public" name="AltaDetalle" returntype="numeric">
+    <cffunction access="public" name="AltaDetalle" returntype="numeric" hint="Funcion para agregar una nueva linea a la Solicitud de Pago">
     	<cfargument name="Ecodigo"			required="false" 	type="numeric"  default="#session.Ecodigo#">
         <cfargument name="SPid"				required="true" 	type="numeric" >
-        <cfargument name="Vid"				required="true" 	type="numeric" >
+        <cfargument name="Vid"				required="false" 	type="numeric" default="-1" hint="Id de Vicerrectoria, Proyecto">
         <cfargument name="Cid"				required="true" 	type="numeric" >
         <cfargument name="Icodigo"			required="true" 	type="string" >
         <cfargument name="DSPdescripcion"	required="true" 	type="string" >
         <cfargument name="DSPmonto"			required="false" 	type="numeric" default="0.00" >
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
-                
-        
-        
+        <cfargument name="DOlinea" 			required="false" 	type="numeric" hint="Id del Detalle de la Orden de compra" default="-1">  
+		<cfargument name="CFid" 			required="false" 	type="numeric" hint="Id del centro funcional" default="-1">  
+		           
         <cfquery name="rsImp" datasource="#Session.DSN#">
             select Icodigo, coalesce(Iporcentaje,0) as imp
             from Impuestos 
             where Ecodigo = #Session.Ecodigo#
-                and Icodigo = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" 	value="#Arguments.Icodigo#" voidnull>
+              and Icodigo = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" 	value="#Arguments.Icodigo#" voidnull>
         </cfquery>
-        
-                
-        <cfquery name="rsCuentaConcepto" datasource="#Session.DSN#">
-            select Cid, Ccodigo, Cdescripcion,cuentac
-            from Conceptos 
-            where Ecodigo = #session.Ecodigo#
-                and Cid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Cid#">
-        </cfquery>
-        
-        <cfquery name="rsCFid" datasource="#session.DSN#">
-            select a.CFid,b.CFcuentac
-            from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
-                inner join CFuncional b
-                on a.CFid = b.CFid
-            where a.Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#">
-        </cfquery>
-        <cfobject component="sif.Componentes.AplicarMascara" name="mascara">
-        
-        <cfif isdefined('rsCuentaConcepto') and rsCuentaConcepto.recordcount EQ 1 and isdefined('rsCFid') and rsCFid.recordcount EQ 1 >
-            <cfset LvarComplementoConcepto 	= #rsCuentaConcepto.cuentac#>
-            <cfset LvarFormatoCuenta 		= #rsCFid.CFcuentac#>
-        
-            <cfset LvarFormatoCuenta = mascara.AplicarMascara(LvarFormatoCuenta,trim(LvarComplementoConcepto),'?')>
-            
-            <cfquery name="rsCCuenta" datasource="#session.DSN#">
-                select a.CCuenta, a.*
-                from CContables a
-                where a.Cformato = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#LvarFormatoCuenta#">
+        <cfif Arguments.DOlinea EQ -1>
+			<cfquery name="rsCuentaConcepto" datasource="#Session.DSN#">
+				select Cid, Ccodigo, Cdescripcion,cuentac
+				from Conceptos 
+				where Ecodigo = #session.Ecodigo#
+				  and Cid     = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Cid#">
+			</cfquery>
+			
+			<cfquery name="rsCFid" datasource="#session.DSN#">
+				select a.CFid,b.CFcuentac
+					from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
+						inner join CFuncional b
+							on a.CFid = b.CFid
+				where a.Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.Vid#">
+			</cfquery>
+			<cfobject component="sif.Componentes.AplicarMascara" name="mascara">
+			
+			<cfif isdefined('rsCuentaConcepto') and rsCuentaConcepto.recordcount EQ 1 and isdefined('rsCFid') and rsCFid.recordcount EQ 1 >
+				<cfset LvarComplementoConcepto 	= rsCuentaConcepto.cuentac>
+				<cfset LvarFormatoCuenta 		= rsCFid.CFcuentac>
+			
+				<cfset LvarFormatoCuenta = mascara.AplicarMascara(LvarFormatoCuenta,trim(LvarComplementoConcepto),'?')>
+				
+				<cfquery name="rsCCuenta" datasource="#session.DSN#">
+					select a.CCuenta, a.*
+					from CContables a
+					where a.Cformato = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#LvarFormatoCuenta#">
+				</cfquery>
+				<cfif isdefined('rsCCuenta') and rsCCuenta.recordcount EQ 0>
+					<cfset TitleErrs = 'Operación Inválida'>
+					<cfset MsgErr	 = 'Contabilidad'>
+					<cfset DetErrs 	 = 'La cuenta Contable ' & #LvarFormatoCuenta# & ' no existe favor Verificar.'>
+					<cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
+				</cfif>
+				
+				<cfquery name="rsCFuenta" datasource="#session.DSN#">
+					select a.CFcuenta, a.*
+					from CFinanciera a
+					where a.CFformato = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#LvarFormatoCuenta#">
+				</cfquery>
+				
+				 <cfif isdefined('rsCFuenta') and rsCFuenta.recordcount EQ 0>
+					<cfset TitleErrs = 'Operación Inválida'>
+					<cfset MsgErr	 = 'Contabilidad'>
+					<cfset DetErrs 	 = 'La cuenta Financiera '& #LvarFormatoCuenta# & ' no existe favor Verificar.'>
+					<cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
+				</cfif>
+			
+			<cfelse>
+				<cfset TitleErrs = 'Operación Inválida'>
+				<cfset MsgErr	 = 'Parámetros RH Tipos Nómina'>
+				<cfset DetErrs 	 = 'El concepto no tiene complemento definido / el centro funcional no tiene definida una mascara, Verificar.'>
+				<cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
+			</cfif>
+			<cfset LvarCcuenta  = rsCCuenta.Ccuenta>
+			<cfset LvarCFcuenta = rsCFuenta.CFcuenta>
+		<cfelse>
+			<!---Si viene de una Orden de compra se toma la Cuenta de alli--->
+			<cfquery name="rsCFuenta" datasource="#session.DSN#">
+                select a.CFcuenta, a.Ccuenta
+                 from CFinanciera a
+				 	inner join DOrdenCM b
+				   		on b.CFcuenta = a.CFcuenta
+                where b.DOlinea = #Arguments.DOlinea#
             </cfquery>
-            <cfif isdefined('rsCCuenta') and rsCCuenta.recordcount EQ 0>
-                <cfset TitleErrs = 'Operación Inválida'>
-                <cfset MsgErr	 = 'Contabilidad'>
-                <cfset DetErrs 	 = 'La cuenta Contable ' & #LvarFormatoCuenta# & ' no existe favor Verificar.'>
-                <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
-            </cfif>
-            
-            <cfquery name="rsCFuenta" datasource="#session.DSN#">
-                select a.CFcuenta, a.*
-                from CFinanciera a
-                where a.CFformato = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#LvarFormatoCuenta#">
-            </cfquery>
-            
-             <cfif isdefined('rsCFuenta') and rsCFuenta.recordcount EQ 0>
-                <cfset TitleErrs = 'Operación Inválida'>
-                <cfset MsgErr	 = 'Contabilidad'>
-                <cfset DetErrs 	 = 'La cuenta Financiera '& #LvarFormatoCuenta# & ' no existe favor Verificar.'>
-                <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
-            </cfif>
-        
-        <cfelse>
-            <cfset TitleErrs = 'Operación Inválida'>
-            <cfset MsgErr	 = 'Parámetros RH Tipos Nómina'>
-            <cfset DetErrs 	 = 'El concepto no tiene complemento definido / el centro funcional no tiene definida una mascara, Verificar.'>
-            <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
-        </cfif>
+			<cfset LvarCcuenta  = rsCFuenta.CFcuenta>
+			<cfset LvarCFcuenta = rsCFuenta.Ccuenta>
+			<cfif Arguments.Vid EQ -1 and Arguments.CFid NEQ -1>
+				<cfquery name="rsVid" datasource="#session.DSN#">
+					select a.Vid
+						from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> a
+							inner join CFuncional b
+								on a.CFid = b.CFid
+					where b.CFid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.CFid#">
+				</cfquery>
+				
+				<cfif rsVid.RecordCount and LEN(TRIM(rsVid.Vid))>
+					<cfset Arguments.Vid = rsVid.Vid>
+				</cfif>
+			</cfif>
+		</cfif>
                 <cftry>
                 <cftransaction> 
                 <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
@@ -390,23 +416,22 @@
                                                         ,Ecodigo  
                                                         ,Ccuenta   
                                                         ,CFcuenta  
-                                                        ,DSPmontototal     
+                                                        ,DSPmontototal 
+														,DOlinea
+														 
                                                     )
                                                 values(	<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.SPid#"voidnull>
-                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Vid#" voidnull>
+                                                        ,<cfqueryparam cfsqltype="cf_sql_numeric" 			value="#Arguments.Vid#" null="#Arguments.Vid EQ -1#">
                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Cid#" voidnull>
                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_varchar" 	value="#Arguments.Icodigo#" voidnull>
-                                                       <!--- , <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdocumento#" 	voidnull>--->
-                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdescripcion#" 	voidnull>
-                                                        <!---, <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPobjeto#" 		voidnull>--->
-                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.DSPmonto#" 	voidnull>
-                                                         
-                                                         ,((#Arguments.DSPmonto# * #rsImp.imp#) / 100 )
-                                                         
-                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.Ecodigo#"voidnull>
-                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#rsCCuenta.Ccuenta#"voidnull>
-                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#rsCFuenta.CFcuenta#"voidnull>
-                                                         ,((#Arguments.DSPmonto# * #rsImp.imp#) / 100 ) + #Arguments.DSPmonto#
+                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_varchar"		value="#Arguments.DSPdescripcion#" 	voidnull>
+                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.DSPmonto#" 	voidnull> 
+                                                        ,((#Arguments.DSPmonto# * #rsImp.imp#) / 100 ) 
+                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Ecodigo#"	voidnull>
+                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#LvarCcuenta#"	voidnull>
+                                                        ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#LvarCFcuenta#"	voidnull>
+                                                        ,((#Arguments.DSPmonto# * #rsImp.imp#) / 100 ) + #Arguments.DSPmonto#
+														,<cfqueryparam cfsqltype="cf_sql_numeric" 			value="#Arguments.DOlinea#" null="#Arguments.DOlinea EQ -1#">
                                                         )
                         <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
                     </cfquery>
@@ -434,10 +459,15 @@
                                 <li><b>Detail:</b> #cfcatch.Detail#
                                 <li><b>Native error code:</b> #cfcatch.NativeErrorCode#
                                 <li><b>SQLState:</b> #cfcatch.SQLState#
-                                <li><b>SQL:</b> #cfcatch.Sql#
-                                
+                            <cfif isdefined('cfcatch.Sql')>
+								<li><b>SQL:</b> #cfcatch.Sql#
+							</cfif>
+							<cfif isdefined('cfcatch.queryError')>
                                 <li><b>queryError:</b> #cfcatch.queryError#
+							</cfif>
+							<cfif isdefined('cfcatch.where')>
                                 <li><b>where:</b> #cfcatch.where#
+							</cfif>
                             </ul>
                         </cfoutput>
                         <cfabort>

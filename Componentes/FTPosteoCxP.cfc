@@ -80,7 +80,7 @@
         
         <cfquery name="rsInsertDDocCP" datasource="#session.DSN#">
             select a.SPid,a.Vid,a.Cid,a.Ecodigo,a.Icodigo,a.DSPid,
-                a.DSPdocumento,a.DSPdescripcion,a.DSPobjeto,a.DSPmonto,a.DScambiopaso, c.CFid, a.Ccuenta, a.CFcuenta
+                a.DSPdocumento,a.DSPdescripcion,a.DSPobjeto,a.DSPmonto,a.DScambiopaso, c.CFid, a.Ccuenta, a.CFcuenta, Coalesce(a.DOlinea,-1) DOlinea
                 from  <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a
                 inner join <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> b
                     on a.Vid =  b.Vid
@@ -119,7 +119,8 @@
                         BMUsucodigo,
                         DSespecificacuenta,
                         FPAEid,
-                        CFComplemento)
+                        CFComplemento,
+						DOlinea)
                 values	 (
                     <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">,
                     <CF_jdbcquery_param cfsqltype="cf_sql_numeric" value="null">,
@@ -148,7 +149,8 @@
                     <cfqueryparam cfsqltype="cf_sql_numeric" value="#session.Usucodigo#">,
                     0,
                     <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="null">,
-                    <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="null">
+                    <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="null">,
+					<cfqueryparam cfsqltype="cf_sql_numeric" value="#rsInsertDDocCP.DOlinea#" null="#rsInsertDDocCP.DOlinea EQ -1#">
             ) 		
             </cfquery>
         </cfloop>

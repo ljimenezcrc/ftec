@@ -39,7 +39,7 @@
         </cfinvoke>
         
         <cfset modo = 'CAMBIO'>
-        <cfset SPid = #Lvar_ID#>
+        <cfset SPid = Lvar_ID>
     <cfelseif isdefined("Form.EliminarEnc")>
     	
        

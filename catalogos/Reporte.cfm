@@ -70,7 +70,7 @@
                     (saldoini) *-1 as saldoini, 
                     debitos, 
                     creditos, 
-                    (saldofin) * -1 as saldofin,
+                    ((saldofin) * -1)  as saldofin,
                     Cdetalle,
                     Speriodo, 
                     Smes1, 
@@ -79,20 +79,37 @@
                     where nivel = 0
                     order by Speriodo
                 </cfquery> 
-
+                
                 <cfif rsDatos.Smes1 NEQ rsDatos.Smes2>
+                	
+                                        
+                    <!---Temporales--->    
+                    <cf_dbtemp name="tempIndicadores" returnvariable="tempIndicadores" datasource="#session.DSN#">
+                        <cf_dbtempcol name="SumDbCr"	type="money" 	mandatory="no">
+                        <cf_dbtempcol name="saldoFin"	type="money" 	mandatory="no">
+                        <cf_dbtempcol name="saldoIni"	type="money" 	mandatory="no">
+                        <cf_dbtempcol name="Speriodo"	type="numeric" 	mandatory="no">
+                    </cf_dbtemp>  
+                
+                
                     <cfif rsDatos.Smes1 EQ 1>
                         <cfquery  dbtype="query" name = "rsDatosIni"> 
-                            select 
+                            select Speriodo,
                             sum(saldoini) * -1 as saldoini
                             from rsCuentasContables
                             where nivel <> 0
                             and Smes1 = #rsDatos.Smes1#
                             group by Speriodo
                         </cfquery> 
-                        <!--- <cfdump var="#rsDatosIni#"> --->
+                        
+                        <cfloop query="rsDatosIni">
+	                        <cfquery datasource="#session.DSN#">
+                                insert into #tempIndicadores# (SumDbCr,saldoFin,saldoIni,Speriodo) 
+                                	values (0,0,#rsDatosIni.saldoini#, #rsDatosIni.Speriodo#)
+                            </cfquery>
+                        </cfloop>
 
-                        <cfquery  dbtype="query" name = "rsDatos"> 
+                        <cfquery  dbtype="query" name = "rsDatos1"> 
                             select 
                             <!---Ccuenta, 
                             Ecodigo, 
@@ -108,11 +125,28 @@
                             Smes1, 
                             Smes2,--->
                             Speriodo,
-                            sum(Creditos - Debitos) + #rsDatosIni.saldoini# as saldofin
+                            <!---sum(Creditos - Debitos) + #rsDatosIni.saldoini# as SumDbCr--->
+                            sum(Creditos - Debitos) as SumDbCr
                             from rsCuentasContables
                             where nivel <> 0
                             group by Speriodo
                         </cfquery> 
+                        
+                         <cfloop query="rsDatos1">
+	                        <cfquery datasource="#session.DSN#">
+                            	update  #tempIndicadores# set SumDbCr = #rsDatos1.SumDbCr#
+                                where #tempIndicadores#.Speriodo = #rsDatos1.Speriodo#
+                            </cfquery>
+                        </cfloop>
+                        
+                        <cfquery datasource="#session.DSN#">
+                            update  #tempIndicadores# set saldoFin =  (SumDbCr + saldoIni )
+                        </cfquery>
+                        
+                        <cfquery datasource="#session.DSN#"  name="rsDatos">
+                        	select Speriodo,(saldofin/1) as saldofin from  #tempIndicadores#
+                        </cfquery>
+
                     <cfelse>
                         <cfquery  dbtype="query" name = "rsDatos"> 
                             select 
@@ -130,7 +164,7 @@
                             Smes1, 
                             Smes2,--->
                             Speriodo,
-                            sum(Creditos - Debitos) as saldofin
+                            (sum(Creditos - Debitos)/1) as saldofin
                             from rsCuentasContables
                             where nivel <> 0
                             group by Speriodo
@@ -186,12 +220,15 @@
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 
                <cfset NumGrafico = 'F01'>  
+               <!--- <cfset escalaMax = fix(#rsDatos.saldofin#) + fix(#rsDatos.saldofin# / 4)>   --->
 			<div align="center" >               
               <cfchart format="jpg" 
+                    <!--- scalefrom="0"
+                    scaleto="#escalaMax#" --->
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
                     show3d="no"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="640"
                     chartwidth="480"
                     <!---name="F01">  --->
                     >
@@ -207,10 +244,11 @@
                 </cfchart>
                 
                 <cfchart format="jpg" 
+                    <!--- scaleto="#escalaMax#" --->
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
                     show3d="no"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     name="F01">  
                     >
@@ -231,9 +269,9 @@
             
             <div align="center"> <h3>Comentarios </h3></div> 
             <cfoutput>
-             <tr>
+<!---              <tr>
     	        <td>
-                    <table align="center" border="0" width="80%">
+ --->                    <table align="center" border="0" width="80%">
                     	<tr>
                            <td width="20%">
                             <div align="center"> <h4>Periodo </h3></div>
@@ -278,8 +316,8 @@
                             </td>
                         </tr>
                     </table>
-                    </td>
-                </tr>
+                    <!--- </td>
+                </tr> --->
                 
  			</cfloop>
             </cfoutput>
@@ -293,7 +331,7 @@
             <div align="center">
               <cf_dump var="Proceso Concluido">
             </div>
-            
+
 
                  
 <!---				<cfset sObj = SpreadsheetNew()>
@@ -335,6 +373,10 @@
                     </cfif>
                     order by c.Cformato
                 </cfquery>
+
+                
+
+
                 
                 <cfif isdefined('rsCuentasContables') and rsCuentasContables.RecordCount EQ 0 >
                     <cfset TitleErrs = 'Operación Inválida'>
@@ -354,17 +396,34 @@
                 </cfquery>  
 
 
-                <cfquery  dbtype="query" name = "rsDatos"> 
+                <cfquery  dbtype="query" name = "rsDatos1"> 
                     select *, (((saldofin - saldofinanterior) / saldofinanterior) * 100 ) as crecimiento
                     from rsCuentasContables
                     where nivel = 0
                     and Speriodo > #rsMinPeriodo.desde#
                     order by Speriodo
                 </cfquery> 
+
+                <!---Temporal para hacer el round --->    
+                <cf_dbtemp name="tempIndicadoresF02" returnvariable="tempF02" datasource="#session.DSN#">
+                    <cf_dbtempcol name="crecimiento"    type="money"    mandatory="no">
+                    <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+                </cf_dbtemp>  
+                <cfloop query="rsDatos1" >
+                    <cfquery  datasource="#session.DSN#">
+                        insert  into #tempF02# (crecimiento,Speriodo) values (#rsDatos1.crecimiento#,#rsDatos1.Speriodo#)
+                    </cfquery>
+                </cfloop>
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round(crecimiento,2) as crecimiento,Speriodo
+                    from #tempF02#
+                    order by Speriodo
+                </cfquery> 
                 
-<!---                <cfdump var="#rsDatos#">
+                
+<!---                 <cfdump var="#rsDatos#">
                 <cfdump var="#rsMinPeriodo#">
-                <cf_dump var="#rsMaxPeriodo#">--->
+                <cf_dump var="#rsMaxPeriodo#"> --->
                 
         
 
@@ -375,14 +434,17 @@
                                                       
                 <cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
+
+                <!--- <cfset escalaMax = #rsDatos.crecimiento# + fix(#rsDatos.crecimiento# / 4)>   --->
                 
                 <cfset NumGrafico = 'F02'>
 		       <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -427,10 +489,10 @@
                         Cformato, 
                         Cdescripcion, 
                         nivel, 
-                        (saldoini) *-1 as saldoini, 
+                        (saldoini) *1 as saldoini, 
                         debitos, 
                         creditos, 
-                        (saldofin) * -1 as saldofin,
+                        (saldofin) * 1 as saldofin,
                         Cdetalle,
                         Speriodo, 
                         Smes1, 
@@ -458,13 +520,15 @@
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 
                 <cfset NumGrafico = 'F03'>
+                <!--- <cfset escalaMax = #rsDatos.saldofin# + fix(#rsDatos.saldofin# / 4)>   --->
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -545,13 +609,30 @@
                 </cfquery>  
 
 
-                <cfquery  dbtype="query" name = "rsDatos"> 
+                <cfquery  dbtype="query" name = "rsDatos1"> 
                     select *, (((saldofin - saldofinanterior) / saldofinanterior) * 100 ) as crecimiento
                     from rsCuentasContables
                     where nivel = 0
                     and Speriodo > #rsMinPeriodo.desde#
                     order by Speriodo
                 </cfquery> 
+
+                <!---Temporal para hacer el round --->    
+                <cf_dbtemp name="tempIndicadoresF04" returnvariable="tempF04" datasource="#session.DSN#">
+                    <cf_dbtempcol name="crecimiento"    type="money"    mandatory="no">
+                    <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+                </cf_dbtemp>  
+                <cfloop query="rsDatos1" >
+                    <cfquery  datasource="#session.DSN#">
+                        insert  into #tempF04# (crecimiento,Speriodo) values (#rsDatos1.crecimiento#,#rsDatos1.Speriodo#)
+                    </cfquery>
+                </cfloop>
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round(crecimiento,2) as crecimiento,Speriodo
+                    from #tempF04#
+                    order by Speriodo
+                </cfquery> 
+
                 
 <!---                <cfdump var="#rsDatos#">
                 <cfdump var="#rsMinPeriodo#">
@@ -568,13 +649,16 @@
                 <cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 <cfset NumGrafico = 'F04'>
+
+                <!--- <cfset escalaMax = #rsDatos.crecimiento# + fix(#rsDatos.crecimiento# / 4)>   --->
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -582,7 +666,7 @@
                     <cfchartseries type="bar" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="crecimiento"   
+                        valuecolumn="crecimiento"
                         seriescolor="##3399FF" 
                         serieslabel="crecimiento" 
                         datalabelstyle="value"> 
@@ -606,34 +690,74 @@
     
             </cfcase>
            
-            <cfcase value="5"><!---4 - Gastos de la UAF generados por los servicios de administración de recursos del TEC --->
-                <cfquery  dbtype="query" name = "rsDatos"> 
-                    select Ccuenta, 
-                        Ecodigo, 
-                        Cformato, 
-                        Cdescripcion, 
-                        nivel, 
-                        (saldoini) *-1 as saldoini, 
-                        debitos, 
-                        creditos, 
-                        (saldofin) * -1 as saldofin,
-                        Cdetalle,
-                        Speriodo, 
-                        Smes1, 
-                        Smes2 
-                    from rsCuentasContables
-                    where nivel = 0
+            <cfcase value="5"><!---Razón entre la cantidad de proyectos activos en la FUNDATEC en el periodo de análisis y la cantidad de funcionarios de la UAF en el periodo de análisis. --->
+            <!--- F1= Qcp1/N1 
+            Qcp1=cantidad de códigos presupuestarios del ITCR activos en la FUNDATEC en el período de análisis .
+            N1= cantidad total de empleados de la UAF de la FUNDATEC. --->
+
+            <!---Temporal para hacer el round --->    
+            <cf_dbtemp name="tempIndicadoresF05" returnvariable="tempF05" datasource="#session.DSN#">
+                <cf_dbtempcol name="Proyectos"      type="money"    mandatory="no">
+                <cf_dbtempcol name="Funcionarios"   type="money"    mandatory="no">    
+                <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+            </cf_dbtemp> 
+
+
+
+
+
+            <cfloop from="#form.PeriodoInicio#" to ="#form.PeriodoFinal#" index="i">
+                <cfset fcinicio = createdate(#i#,#form.MesFinal#,01)>
+                <cfset Fhasta = DATEADD('D',-1,DATEADD('m', 1 ,#fcinicio#))>
+
+
+                <cfquery datasource="#session.dsn#" name="rs">
+                    select count(1) as Cantidad
+                    from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec">
+                    where Vesproyecto = 1
+                    and #Fhasta# between  coalesce(Vfinicio,'19000101') and coalesce(Vffinal,'61000101')
+                </cfquery>
+                
+                <cfif isDefined('rs') and rs.RecordCount >
+                    <cfset lVarProyectos = #rs.Cantidad#>
+                <cfelse>
+                    <cfset lVarProyectos = 0>
+                </cfif>
+
+                <cfquery datasource="#session.dsn#" name="rsE">
+                    select count(1) as Cantidad
+                    from <cf_dbdatabase table="FTEmpleadoIndicador" datasource="ftec">
+                    where EIperiodo = #i#
+                    and EImes >= #form.MesInicial#
+                    and EImes <= #form.MesFinal#
+                    group by EIperiodo     
+                </cfquery>
+
+                <cfif isDefined('rsE') and rsE.RecordCount >
+                    <cfset lVarfuncionarios = #rsE.Cantidad#>
+                <cfelse>
+                    <cfset lVarfuncionarios = 0>
+                </cfif>
+
+
+                <cfquery datasource="#session.dsn#">
+                    insert into #tempF05# (Proyectos, Funcionarios, Speriodo )
+                        values (#lVarProyectos#, #lVarfuncionarios#, #i#)
+                </cfquery>
+            </cfloop>
+
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round((Proyectos / Funcionarios),2) as crecimiento, Speriodo
+                    from #tempF05#
                     order by Speriodo
                 </cfquery> 
                 
                 <cfquery  dbtype="query" name = "rsMinPeriodo"> 
-                    select min(Speriodo) desde from rsCuentasContables
-                    where nivel = 0
+                    select min(Speriodo) desde from rsDatos
                 </cfquery>
                 
                 <cfquery  dbtype="query" name = "rsMaxPeriodo"> 
-                    select max(Speriodo) hasta from rsCuentasContables
-                    where nivel = 0
+                    select max(Speriodo) hasta from rsDatos
                 </cfquery>  
         
                  
@@ -645,13 +769,16 @@
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 <cfset NumGrafico = 'F05'>
+
+                <!--- <cfset escalaMax = #rsDatos.saldofin# + fix(#rsDatos.saldofin# / 4)>  ---> 
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                    <!--- name="#NumGrafico#"--->
                    >  
@@ -659,9 +786,9 @@
                     <cfchartseries type="cone" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="saldofin"   
+                        valuecolumn="crecimiento"   
                         seriescolor="##3399FF" 
-                        serieslabel="saldofin" 
+                        serieslabel="crecimiento" 
                         datalabelstyle="value"> 
                     </cfchartseries> 
                 </cfchart> 
@@ -700,7 +827,7 @@
                         a.Smes1, 
                         a.Smes2,
                         coalesce((select count(DEid)
-									from FTEmpleadoIndicador 
+									from <cf_dbdatabase table="FTEmpleadoIndicador" datasource="ftec">
                                     where EIperiodo =  a.Speriodo)
                                 ,0) as CantEmpledos
                     from #reporte# a
@@ -757,20 +884,23 @@
                 
         
                  <cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD'& 
+                                        chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &chr(13)& chr(10)& 'DE FUNCIONARIOS DE LA UAF'& 
                                         chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
                                         chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# > 
 				
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 <cfset NumGrafico = 'F06'>
+
+               <!---  <cfset escalaMax = #rsDatos.saldofin# + fix(#rsDatos.saldofin# / 4)>   --->
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -822,7 +952,7 @@
                     		where aa.nivel = 0 
                             	and aa.Speriodo = a.Speriodo
                             	and aa.GCid = (select y.GCid 
-                                				from FTGrupoCuentas y 
+                                				from <cf_dbdatabase table="FTGrupoCuentas" datasource="ftec"> y 
                                                 where y.Iid = #form.Indicador# 
                                                 and upper(ltrim(rtrim(y.GCcodigo))) = 'Z1' )
                         	group by aa.Speriodo,aa.GCid),0) as montoZ1
@@ -831,7 +961,7 @@
                     		where aa.nivel = 0 
 	                            and aa.Speriodo = a.Speriodo
 	                            and aa.GCid = (select z.GCid 
-                                				from FTGrupoCuentas z
+                                				from <cf_dbdatabase table="FTGrupoCuentas" datasource="ftec"> z
                                                 where z.Iid = #form.Indicador# 
                                                 and upper(ltrim(rtrim(z.GCcodigo))) = 'Y1' )
                         	group by aa.Speriodo,aa.GCid),0) as montoY1
@@ -866,7 +996,7 @@
 
 
                 <cfquery  dbtype="query" name = "rsDatos"> 
-                    select *, (montoY1 / montoY1) *100 as saldofin
+                    select *, (montoZ1 / montoY1) *100 as saldofin
                     from rsCuentasContables
                     where nivel = 0
                     order by Speriodo
@@ -882,13 +1012,16 @@
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 <cfset NumGrafico = 'F07'>
+
+                <!--- <cfset escalaMax = #rsDatos.saldofin# + fix(#rsDatos.saldofin# / 4)>   --->
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -896,7 +1029,7 @@
                     <cfchartseries type="Pyramid" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="saldofin"   
+                        valuecolumn="saldofin"
                         seriescolor="##3399FF" 
                         serieslabel="saldofin" 
                         datalabelstyle="value"> 
@@ -971,11 +1104,27 @@
                 </cfquery>  
 
 
-                <cfquery  dbtype="query" name = "rsDatos"> 
+                <cfquery  dbtype="query" name = "rsDatos1"> 
                     select *, (((saldofin - saldofinanterior) / saldofinanterior) * 100 ) as crecimiento
                     from rsCuentasContables
                     where nivel = 0
                     and Speriodo > #rsMinPeriodo.desde#
+                    order by Speriodo
+                </cfquery> 
+
+                <!---Temporal para hacer el round --->    
+                <cf_dbtemp name="tempIndicadoresF08" returnvariable="tempF08" datasource="#session.DSN#">
+                    <cf_dbtempcol name="crecimiento"    type="money"    mandatory="no">
+                    <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+                </cf_dbtemp>  
+                <cfloop query="rsDatos1" >
+                    <cfquery  datasource="#session.DSN#">
+                        insert  into #tempF08# (crecimiento,Speriodo) values (#rsDatos1.crecimiento#,#rsDatos1.Speriodo#)
+                    </cfquery>
+                </cfloop>
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round(crecimiento,2) as crecimiento,Speriodo
+                    from #tempF08#
                     order by Speriodo
                 </cfquery> 
         
@@ -987,13 +1136,16 @@
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'> 
                 <cfset NumGrafico = 'F08'>
+
+                <!--- <cfset escalaMax = #rsDatos.crecimiento# + fix(#rsDatos.crecimiento# / 4)>   --->
         
                 <div align="center">
                 <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
+                    <!--- scaleto="#escalaMax#" --->
                     show3d="yes"  title="#Titulo_Grafico#"
-                    chartheight="480"
+                    chartheight="600"
                     chartwidth="480"
                     <!---name="#NumGrafico#"--->
                     >  
@@ -1001,7 +1153,7 @@
                     <cfchartseries type="bar" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="crecimiento"   
+                        valuecolumn="crecimiento"
                         seriescolor="##3399FF" 
                         serieslabel="crecimiento" 
                         datalabelstyle="value"> 

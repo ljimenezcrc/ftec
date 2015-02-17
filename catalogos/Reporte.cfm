@@ -79,7 +79,8 @@
                     where nivel = 0
                     order by Speriodo
                 </cfquery> 
-                
+                 <!--- <cfdump var="#rsDatos#"> --->
+
                 <cfif rsDatos.Smes1 NEQ rsDatos.Smes2>
                 	
                                         
@@ -101,6 +102,10 @@
                             and Smes1 = #rsDatos.Smes1#
                             group by Speriodo
                         </cfquery> 
+
+                        <!--- <cfdump var="#rsDatosIni#"> --->
+
+
                         
                         <cfloop query="rsDatosIni">
 	                        <cfquery datasource="#session.DSN#">
@@ -131,6 +136,9 @@
                             where nivel <> 0
                             group by Speriodo
                         </cfquery> 
+
+                        <!--- <cf_dump var="#rsDatos1#"> --->
+
                         
                          <cfloop query="rsDatos1">
 	                        <cfquery datasource="#session.DSN#">
@@ -170,6 +178,8 @@
                             group by Speriodo
                         </cfquery>
                     </cfif>
+
+                    <!--- <cf_dump var="#rsDatos#"> --->
 
 
 <!--- 
@@ -811,6 +821,9 @@
             </cfcase>
             
              <cfcase value="6"><!---Razón entre la cantidad de ingresos custodiados por la FUNDATEC en el periodo de análisis y la cantidad de funcionarios de la UAF en el periodo de análisis. --->
+                 <!---Temporal para hacer el round --->    
+ 
+
                 <cfquery name="rsCuentasContables" datasource="#session.dsn#">
                     select 
                         a.Ccuenta, 
@@ -826,7 +839,7 @@
                         a.Speriodo, 
                         a.Smes1, 
                         a.Smes2,
-                        coalesce((select count(DEid)
+                        coalesce((select coalesce(count(DEid),0)
 									from <cf_dbdatabase table="FTEmpleadoIndicador" datasource="ftec">
                                     where EIperiodo =  a.Speriodo)
                                 ,0) as CantEmpledos
@@ -840,7 +853,7 @@
                     </cfif>
                     order by c.Cformato
                 </cfquery>
-                
+
                 <cfif isdefined('rsCuentasContables') and rsCuentasContables.RecordCount EQ 0 >
                     <cfset TitleErrs = 'Operación Inválida'>
                     <cfset MsgErr	 = 'Indicadores'>
@@ -861,7 +874,7 @@
                 </cfquery>  
 
 
-                <cfquery  dbtype="query" name = "rsDatos"> 
+                <cfquery  dbtype="query" name = "rsDatos1"> 
                     select Ccuenta, 
                         Ecodigo, 
                         Cformato, 
@@ -875,13 +888,45 @@
                         Speriodo, 
                         Smes1, 
                         Smes2,
-	                    (saldofin / CantEmpledos) as crecimiento
+                        CantEmpledos
+	                    <!---( saldofin / CantEmpledos ) as crecimiento --->
                     from rsCuentasContables
                     where nivel = 0
-                    and Speriodo > #rsMinPeriodo.desde#
+                    and Speriodo >= #rsMinPeriodo.desde#
                     order by Speriodo
                 </cfquery> 
-                
+
+
+                <!---Temporal para hacer el round --->    
+                <cf_dbtemp name="tempIndicadoresF06" returnvariable="tempF06" datasource="#session.DSN#">
+                    <cf_dbtempcol name="crecimiento"    type="money"    mandatory="no">
+                    <cf_dbtempcol name="CantEmpledos"   type="numeric"  mandatory="no">
+                    <cf_dbtempcol name="saldofin"       type="money"  mandatory="no">    
+                    <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+                </cf_dbtemp>  
+                <cfloop query="rsDatos1" >
+                    <cfif rsDatos1.CantEmpledos EQ 0>
+                        <cfset Cantidad = 1>
+                    <cfelse>
+                        <cfset Cantidad = #rsDatos1.CantEmpledos#>
+                    </cfif>
+                    <cfquery  datasource="#session.DSN#">
+                        insert  into #tempF06# (CantEmpledos,saldofin,crecimiento,Speriodo) 
+                            values (#Cantidad#,#rsDatos1.saldofin#, 0,#rsDatos1.Speriodo#)
+                    </cfquery> 
+                </cfloop>
+
+                <cfquery  datasource="#session.DSN#">
+                    update #tempF06# set crecimiento = (saldofin / CantEmpledos)
+                </cfquery> 
+
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round(coalesce(crecimiento,0),2) as crecimiento,Speriodo
+                    from #tempF06#
+                    order by Speriodo
+                </cfquery> 
+                 
+
         
                  <cfset Titulo_Grafico = 'FUNDATEC'& 
                                         chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &chr(13)& chr(10)& 'DE FUNCIONARIOS DE LA UAF'& 
@@ -908,7 +953,7 @@
                     <cfchartseries type="line" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="saldofin"   
+                        valuecolumn="crecimiento"   
                         seriescolor="##3399FF" 
                         serieslabel="saldofin" 
                         datalabelstyle="value"> 
@@ -995,12 +1040,30 @@
                 </cfquery>  
 
 
-                <cfquery  dbtype="query" name = "rsDatos"> 
-                    select *, (montoZ1 / montoY1) *100 as saldofin
+                <cfquery  dbtype="query" name = "rsDatos1"> 
+                    select *, (montoZ1 / montoY1) *100 as crecimiento
                     from rsCuentasContables
                     where nivel = 0
                     order by Speriodo
                 </cfquery> 
+
+
+                <!---Temporal para hacer el round --->    
+                <cf_dbtemp name="tempIndicadoresF07" returnvariable="tempF07" datasource="#session.DSN#">
+                    <cf_dbtempcol name="crecimiento"    type="money"    mandatory="no">
+                    <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
+                </cf_dbtemp>  
+                <cfloop query="rsDatos1" >
+                    <cfquery  datasource="#session.DSN#">
+                        insert  into #tempF07# (crecimiento,Speriodo) values (#rsDatos1.crecimiento#,#rsDatos1.Speriodo#)
+                    </cfquery>
+                </cfloop>
+                <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+                    select round(crecimiento,2) as crecimiento,Speriodo
+                    from #tempF07#
+                    order by Speriodo
+                </cfquery> 
+
                 
                 <!--- --and Speriodo > #rsMinPeriodo.desde#--->
                 
@@ -1029,7 +1092,7 @@
                     <cfchartseries type="Pyramid" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
-                        valuecolumn="saldofin"
+                        valuecolumn="crecimiento"
                         seriescolor="##3399FF" 
                         serieslabel="saldofin" 
                         datalabelstyle="value"> 

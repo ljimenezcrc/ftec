@@ -45,7 +45,6 @@
         </cfinvoke>
         
         <cfset modo = 'CAMBIO'>
-        <cfset SPid = #Lvar_ID#>
         <cfelse>
             <cfset TitleErrs = 'Operación Inválida'>
             <cfset MsgErr    = 'Registro Ordenes de Pago'>

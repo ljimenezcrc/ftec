@@ -768,9 +768,7 @@
                     order by Speriodo
                 </cfquery> 
 
-                datos de los empleados por proyecto y periodos
-                <cfdump var="#emple#">
-                
+ 
                 <cfquery  dbtype="query" name = "rsMinPeriodo"> 
                     select min(Speriodo) desde from rsDatos
                 </cfquery>
@@ -958,10 +956,7 @@
                     order by Speriodo
                 </cfquery> 
 
-                datos de los empleados por proyecto y periodos
-                <cfdump var="#xxx#">
-                 
-
+ 
         
                  <cfset Titulo_Grafico = 'FUNDATEC'& 
                                         chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &chr(13)& chr(10)& 'DE FUNCIONARIOS DE LA UAF'& 

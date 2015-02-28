@@ -712,14 +712,14 @@
                 <cf_dbtempcol name="Speriodo"       type="numeric"  mandatory="no">
             </cf_dbtemp> 
 
-
-
-
-
-            <cfloop from="#form.PeriodoInicio#" to ="#form.PeriodoFinal#" index="i">
+           <cfloop from="#form.PeriodoInicio#" to ="#form.PeriodoFinal#" index="i">
                 <cfset fcinicio = createdate(#i#,#form.MesFinal#,01)>
                 <cfset Fhasta = DATEADD('D',-1,DATEADD('m', 1 ,#fcinicio#))>
 
+                <cfset f1 = createdate(#i#,#form.MesInicial#,01)>
+                <cfset f2 = createdate(#i#,#form.MesFinal#,01)>
+
+                <cfset meses = datediff("m",#f1#,#f2#) + 1>
 
                 <cfquery datasource="#session.dsn#" name="rs">
                     select count(1) as Cantidad
@@ -749,10 +749,9 @@
                     <cfset lVarfuncionarios = 0>
                 </cfif>
 
-
                 <cfquery datasource="#session.dsn#">
                     insert into #tempF05# (Proyectos, Funcionarios, Speriodo )
-                        values (#lVarProyectos#, #lVarfuncionarios#, #i#)
+                        values (#lVarProyectos#, (#lVarfuncionarios# / #meses#), #i#)
                 </cfquery>
             </cfloop>
 
@@ -761,6 +760,16 @@
                     from #tempF05#
                     order by Speriodo
                 </cfquery> 
+
+
+                <cfquery  datasource="#session.dsn#" name = "emple"> 
+                    select Proyectos, Funcionarios, Speriodo
+                    from #tempF05#
+                    order by Speriodo
+                </cfquery> 
+
+                datos de los empleados por proyecto y periodos
+                <cfdump var="#emple#">
                 
                 <cfquery  dbtype="query" name = "rsMinPeriodo"> 
                     select min(Speriodo) desde from rsDatos
@@ -839,9 +848,12 @@
                         a.Speriodo, 
                         a.Smes1, 
                         a.Smes2,
-                        coalesce((select coalesce(count(DEid),0)
-									from <cf_dbdatabase table="FTEmpleadoIndicador" datasource="ftec">
-                                    where EIperiodo =  a.Speriodo)
+                        coalesce((select coalesce(count(e.DEid),0)
+									from <cf_dbdatabase table="FTEmpleadoIndicador" datasource="ftec"> e
+                                    where coalesce(e.EInoaplica,0) = 0
+                                        and e.EImes >= a.Smes1
+                                        and e.EImes <= a.Smes2
+                                        and e.EIperiodo = a.Speriodo)
                                 ,0) as CantEmpledos
                     from #reporte# a
                         inner join CContables c
@@ -853,6 +865,10 @@
                     </cfif>
                     order by c.Cformato
                 </cfquery>
+
+           
+
+
 
                 <cfif isdefined('rsCuentasContables') and rsCuentasContables.RecordCount EQ 0 >
                     <cfset TitleErrs = 'Operación Inválida'>
@@ -910,6 +926,12 @@
                     <cfelse>
                         <cfset Cantidad = #rsDatos1.CantEmpledos#>
                     </cfif>
+
+                    <cfset f1 = createdate(#rsDatos1.Speriodo#,#rsDatos1.Smes1#,01)>
+                    <cfset f2 = createdate(#rsDatos1.Speriodo#,#rsDatos1.Smes2#,01)>
+
+                    <cfset meses = datediff("m",#f1#,#f2#) + 1>
+
                     <cfquery  datasource="#session.DSN#">
                         insert  into #tempF06# (CantEmpledos,saldofin,crecimiento,Speriodo) 
                             values (#Cantidad#,#rsDatos1.saldofin#, 0,#rsDatos1.Speriodo#)
@@ -917,14 +939,27 @@
                 </cfloop>
 
                 <cfquery  datasource="#session.DSN#">
-                    update #tempF06# set crecimiento = (saldofin / CantEmpledos)
+                    update #tempF06# set crecimiento = (saldofin / round((CantEmpledos / #meses#),0))
                 </cfquery> 
+
+
 
                 <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
                     select round(coalesce(crecimiento,0),2) as crecimiento,Speriodo
                     from #tempF06#
                     order by Speriodo
                 </cfquery> 
+
+
+
+                  <cfquery  datasource="#session.dsn#" name = "xxx"> 
+                    select CantEmpledos,saldofin,crecimiento,Speriodo
+                    from #tempF06#
+                    order by Speriodo
+                </cfquery> 
+
+                datos de los empleados por proyecto y periodos
+                <cfdump var="#xxx#">
                  
 
         

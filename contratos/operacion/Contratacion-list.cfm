@@ -19,18 +19,19 @@
                 ,a.PCEnumero
                 ,a.PCEPeriodo
                 ,b.Cdescripcion
+                 ,{fn concat('<img border=''0''  width= ''30%''  onClick=''Comentario(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as ComStr
             from FTPContratacion a
                 inner join FTContratos b
                     on b.Cid = a.Cid
-            where a.PCEstado = 'T'
+            where a.PCEstado in  ('P','R','A')
         </cfquery>
 
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
             <cfinvokeargument name="query" value="#rsLista#"/>
-            <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado"/>
-            <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado"/>
-            <cfinvokeargument name="formatos" value=" S, S, S, S"/>
-            <cfinvokeargument name="align" value="left, left, left,  left"/>
+            <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado,ComStr"/>
+            <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado,Comentarios"/>
+            <cfinvokeargument name="formatos" value=" S, S, S, S,I"/>
+            <cfinvokeargument name="align" value="left, left, left,  left,center"/>
             <cfinvokeargument name="ajustar" value="N"/>
             <cfinvokeargument name="irA" value="Contratacion.cfm"/>
             <cfinvokeargument name="keys" value="PCid"/>
@@ -47,3 +48,12 @@
 		<input type="submit" name="btnNContracion" class="btn btn-info"     value="Nueva Contración" />
     </div>
 </div> 
+
+
+ <script language="JavaScript1.2" type="text/javascript">
+ 
+            function Comentario(PCid) 
+            { 
+              window.open('/cfmx/ftec/contratos/operacion/PopupComentario.cfm?PCid='+PCid,'popup','width=850,height=400','mywindow');
+            }
+</script>

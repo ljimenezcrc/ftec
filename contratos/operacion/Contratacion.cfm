@@ -31,6 +31,7 @@
 <cfinvoke component="ftec.Componentes.FTContratos" method="get" returnvariable="rsContratoAll"></cfinvoke>
 
 <cfoutput>
+
 <!---Buscar Oferente--->
 <cfif isdefined('form.btnBuscarOferente')>
     <cfinvoke component="ftec.Componentes.BuscarOferente" method="Contratos" returnvariable="rsOferente">
@@ -58,6 +59,11 @@
                 <cfelse>
                     , NULL as PCid
                 </cfif>
+                <cfif isdefined('form.Vid') and len(#form.Vid#)>
+                    ,#form.Vid# as Vid
+                <cfelse>
+                    , NULL as Vid
+                </cfif>
                 ,#form.TCid# as TCid
                 ,'#form.Cdescripcion#' as Cdescripcion
                 ,'#rsOferente.PCTidentificacion#' as PCTidentificacion
@@ -70,6 +76,7 @@
                 , getdate() as PCFechaN
             from dual
         </cfquery>    
+
     </cfif>    
 </cfif>
 
@@ -93,11 +100,13 @@
         <cfinvokeargument name="PCFechaN" 			value="#form.PCFechaN#">
 	</cfinvoke>
 	
-	<cfinvoke component="ftec.Componentes.FTDatosVariables" method="SETVALOR">
-		<cfinvokeargument name="form" value="#form#">
-	</cfinvoke>
+
     
 	<cfset form.PCid = LvarPCid>
+
+    <cfinvoke component="ftec.Componentes.FTDatosVariables" method="SETVALOR">
+        <cfinvokeargument name="form" value="#form#">
+    </cfinvoke>
     <cfset form.modo = 'CAMBIO'>
     
 <!---Elimina el contrato--->
@@ -112,11 +121,11 @@
 	<cfset form.PCid = "">
 
 <!---Ènvia al tramite el contrato---> 
+
 <cfelseif isdefined('form.btnTramite')>
-    <cfinvoke component="ftec.Componentes.FTTramitesContratacion" method="AplicaTramite" returnvariable="rsContrato">
+    <cfinvoke component="ftec.Componentes.FTTramitesContratacion" method="EnviarTramite">
         <cfinvokeargument name="PCid" value="#form.PCid#">
-        <cfinvokeargument name="Aprueba" value="1"> <!--- lo esta enviando al tramite --->
-        
+        <cfinvokeargument name="Aprueba" value="0"> <!--- lo esta enviando al tramite --->
     </cfinvoke>
 
 </cfif>
@@ -150,6 +159,3 @@
         </form>
 	<cf_web_portlet_end>																			
 <cf_templatefooter>
-
-
- 

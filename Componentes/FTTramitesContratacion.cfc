@@ -1,19 +1,58 @@
-﻿<cfcomponent name="FTTramitesContratacion"  output="true">
+﻿ 
+<cfcomponent name="FTTramitesContratacion">
 	<!--- *************************** --->
 	<!--- Aplica Tramite  --->
 	<!--- *************************** --->
-    <cffunction access="public" name="AplicaTramite">
+
+    <cffunction   name="EnviarTramite" access="remote" returnformat="json"  output="true" returntype="query">
+    	<cfargument name="PCid"				required="true" 	type="any">
+        <cfargument name="Aprueba"			required="true" 	type="any">
+<!---        <cfargument name="Estado"			required="true" 	type="any" default="P">--->
+        <cftransaction>
+            <cfquery name="rsUpdate" datasource="#Session.DSN#">
+                update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set 
+                    PCEstado = 	 <cfif #Arguments.Aprueba# EQ 0> 'T'<cfelseif  #Arguments.Aprueba# EQ 1> 'A'  <cfelseif  #Arguments.Aprueba# EQ 2> 'R' <cfelse> 'P'</cfif>
+<!---                    <cf_jdbcquery_param cfsqltype="cf_sql_varchar"		value="#Arguments.Estado#">--->
+                    where PCid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.PCid#">
+            </cfquery>
+            
+            <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
+                insert into <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> (Usucodigo
+                        ,HTfecha
+                        ,ETid
+                        ,TPid
+                        ,PCid
+                        ,HTpasosigue
+                        ,DSPid
+                        ,HTcompleto
+                    )
+                values(	<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#session.Usucodigo#" 	voidnull>
+                        ,<cf_dbfunction name="now">
+                        , 1
+                        , null
+                        , <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.PCid#"		voidnull>
+                        , 0
+                        ,null
+                        ,1
+                       )
+            </cfquery>
+        </cftransaction>
+        <cfquery name="rs" datasource="#Session.DSN#">
+	        select 1 from dual
+        </cfquery>
+        
+        <cfreturn rs>
+    </cffunction>
+    
+
+
+    <cffunction   name="AplicaTramite"  access="remote" returnformat="json"  output="true" returntype="query">
 		<cfargument name="PCid"				required="true" 	type="any">
         <cfargument name="Aprueba"			required="true" 	type="any">
-		<!---<cfargument name="TPid"				required="true" 	type="any">
-        <cfargument name="HTcompleto"		required="no" 		type="any">
-        <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  --->
-        
+
         <cfinvoke component="ftec.Componentes.FTPContratacion" method="Get" returnvariable="rsContrato">
             <cfinvokeargument name="PCid" value="#Arguments.PCid#">
         </cfinvoke>
-        
- 
         
         <cfquery name="rsSiguientePasoH" datasource="#Session.DSN#">
             select Usucodigo,HTfecha ETid,TPid,SPid,HTpasosigue
@@ -25,7 +64,6 @@
                                 )
         </cfquery>
         
- 
         
         <cfif isdefined('rsSiguientePasoH') and rsSiguientePasoH.recordCount EQ 0>
         	<cfquery name="rsSiguientePaso" datasource="#Session.DSN#">
@@ -103,7 +141,11 @@
                     </cfinvoke>
                </cfif>
         </cfif>
-        <cfreturn>
+        <cfquery name="rs" datasource="#Session.DSN#">
+        	select 1 from dual
+        </cfquery>
+        
+        <cfreturn rs>
     </cffunction>    
     
 	<cffunction access="public" name="AltaHTramite" returntype="numeric">

@@ -75,7 +75,7 @@ PCid				<!--- Id de la  Tabla --->
     
 	<cffunction access="public" name="set" returntype="numeric"  hint="Funcion para Insertar o Actualizar contratos">
         <cfargument name="PCid" 				required="false" 	type="numeric">
-        <cfargument name="Vid"                  required="true"     type="numeric">
+        <cfargument name="Vid"                  required="true"     type="any">
         <cfargument name="Cid" 					required="true" 	type="numeric">
     	<cfargument name="PCTidentificacion" 	required="true" 	type="string">
         <cfargument name="PCIdentificacion" 	required="true" 	type="string">
@@ -88,8 +88,7 @@ PCid				<!--- Id de la  Tabla --->
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
 		<cfargument name="Conexion" 			required="false" 	type="string" 	default="ftec">  
-
-
+        
         <cftransaction>   
             <cfif isdefined('Arguments.PCid')>
              <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
@@ -175,6 +174,33 @@ PCid				<!--- Id de la  Tabla --->
                 delete from FTPContratacion
                 where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
             </cfquery>	
+        </cftransaction>
+        <cfreturn>
+	</cffunction>
+    
+    <cffunction access="public" name="setComentario">
+        <cfargument name="PCid" 			required="true" 	type="numeric">
+        <cfargument name="comentarios"		required="true" 	type="any">
+        
+        <cftransaction>   
+        	 <cfquery datasource="ftec" name="rsExiste">
+                select * from FTPContratacionObserv
+                where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
+            </cfquery>
+            
+            <cfif isdefined('rsExiste') and rsExiste.RecordCount GT 0>
+                <cfquery datasource="ftec">
+                    update FTPContratacionObserv set 
+                    FTPCOcomentario = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#Arguments.comentarios#" voidnull> 
+                    where PCid= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>
+                </cfquery>	
+            <cfelse>
+                <cfquery datasource="ftec">
+                    insert into FTPContratacionObserv (PCid,FTPCOcomentario) values
+                    (<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#" voidnull>,<cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#Arguments.comentarios#" voidnull> )
+                </cfquery>	
+            </cfif>
+		
         </cftransaction>
         <cfreturn>
 	</cffunction>

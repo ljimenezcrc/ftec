@@ -123,7 +123,7 @@
                     <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                         <cfinvokeargument name="query" value="#rsLista#"/>
                         <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado,ApruebaStr,RechazaStr,VerStr,ComStr"/>
-                        <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado, Aprueba, Rechaza,Revizar,Comentario"/>
+                        <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado, Aprueba, Rechaza,Revisar,Comentario"/>
                         <cfinvokeargument name="formatos" value=" S, S, S, S,I,I,I,I"/>
                         <cfinvokeargument name="align" value="left, left, left,  left, center, center, center, center"/>
                         <cfinvokeargument name="ajustar" value="true"/>

@@ -15,7 +15,7 @@
 <!---                    <cf_jdbcquery_param cfsqltype="cf_sql_varchar"		value="#Arguments.Estado#">--->
                     where PCid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.PCid#">
             </cfquery>
-            
+
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                 insert into <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> (Usucodigo
                         ,HTfecha

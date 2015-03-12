@@ -195,15 +195,15 @@
 <div class="btn-group" align="center"> 
   	<button type="submit"  name="btnRegresar" class="btn btn-success">Regresar a la Lista</button>
   <cfif LEN(TRIM(form.Cid))>
-		<cfif form.PCestado neq 'Aprobado'>  	
+		<cfif isdefined('form.PCestado') and form.PCestado neq 'Aprobado'>  	
 	  		<button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
 	  	</cfif>
 		<cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
 	    	<button type="button"  name="btnGContrato"  class="btn btn-success" 
 				onclick="window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid=<cfoutput>#rsForm.PCid#</cfoutput>','mywindow')">Contrato Preliminar</button>
 		</cfif>
-		<cfif form.PCestado neq 'Aprobado'>
-			<button type="submit"  name="btnTramite" class="btn btn-danger">Enviar a Tramite</button>
+		<cfif isdefined('form.PCestado') and form.PCestado neq 'Aprobado'>  	
+			<button type="submit"  name="btnTramite" class="btn btn-danger">Enviar a aprobar</button>
 		  	<button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
 		</cfif>
    </cfif>

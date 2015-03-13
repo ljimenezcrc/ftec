@@ -47,7 +47,7 @@
 					 console.log(ss);
 					}
  
-                   $('form#fmContratacion').submit();
+                    $('form[name=fmContratacion]').submit();
 				}
             function rechaza(PCid){ 
                 var Aprueba = 2
@@ -80,7 +80,7 @@
                      console.log(ss);
                     }
                     
-                     $('form#fmContratacion').submit();
+                    $('form[name=fmContratacion]').submit();
                 }
  
         </script>

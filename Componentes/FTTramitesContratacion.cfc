@@ -11,7 +11,12 @@
         <cftransaction>
             <cfquery name="rsUpdate" datasource="#Session.DSN#">
                 update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set 
-                    PCEstado = 	 <cfif #Arguments.Aprueba# EQ 0> 'T'<cfelseif  #Arguments.Aprueba# EQ 1> 'A'  <cfelseif  #Arguments.Aprueba# EQ 2> 'R' <cfelse> 'P'</cfif>
+                    PCEstado = 	 
+						<cfif #Arguments.Aprueba# EQ 0> 'T'
+						<cfelseif  #Arguments.Aprueba# EQ 1> 'A'  
+						<cfelseif  #Arguments.Aprueba# EQ 2> 'R' 
+                        <cfelseif  #Arguments.Aprueba# EQ 3> 'F' 
+                        <cfelse> 'P'</cfif>
 <!---                    <cf_jdbcquery_param cfsqltype="cf_sql_varchar"		value="#Arguments.Estado#">--->
                     where PCid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.PCid#">
             </cfquery>

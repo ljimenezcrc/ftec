@@ -138,7 +138,7 @@ PCid				<!--- Id de la  Tabla --->
                             , <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>
                             
                             , 'P' <!---Proceso--->
-                            , 1
+                            , -1
                             , year(getdate())
                             , <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
                             )

@@ -77,6 +77,7 @@
 										<option value="N" <cfif rsSeccion.Cpermisos EQ 'N'>selected="selected"</cfif>>No Modificable</option>
 										<option value="E" <cfif rsSeccion.Cpermisos EQ 'E'>selected="selected"</cfif>>Extendible</option>
 									</select>
+									<input name="NombreSeccion" id="NombreSeccion" placeholder="Nombre Seccion" value="<cfoutput>#rsSeccion.NombreSeccion#</cfoutput>" />
 								</div>
 								<cf_rheditorhtml ControlsE="[ 'Save']," name="editor_#rsSeccion.Sid#" value="#rsSeccion.STexto#" height="400" toolbarset="Default" type="full">
 							</div>
@@ -89,6 +90,7 @@
 			<div class="alert alert-info">
 			<cfif rsFTSeccionesD.RecordCount>
 				<cfoutput query="rsFTSeccionesD" group="Sid">
+						<div align="center"><strong>#rsFTSeccionesD.NombreSeccion#</strong></div>
 						<hr />
 					<cfoutput>
 						<div class="row">
@@ -105,6 +107,7 @@
 										<option value="7"  <cfif rsFTSeccionesD.TVariables EQ 7>  selected="selected"</cfif>>Sexo</option>
 										<option value="8"  <cfif rsFTSeccionesD.TVariables EQ 8>  selected="selected"</cfif>>Fecha Nacimiento</option>
 										<option value="14" <cfif rsFTSeccionesD.TVariables EQ 14> selected="selected"</cfif>>Estado Civil</option>
+										<option value="15" <cfif rsFTSeccionesD.TVariables EQ 15> selected="selected"</cfif>>Nombre Coordinador</option>
 									</optgroup>
 									<optgroup label="Datos del Contrato">
 										<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9>  selected="selected"</cfif>>Numero Contrato</option>

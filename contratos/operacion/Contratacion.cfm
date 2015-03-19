@@ -81,7 +81,6 @@
 </cfif>
 
 
-
 <!---Guarda el Contrato--->
 <cfif isdefined('form.btnGContrato')>
 	<cfinvoke component="ftec.Componentes.FTPContratacion" method="set" returnvariable="LvarPCid">

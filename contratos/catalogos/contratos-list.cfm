@@ -4,7 +4,7 @@
 	<cfinvokeargument name="etiquetas" 	value="Contrato"/>
 	<cfinvokeargument name="formatos" 	value="V"/>
 	<cfinvokeargument name="align" 		value="left"/>
-	<cfinvokeargument name="ajustar" 	value="N"/>
+	<cfinvokeargument name="ajustar" 	value="S"/>
 	<cfinvokeargument name="botones" 	value="Nuevo"/>
 	<cfinvokeargument name="irA" 		value="contratos.cfm"/>
 	<cfinvokeargument name="keys" 		value="Cid"/>

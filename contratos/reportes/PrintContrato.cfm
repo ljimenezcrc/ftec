@@ -75,6 +75,7 @@
 				<cfcase value="13"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaF,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Estado Civil--->
 				<cfcase value="14"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.EstadoCivil & '</font>')></cfcase> 
+				<cfcase value="15"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &'Nombre Coordinador'& '</font>')></cfcase> 
 				<!---Caso no conteplado--->
 				<cfdefaultcase></cfdefaultcase>
 			</cfswitch>

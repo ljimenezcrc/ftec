@@ -48,9 +48,10 @@
 			<cfinvokeargument name="Cid" value="#form.Cid#">
 		</cfif>
 		<cfif isdefined('form.Sid')>
-			<cfinvokeargument name="Sid" 		value="#form.Sid#">
-			<cfinvokeargument name="Cpermisos" 	value="#form.Cpermisos#">
-			<cfinvokeargument name="STexto" 	value="#FORM['Editor_' & form.Sid]#">
+			<cfinvokeargument name="Sid" 			value="#form.Sid#">
+			<cfinvokeargument name="Cpermisos" 		value="#form.Cpermisos#">
+			<cfinvokeargument name="NombreSeccion" 	value="#form.NombreSeccion#">
+			<cfinvokeargument name="STexto" 		value="#FORM['Editor_' & form.Sid]#">
 		</cfif>
 	</cfinvoke>
 </cfif>

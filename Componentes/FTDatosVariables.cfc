@@ -181,6 +181,7 @@
 		<cfoutput query="DatoVariable" group="Sid">
 			
 			<hr>
+			<div align="center"><strong>#DatoVariable.NombreSeccion#</strong></div>
 			<cfoutput>
 			<div class="row">
 				<cfset name="V#DatoVariable.PCDid#">
@@ -348,12 +349,14 @@
 
 		<cfquery name="DatoVariable" datasource="#Arguments.Conexion#">	
 			select a.PCDid, a.PCid,c.Sid, a.SDid,a.DVid,a.DVLcodigo,a.PCDValor, b.Ecodigo,b.DVetiqueta,b.DVexplicacion,b.DVtipoDato,
-				   b.DVlongitud,b.DVdecimales,b.DVmascara,b.DVobligatorio,b.BMUsucodigo
+				   b.DVlongitud,b.DVdecimales,b.DVmascara,b.DVobligatorio,b.BMUsucodigo, d.NombreSeccion
 				from FTPDContratacion a
 					inner join FTDatosVariables b
 						on b.DVid = a.DVid
 					inner join FTSeccionesD c
 						on c.SDid = a.SDid
+					inner join FTSecciones d
+						on d.Sid = c.Sid
 			where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.ID_Table#">
 			order by c.Sid
 		</cfquery>

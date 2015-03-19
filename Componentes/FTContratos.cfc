@@ -30,7 +30,7 @@
 		<cfargument name="conexion" type="string"   required="no" default="ftec">
 	
 		<cfquery name="rssql" datasource="#Arguments.conexion#">
-			select Sid, Cid, STexto, SOrden,Cpermisos, Ecodigo, Usucodigo
+			select Sid, Cid, STexto, SOrden,Cpermisos, Ecodigo, Usucodigo,NombreSeccion
 			 from FTSecciones
 			where 1 = 1
 			  and Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
@@ -102,14 +102,15 @@
 	</cffunction>
 	<!---Funcion paa crear y Actualizar Secciones del contrato--->
 	<cffunction name="SetSeccion" returntype="numeric" hint="Funcion paa crear y Actualizar Secciones del contrato">
-		<cfargument name="Sid" 			type="numeric" 	required="no">
-		<cfargument name="Cid" 			type="numeric" 	required="no">
-		<cfargument name="STexto" 		type="string" 	required="no" default="DOBLE CLICK PARA EDITAR">
-		<cfargument name="SOrden" 		type="numeric" 	required="no" default="1">
-		<cfargument name="Cpermisos" 	type="string" 	required="no" default="M">
-		<cfargument name="Ecodigo" 		type="numeric" 	required="no">
-		<cfargument name="Usucodigo" 	type="numeric" 	required="no">
-		<cfargument name="conexion" 	type="string"  required="no" default="ftec" hint="Nombre del Datasource">
+		<cfargument name="Sid" 				type="numeric" 	required="no">
+		<cfargument name="Cid" 				type="numeric" 	required="no">
+		<cfargument name="STexto" 			type="string" 	required="no" default="DOBLE CLICK PARA EDITAR">
+		<cfargument name="SOrden" 			type="numeric" 	required="no" default="1">
+		<cfargument name="Cpermisos" 		type="string" 	required="no" default="M">
+		<cfargument name="Ecodigo" 			type="numeric" 	required="no">
+		<cfargument name="Usucodigo" 		type="numeric" 	required="no">
+		<cfargument name="conexion" 		type="string"  	required="no" default="ftec" hint="Nombre del Datasource">
+		<cfargument name="NombreSeccion" 	type="string" 	required="no" default="">
 		
 		<cfif isdefined('session.Ecodigo') and not isdefined('Arguments.Ecodigo')>
 			<cfset Arguments.Ecodigo = session.Ecodigo>
@@ -130,23 +131,25 @@
 				  <cfif isdefined('Arguments.SOrden')>
 					SOrden    = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.SOrden#">, 	
 				  </cfif>
-					STexto    = <cfqueryparam cfsqltype="cf_sql_longvarchar" 	value="#Arguments.STexto#">,
-					Cpermisos = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Arguments.Cpermisos#">,
-					Ecodigo   = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Ecodigo#">, 
-					Usucodigo = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Usucodigo#">
-				  where   Sid = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Sid#">
+					STexto        = <cfqueryparam cfsqltype="cf_sql_longvarchar" 	value="#Arguments.STexto#">,
+					Cpermisos     = <cfqueryparam cfsqltype="cf_sql_varchar" 		value="#Arguments.Cpermisos#">,
+					Ecodigo   	  = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Ecodigo#">, 
+					Usucodigo 	  = <cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Usucodigo#">,
+					NombreSeccion = <cfqueryparam cfsqltype="cf_sql_varchar" 		value="#Arguments.NombreSeccion#">
+				  where   Sid = <cfqueryparam cfsqltype="cf_sql_numeric" 			value="#Arguments.Sid#">
 			</cfquery>
 			<cfset LvarSid =  Arguments.Sid>
 		<cfelse>
 			<cfquery name="rssql" datasource="#Arguments.Conexion#">
-				insert into FTSecciones (Cid, STexto, SOrden, Cpermisos, Ecodigo, Usucodigo)
+				insert into FTSecciones (Cid, STexto, SOrden, Cpermisos, Ecodigo, Usucodigo,NombreSeccion)
 				values (
 					<cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Cid#">,
 					<cfqueryparam cfsqltype="cf_sql_longvarchar" 	value="#Arguments.STexto#">,
 					<cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.SOrden#">,
 					<cfqueryparam cfsqltype="cf_sql_varchar" 		value="#Arguments.Cpermisos#">,
 					<cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Ecodigo#">,
-					<cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Usucodigo#">
+					<cfqueryparam cfsqltype="cf_sql_numeric" 		value="#Arguments.Usucodigo#">,
+					<cfqueryparam cfsqltype="cf_sql_varchar" 		value="#Arguments.NombreSeccion#">
 				)
 				<cf_dbidentity1 datasource="#Arguments.Conexion#">
 			</cfquery>
@@ -256,7 +259,7 @@
 		</cfif>
 		
 		<cfquery name="rsFTSeccionesD" datasource="#Arguments.Conexion#">
-			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo  
+			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo , b.NombreSeccion
    			from FTSeccionesD a
 				inner join FTSecciones b
 					on b.Sid = a.Sid

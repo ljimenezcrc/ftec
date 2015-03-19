@@ -46,39 +46,54 @@
 		<cfloop query="rsVariable">
 			<cfswitch expression="#rsVariable.TVariables#"> 
 				<!---Dato Variable--->
-				<cfcase value="1"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsVariable.PCDValor)></cfcase> 
+				<cfcase value="1"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' & rsVariable.PCDValor & '</font>')></cfcase> 
 				<!---Tipo de Identificación--->
 				<cfcase value="2">
-					<cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.TipoIdentificacion)>
+					<cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.TipoIdentificacion & '</font>')>
 				</cfcase> 
 				<!---Identificación--->
-				<cfcase value="3"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCIdentificacion)></cfcase>
+				<cfcase value="3"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCIdentificacion & '</font>')></cfcase>
 				<!---Nombre--->
-				<cfcase value="4"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCNombre)></cfcase> 
+				<cfcase value="4"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCNombre & '</font>')></cfcase> 
 				<!---Primer Apellido--->
-				<cfcase value="5"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCApellido1)></cfcase> 
+				<cfcase value="5"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCApellido1 & '</font>')></cfcase> 
 				<!---Segundo Apellido--->
-				<cfcase value="6"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCApellido2)></cfcase> 
+				<cfcase value="6"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCApellido2 & '</font>')></cfcase> 
 				<!---Sexo--->
-				<cfcase value="7"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.Sexo)></cfcase> 
+				<cfcase value="7"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.Sexo & '</font>')></cfcase> 
 				<!---Fecha Nacimiento--->
-				<cfcase value="8"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',DateFormat(rsContrato.PCFechaN,'DD/MM/YYYY'))></cfcase> 
+				<cfcase value="8"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaN,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Numero Contrato--->
-				<cfcase value="9"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCEnumero)></cfcase> 
+				<cfcase value="9"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCEnumero & '</font>')></cfcase> 
 				<!---Periodo Contratación--->
-				<cfcase value="10"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.PCEPeriodo)></cfcase> 
+				<cfcase value="10"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.PCEPeriodo & '</font>')></cfcase> 
 				<!---Fecha de Creación--->
-				<cfcase value="11"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##',DateFormat(rsContrato.PCFechaC,'DD/MM/YYYY'))></cfcase> 
+				<cfcase value="11"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaC,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Fecha de Aprobación--->
-				<cfcase value="12"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##',DateFormat(rsContrato.PCFechaA,'DD/MM/YYYY'))></cfcase> 
+				<cfcase value="12"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaA,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Fecha de Firmas--->
-				<cfcase value="13"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##',DateFormat(rsContrato.PCFechaF,'DD/MM/YYYY'))></cfcase> 
+				<cfcase value="13"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaF,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Estado Civil--->
-				<cfcase value="14"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##',rsContrato.EstadoCivil)></cfcase> 
+				<cfcase value="14"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.EstadoCivil & '</font>')></cfcase> 
 				<!---Caso no conteplado--->
 				<cfdefaultcase></cfdefaultcase>
 			</cfswitch>
 		</cfloop>
+		<cfif rsContrato.Sexo EQ 'F'>
+			<cfset Seccion = Replace(Seccion,'El contratado','La contratada','ALL')>
+			<cfset Seccion = Replace(Seccion,'el contratado','la contratada','ALL')>
+			<cfset Seccion = Replace(Seccion,'EL CONTRATADO(A)','LA CONTRATADA','ALL')>	
+			<cfset Seccion = Replace(Seccion,'El CONTRATADO(A)','La CONTRATADA','ALL')>
+			<cfset Seccion = Replace(Seccion,'el CONTRATADO(A)','la CONTRATADA','ALL')>	 
+			<cfset Seccion = Replace(Seccion,'al CONTRATADO(A)','a la CONTRATADA','ALL')>	
+			<cfset Seccion = Replace(Seccion,'CONTRATADO(A)','CONTRATADA','ALL')>	  
+		<cfelse>
+			<cfset Seccion = Replace(Seccion,'EL CONTRATADO(A)','EL CONTRATADO','ALL')>
+			<cfset Seccion = Replace(Seccion,'el CONTRATADO(A)','el CONTRATADO','ALL')>	
+			<cfset Seccion = Replace(Seccion,'al CONTRATADO(A)','al CONTRATADO','ALL')> 
+			<cfset Seccion = Replace(Seccion,'El CONTRATADO(A)','El CONTRATADO','ALL')>
+			<cfset Seccion = Replace(Seccion,'CONTRATADO(A)','CONTRATADO','ALL')>	   
+		</cfif>
 		
 		
 			<div class="row">

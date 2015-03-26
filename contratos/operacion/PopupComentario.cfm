@@ -2,6 +2,11 @@
 	<cfset form.PCid = url.PCid>
 </cfif>
 
+<cfif isdefined('url.ver') and LEN(TRIM(url.ver))>
+	<cfset form.ver = url.ver>
+</cfif>
+
+
 <cfif isdefined('form.btnGComentario')>
 	<cfinvoke component="ftec.Componentes.FTPContratacion" method="setComentario" returnvariable="LvarPCid">
 		<cfinvokeargument name="PCid" 			value="#form.PCid#">
@@ -31,7 +36,9 @@
 		</tr>
         <tr>            
 			<td align="center">
-            	<button  name="btnGComentario"   class="btn btn-info">Guardar</button>
+				<cfif not isDefined("form.ver")>
+					<button  name="btnGComentario"   class="btn btn-info">Guardar</button>	
+				</cfif>
                 <button  name="btnRComentario"   class="btn btn-info" onclick="funcRegresar()">Regresar</button>
 				<!---<cf_botones values="Guardar/salir" names="Regresar">--->
 			</td>

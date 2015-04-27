@@ -41,6 +41,7 @@
 		<cfargument name="Identificacion" type="string" required="yes">
 			<cfquery name="rs" datasource="#session.dsn#">
                 select DEidentificacion as PCIdentificacion
+                        ,'F' as PCTIdentificacion
                         ,DEsexo as PCSexo
                         ,DEnombre as PCNombre
                         ,DEapellido1 as PCApellido1

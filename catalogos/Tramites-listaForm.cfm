@@ -80,7 +80,8 @@
                                 on a1.SPid = b1.SPid
                         where b1.SPid = a.SPid) as Total
                         , e.Usucodigo
-                        , 1 as Tramite     
+                        , 1 as Tramite   
+                        ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda  
                     from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                     inner join SNegocios b
 						on a.SNcodigo = b.SNcodigo
@@ -151,10 +152,10 @@
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                     <cfinvokeargument name="query" value="#rsListaSolicitudes#"/>
-                    <cfinvokeargument name="desplegar" value="Tipo, SPdocumento,Proveedor, Total"/>
-                    <cfinvokeargument name="etiquetas" value="Tipo,Documento,Proveedor, Monto"/>
-                    <cfinvokeargument name="formatos" value="V,V,V,M"/>
-                    <cfinvokeargument name="align" value="left, left,left,right"/>
+                    <cfinvokeargument name="desplegar" value="Tipo, SPdocumento,Proveedor, Moneda, Total"/>
+                    <cfinvokeargument name="etiquetas" value="Tipo,Documento,Proveedor, Moneda, Monto"/>
+                    <cfinvokeargument name="formatos" value="V,V,V,S,M"/>
+                    <cfinvokeargument name="align" value="left, left,left,center, right"/>
                     <cfinvokeargument name="ajustar" value="N"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Tramites-listaSql.cfm"/>
                     <cfinvokeargument name="keys" value="SPid,Tramite"/>

@@ -79,7 +79,35 @@
                     where nivel = 0
                     order by Speriodo
                 </cfquery> 
-                 <!--- <cfdump var="#rsDatos#"> --->
+
+                <!--- <cfdump var="#rsDatos#">
+
+
+<cfquery  dbtype="query" name = "rsDatos1"> 
+    select 
+    Ccuenta, 
+    Ecodigo, 
+    Cformato, 
+    Cdescripcion, 
+    nivel, 
+    (saldoini) *-1 as saldoini, 
+    debitos, 
+    creditos, 
+    (saldofin) * -1 as saldofin,
+    Cdetalle,
+    Speriodo, 
+    Smes1, 
+    Smes2,
+    Speriodo,
+    from rsCuentasContables
+    where nivel <> 0
+</cfquery> 
+
+<cf_dump var="#rsDatos1#">
+
+
+
+                 <cfdump var="#rsCuentasContables#"> --->
 
                 <cfif rsDatos.Smes1 NEQ rsDatos.Smes2>
                 	
@@ -103,8 +131,8 @@
                             group by Speriodo
                         </cfquery> 
 
-                        <!--- <cfdump var="#rsDatosIni#"> --->
-
+                       <!---  <cfdump var="#rsDatosIni#">
+ --->
 
                         
                         <cfloop query="rsDatosIni">
@@ -137,7 +165,7 @@
                             group by Speriodo
                         </cfquery> 
 
-                        <!--- <cf_dump var="#rsDatos1#"> --->
+                        <cfdump var="#rsDatos1#">
 
                         
                          <cfloop query="rsDatos1">
@@ -154,6 +182,10 @@
                         <cfquery datasource="#session.DSN#"  name="rsDatos">
                         	select Speriodo,(saldofin/1) as saldofin from  #tempIndicadores#
                         </cfquery>
+
+                        <!--- <cf_dumptable var="#tempIndicadores#"> --->
+
+
 
                     <cfelse>
                         <cfquery  dbtype="query" name = "rsDatos"> 
@@ -749,9 +781,14 @@
                     <cfset lVarfuncionarios = 0>
                 </cfif>
 
+
+                <!--- Redondear la cantidad de funcionarios promedio
+                | 30.5 = 31 | 30.49 = 30 | 
+ --->
+
                 <cfquery datasource="#session.dsn#">
                     insert into #tempF05# (Proyectos, Funcionarios, Speriodo )
-                        values (#lVarProyectos#, (#lVarfuncionarios# / #meses#), #i#)
+                        values (#lVarProyectos#, Round(#lVarfuncionarios# / #meses#), #i#)
                 </cfquery>
             </cfloop>
 

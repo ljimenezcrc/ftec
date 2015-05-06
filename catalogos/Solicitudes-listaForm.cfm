@@ -86,6 +86,7 @@
                     where b1.SPid = a.SPid) as Total
                     ,(select Usulogin from Usuario where Usucodigo = a.Usucodigo) as Usulogin
                     ,(select sn.SNnombre from SNegocios  sn where sn.SNcodigo = a.SNcodigo ) as Proveedor
+                    ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda
                 from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
                 <!---inner join FTVicerrectoria b
                     on a.Vid = b.Vid
@@ -118,16 +119,19 @@
                 and a.Usucodigo = #session.Usucodigo#
                 and a.SPestado <> -1
             </cfquery>  
+            
+   
+            
          
             
     
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                     <cfinvokeargument name="query" value="#rsListaSolicitudes#"/>
-                    <cfinvokeargument name="desplegar" value="SPid,Tipo,Proveedor,SPdocumento,Usulogin,SPfechafactura, Total"/>
-                    <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Proveedor,Documento,Usuario Reg,Fecha Fact, Monto"/>
-                    <cfinvokeargument name="formatos" value="I,V,S,S,S,D,M"/>
-                    <cfinvokeargument name="align" value="center,left,left,left,left,center, right"/>
+                    <cfinvokeargument name="desplegar" value="SPid,Tipo,Proveedor,SPdocumento,Usulogin,SPfechafactura,Moneda, Total"/>
+                    <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Proveedor,Documento,Usuario Reg,Fecha Fact, Moneda,Monto"/>
+                    <cfinvokeargument name="formatos" value="I,V,S,S,S,D,S,M"/>
+                    <cfinvokeargument name="align" value="center,left,left,left,left,center, center,right"/>
                     <cfinvokeargument name="ajustar" value="N"/>
                     <cfinvokeargument name="botones" value="Nuevo"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm"/>

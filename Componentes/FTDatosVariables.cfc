@@ -27,9 +27,9 @@
 				<cf_jdbcquery_param cfsqltype="cf_sql_integer" 		value="#Arguments.DVobligatorio#">,
 				 #Arguments.BMUsucodigo#
 			   )
-			   <cf_dbidentity1>
+			   <cf_dbidentity1 datasource="#Arguments.Conexion#" >
 		</cfquery>
-			  <cf_dbidentity2 name="rsDVdatosVariables">
+			  <cf_dbidentity2 name="rsDVdatosVariables" datasource="#Arguments.Conexion#" >
 			  <cfreturn #rsDVdatosVariables.identity#>
 	</cffunction>
 	<!---==================MODIFICAR UN TIPO DE DATO VARIABLE==================--->

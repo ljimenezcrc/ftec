@@ -48,7 +48,6 @@
           <cfcase value="12"> 
           	<cfreturn  'DICIEMBRE'	>
           </cfcase>
-          
     </cfswitch>
 </cffunction>
 
@@ -58,7 +57,6 @@
     <cfset MesFin = mestxt(#form.MesFinal#)>
     
     <cfswitch expression="#form.Indicador#">
-        
             <cfcase value="1">  <!--- 1 - FUNDATEC GASTOS DE OPERACION DE LA UAF --->
                 <cfquery  dbtype="query" name = "rsDatos"> 
                     select 
@@ -80,38 +78,7 @@
                     order by Speriodo
                 </cfquery> 
 
-                <!--- <cfdump var="#rsDatos#">
-
-
-<cfquery  dbtype="query" name = "rsDatos1"> 
-    select 
-    Ccuenta, 
-    Ecodigo, 
-    Cformato, 
-    Cdescripcion, 
-    nivel, 
-    (saldoini) *-1 as saldoini, 
-    debitos, 
-    creditos, 
-    (saldofin) * -1 as saldofin,
-    Cdetalle,
-    Speriodo, 
-    Smes1, 
-    Smes2,
-    Speriodo,
-    from rsCuentasContables
-    where nivel <> 0
-</cfquery> 
-
-<cf_dump var="#rsDatos1#">
-
-
-
-                 <cfdump var="#rsCuentasContables#"> --->
-
                 <cfif rsDatos.Smes1 NEQ rsDatos.Smes2>
-                	
-                                        
                     <!---Temporales--->    
                     <cf_dbtemp name="tempIndicadores" returnvariable="tempIndicadores" datasource="#session.DSN#">
                         <cf_dbtempcol name="SumDbCr"	type="money" 	mandatory="no">
@@ -131,8 +98,7 @@
                             group by Speriodo
                         </cfquery> 
 
-                       <!---  <cfdump var="#rsDatosIni#">
- --->
+                       <!---  <cfdump var="#rsDatosIni#"> --->
 
                         
                         <cfloop query="rsDatosIni">
@@ -164,9 +130,6 @@
                             where nivel <> 0
                             group by Speriodo
                         </cfquery> 
-
-                        <cfdump var="#rsDatos1#">
-
                         
                          <cfloop query="rsDatos1">
 	                        <cfquery datasource="#session.DSN#">
@@ -184,37 +147,35 @@
                         </cfquery>
 
                         <!--- <cf_dumptable var="#tempIndicadores#"> --->
-
-
-
-                    <cfelse>
-                        <cfquery  dbtype="query" name = "rsDatos"> 
-                            select 
-                            <!---Ccuenta, 
-                            Ecodigo, 
-                            Cformato, 
-                            Cdescripcion, 
-                            nivel, 
-                            (saldoini) *-1 as saldoini, 
-                            debitos, 
-                            creditos, 
-                            (saldofin) * -1 as saldofin,
-                            Cdetalle,
-                            Speriodo, 
-                            Smes1, 
-                            Smes2,--->
-                            Speriodo,
-                            (sum(Creditos - Debitos)/1) as saldofin
-                            from rsCuentasContables
-                            where nivel <> 0
-                            group by Speriodo
-                        </cfquery>
                     </cfif>
+                <cfelse>
+                    <cfquery  dbtype="query" name = "rsDatos"> 
+                        select 
+                        <!---Ccuenta, 
+                        Ecodigo, 
+                        Cformato, 
+                        Cdescripcion, 
+                        nivel, 
+                        (saldoini) *-1 as saldoini, 
+                        debitos, 
+                        creditos, 
+                        (saldofin) * -1 as saldofin,
+                        Cdetalle,
+                        Speriodo, 
+                        Smes1, 
+                        Smes2,--->
+                        Speriodo,
+                        (sum(Creditos - Debitos)/1) as saldofin
+                        from rsCuentasContables
+                        where nivel <> 0
+                        group by Speriodo
+                    </cfquery>
+                </cfif>
 
                     <!--- <cf_dump var="#rsDatos#"> --->
 
 
-<!--- 
+                    <!--- 
                     <cfquery  dbtype="query" name = "rsDatos"> 
                         select 
                         Ccuenta, 
@@ -238,7 +199,7 @@
                     </cfquery> 
                     <cf_dump var="#rsDatos#"> --->
 
-                </cfif>
+                
                 
                 <!--- group by Debitos,Creditos --->
                 <!--- <cf_dump var="#rsDatos#"> --->
@@ -311,9 +272,7 @@
             
             <div align="center"> <h3>Comentarios </h3></div> 
             <cfoutput>
-<!---              <tr>
-    	        <td>
- --->                    <table align="center" border="0" width="80%">
+                    <table align="center" border="0" width="80%">
                     	<tr>
                            <td width="20%">
                             <div align="center"> <h4>Periodo </h3></div>

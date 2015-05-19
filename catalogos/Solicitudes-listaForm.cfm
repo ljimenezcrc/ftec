@@ -87,6 +87,9 @@
                     ,(select Usulogin from Usuario where Usucodigo = a.Usucodigo) as Usulogin
                     ,(select sn.SNnombre from SNegocios  sn where sn.SNcodigo = a.SNcodigo ) as Proveedor
                     ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda
+                    , 0 as VB
+
+
                 from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
                 <!---inner join FTVicerrectoria b
                     on a.Vid = b.Vid
@@ -119,12 +122,7 @@
                 and a.Usucodigo = #session.Usucodigo#
                 and a.SPestado <> -1
             </cfquery>  
-            
-   
-            
-         
-            
-    
+
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                     <cfinvokeargument name="query" value="#rsListaSolicitudes#"/>
@@ -135,7 +133,7 @@
                     <cfinvokeargument name="ajustar" value="N"/>
                     <cfinvokeargument name="botones" value="Nuevo"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm"/>
-                    <cfinvokeargument name="keys" value="SPid"/>
+                    <cfinvokeargument name="keys" value="SPid,VB"/>
                     <cfinvokeargument name="MaxRows" value="20"/>
                      <cfinvokeargument name="formName" value="listaSolicitudes"/> <!------>
                     <cfinvokeargument name="debug" value="N"/>

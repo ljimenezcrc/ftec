@@ -1,4 +1,5 @@
-﻿<cfinvoke component="sif.Componentes.Translate"
+﻿
+<cfinvoke component="sif.Componentes.Translate"
 	method="Translate"
 	key="LB_NoSeEncontraronRegistros"
 	default="No se encontraron Registros "
@@ -78,6 +79,7 @@
             ,e.SNnumero
             ,e.SNnombre
             ,e.SNvencompras
+            , 0 as VB
         from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
         inner join <cf_dbdatabase table="FTFormaPago " datasource="ftec"> c
         	on a.FPid = c.FPid
@@ -207,6 +209,7 @@
 	<input type="hidden" name="TPid" 		value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.TPid#</cfif>">
     <input type="hidden" name="SPfp" 		value="<cfif isdefined('form.FPid')> #form.FPid# </cfif>">
     <input type="hidden" name="Tramite" 	value="<cfif isdefined('form.Tramite')> #form.Tramite# </cfif>">   
+    <input type="hidden" name="VB" 			value="<cfif isdefined('form.VB')> #form.VB# </cfif>">   
     <input type="hidden" name="SNvencompras" value="<cfoutput>#LvarSNvencompras#</cfoutput>" id="SNvencompras"  > 
     
     	<!---Documento y Forma de Pago--->
@@ -253,7 +256,7 @@
 				Proveedor
 			</div>
 			<div class="col-sm-5">
-				<cfif modo NEQ "ALTA">
+				<cfif modo NEQ "ALTA" and isdefined('rsSolicitudProcesos')>
 					<cf_rhsociosnegociosFA form="fEncabezado"  query="#rsSolicitudProcesos#"> 
 				<cfelse>
 					<cf_rhsociosnegociosFA form="fEncabezado" FuncJSalCerrar="CalculaFechaVen();"> 
@@ -263,7 +266,7 @@
 				Moneda
 			</div>
 			<div class="col-sm-3">
-				<cfif isdefined('modo') and  modo eq 'CAMBIO'>
+				<cfif isdefined('modo') and  modo eq 'CAMBIO' and isdefined('rsSolicitudProcesos')>
 				   <cf_sifmonedas Conexion="#session.DSN#" form="fEncabezado" query="#rsSolicitudProcesos#"  Mcodigo="Mcodigo" tabindex="1" >
 				<cfelse>
 					<cf_sifmonedas Conexion="#session.DSN#" form="fEncabezado" Mcodigo="Mcodigo" tabindex="1">
@@ -361,6 +364,7 @@
 			<div class="col-sm-12">
 					<cfif isdefined('form.Tramite') and modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Rechazar,Regresar" >
+
 					<cfelseif modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Eliminar,Regresar" exclude="BAJA" >
 					<cfelse>
@@ -377,7 +381,7 @@
     <input type="hidden" name="SPid" value="#form.SPid#">
     <input type="hidden" name="SPidDelete" value="<cfoutput>#form.SPid#</cfoutput>">
     <input type="hidden" name="DSPidCambio" value="<cfif isdefined('form.DSPid')><cfoutput>#form.DSPid#</cfoutput></cfif>">
-
+	<input type="hidden" name="VB" value="<cfif isdefined('form.VB')><cfoutput>#form.VB#</cfoutput></cfif>">
 
 	<cfif modo EQ 'CAMBIO' and not isdefined('form.Tramite') >
     <table width="95%" align="center" border="0" cellspacing="0" cellpadding="1">

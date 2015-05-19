@@ -1,10 +1,16 @@
 ﻿<cfif not isdefined("Form.NuevoEnc")>
 
 	<cfif isdefined("Form.AplicarEnc") or isdefined("Form.RechazarEnc")>
-    	
+        
+        
+        <cfif isDefined('form.VB') and len(form.VB) eq 0>
+            <cfset form.VB = 0>
+        </cfif>
+
     	<cfinvoke component="ftec.Componentes.FTTramites" method="AplicaTramite" >
             <cfinvokeargument name="SPid" 		value="#form.SPid#">
             <cfinvokeargument name="TPid" 		value="#form.TPid#">
+            <cfinvokeargument name="VB"       value="#form.VB#">
             <cfinvokeargument name="HTcompleto"	value="1">
 
             <!---<cfinvokeargument name="Vid"		value="#form.Vpkresp#">--->
@@ -13,6 +19,7 @@
             <cfelse>
             	<cfinvokeargument name="Aprueba"	value="0">
             </cfif>
+
             <cfinvokeargument name="Debug"		value="false">
         </cfinvoke>
     
@@ -43,7 +50,9 @@
             </cfif>
             <cfinvokeargument name="Debug"		value="false">
         </cfinvoke>
-        
+
+         <cfset SPid = #Lvar_ID#>
+
         <cfset modo = 'CAMBIO'>
         <cfelse>
             <cfset TitleErrs = 'Operación Inválida'>
@@ -129,6 +138,7 @@
     <form action="SolicitudPago.cfm" method="post" name="sql">
         <input name="modo" type="hidden" value="<cfoutput>#modo#</cfoutput>">
         <input name="SPid" type="hidden" value="<cfoutput>#SPid#</cfoutput>">
+        <input name="VB" type="hidden" value="<cfoutput>#VB#</cfoutput>">
         
         <cfif isdefined("Form.NuevoDet")>
             <input name="DSPid" type="hidden" value="">

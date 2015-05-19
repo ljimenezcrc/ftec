@@ -66,8 +66,11 @@
     <cfif isdefined("Form.Tramite")>
 		<input name="Tramite" type="hidden" value="#Form.Tramite#">
 	</cfif>
-   
-    
+
+	<cfif isdefined("Form.VB")>
+		<input name="VB" type="hidden" value="#Form.VB#">
+	</cfif>
+
 	<input name="Pagina" type="hidden" value="<cfif isdefined("Form.Pagina")>#Form.Pagina#</cfif>">	
 </form>
 </cfoutput>

@@ -25,6 +25,7 @@
             , a.FTpasoactual
             , a.FTpasoaprueba
             , a.FTpasorechaza
+            , a.FTpasoVB
             , coalesce(a.FTautoriza,0) as FTautoriza
             , b.ETcodigo #_Cat# ' - ' #_Cat#  b.ETdescripcion as Estado
             , c.TTcodigo #_Cat# ' - ' #_Cat# c.TTdescripcion as Tramite
@@ -41,9 +42,10 @@
     </cfquery>  
     
         
-    <cfset lvFTpasoactual = rsFTramites.FTpasoactual>
+    <cfset lvFTpasoactual  = rsFTramites.FTpasoactual>
     <cfset lvFTpasoaprueba = rsFTramites.FTpasoaprueba>
     <cfset lvFTpasorechaza = rsFTramites.FTpasorechaza>
+    <cfset lvFTpasoVB      = rsFTramites.FTpasoVB>
     
     <cfif isdefined('form.FTid')>
         <cfquery name="rsAutorizadores" datasource="#session.DSN#">
@@ -128,6 +130,13 @@
         </tr>
         
         <tr>
+            <td align="right" nowrap>&nbsp;<strong><cf_translate key="LB_Orden">Aprueba V.B.</cf_translate>:</strong>&nbsp;</td>
+            <td>
+                <cf_inputNumber name="FTpasoVB" value="#lvFTpasoVB#" enteros="5" decimales="0" negativos="false" comas="no" >
+            </td>
+        </tr>
+
+        <tr>
         	<td align="right" nowrap>&nbsp;<strong><cf_translate key="LB_Orden">Aprueba Siguiente Paso</cf_translate>:</strong>&nbsp;</td>
         	<td>
 				<cf_inputNumber name="FTpasoaprueba" value="#lvFTpasoaprueba#" enteros="5" decimales="0" negativos="false" comas="no" >
@@ -141,7 +150,6 @@
             </td>
         </tr>
         
-**********************************
 
         <tr>
             <td align="right">
@@ -208,7 +216,7 @@
                 </table>
             </td> 
         </tr>	
-**********************************
+
 		<tr valign="baseline"> 
 			<td colspan="5" align="center" nowrap>
 				<cfset tabindex=5>

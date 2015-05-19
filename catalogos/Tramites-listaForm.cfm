@@ -81,7 +81,15 @@
                         where b1.SPid = a.SPid) as Total
                         , e.Usucodigo
                         , 1 as Tramite   
-                        ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda  
+                        ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda 
+                        , case when ((select coalesce(sum(a1.DSPmonto),0.00) 
+                                        from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1 
+                                        inner join <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> b1 
+                                            on a1.SPid = b1.SPid 
+                                        where b1.SPid = a.SPid) between f.TAmontomin and f.TAmontomax
+                                    ) then 0
+                                else 1
+                        end as VB
                     from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                     inner join SNegocios b
 						on a.SNcodigo = b.SNcodigo
@@ -97,13 +105,14 @@
 
                     inner join <cf_dbdatabase table="FTTipoAutorizador" datasource="ftec"> f
                         on e.TAid = f.TAid
-                        and (
-                             ((select coalesce(sum(a1.DSPmonto),0.00) from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1 
+                        and ( <!---
+                             ((select coalesce(sum(a1.DSPmonto),0.00) 
+                                from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a1 
                                 inner join <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> b1 
                                     on a1.SPid = b1.SPid 
                                 where b1.SPid = a.SPid) between f.TAmontomin and f.TAmontomax
                              )
-                        and  (e.Usucodigo in (
+                        and ---> (e.Usucodigo in (
                                             select e1.Usucodigo
                                                 from <cf_dbdatabase table="FTHistoriaTramite" datasource="ftec"> a11
                                                     inner join <cf_dbdatabase table="FTTipoProceso" datasource="ftec"> b1
@@ -145,9 +154,6 @@
                     and b.Vcodigo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Form.Vcodigoresp#">
                 </cfif>--->
             </cfquery>  
-
-            
-            
             
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">

@@ -6,6 +6,7 @@
             <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
             <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
             <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+            <cfinvokeargument name="FTpasoVB"  value="#form.FTpasoVB#">
             <cfif isdefined('form.FTautoriza')>
 	            <cfinvokeargument name="FTautoriza" 	value="1">
             <cfelse>
@@ -21,6 +22,7 @@
                 <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
                 <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
                 <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+                <cfinvokeargument name="FTpasoVB"       value="#form.FTpasoVB#">
                 <cfinvokeargument name="Debug"		value="false">
             </cfinvoke>
 		<cfelse>
@@ -42,6 +44,7 @@
             <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
             <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
             <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+            <cfinvokeargument name="FTpasoVB"  value="#form.FTpasoVB#">
             <cfif isdefined('form.FTautoriza')>
 	            <cfinvokeargument name="FTautoriza" 	value="1">
             <cfelse>
@@ -56,6 +59,7 @@
             <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
             <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
             <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+            <cfinvokeargument name="FTpasoVB"  value="#form.FTpasoVB#">
             <cfif isdefined('form.FTautoriza')>
 	            <cfinvokeargument name="FTautoriza" 	value="1">
             <cfelse>
@@ -71,6 +75,7 @@
                 <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
                 <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
                 <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+                <cfinvokeargument name="FTpasoVB"  value="#form.FTpasoVB#">
                 <cfinvokeargument name="FTautoriza" 	value="1">
                 
             </cfinvoke>
@@ -80,6 +85,7 @@
                 <cfinvokeargument name="FTpasoactual" 	value="#form.FTpasoactual#">
                 <cfinvokeargument name="FTpasoaprueba" 	value="#form.FTpasoaprueba#">
                 <cfinvokeargument name="FTpasorechaza" 	value="#form.FTpasorechaza#">
+                <cfinvokeargument name="FTpasoVB"  value="#form.FTpasoVB#">
                 <cfif isdefined('form.FTautoriza')>
                     <cfinvokeargument name="FTautoriza" 	value="1">
                 <cfelse>

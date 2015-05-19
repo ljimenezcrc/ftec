@@ -9,13 +9,14 @@
         <cfargument name="FTpasoactual" 	required="false" 	type="numeric">
         <cfargument name="FTpasoaprueba" 	required="false" 	type="numeric">
         <cfargument name="FTpasorechaza" 	required="false" 	type="numeric">
+        <cfargument name="FTpasoVB" 		required="false" 	type="numeric">
         <cfargument name="FTautoriza" 		required="false" 	type="numeric"  default="0"> 
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">    
 
 
         
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
-			select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza,FTautoriza
+			select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza,FTautoriza,FTpasoVB
 				from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
 				where TTid		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.TTid#" voidnull>
                  	and ETid	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.ETid#" voidnull>
@@ -40,6 +41,7 @@
         <cfargument name="FTpasoactual" 	required="true" 	type="numeric">
         <cfargument name="FTpasoaprueba" 	required="false" 	type="any" default="0">
         <cfargument name="FTpasorechaza" 	required="false" 	type="any" default="0">
+        <cfargument name="FTpasoVB" 		required="false" 	type="numeric">
         <cfargument name="FTautoriza" 		required="false" 	type="numeric" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
@@ -50,6 +52,7 @@
                                                 , FTpasoaprueba
                                                 , FTpasorechaza
                                                 , FTautoriza
+                                                , FTpasoVB
                                                 )
                                         values(<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	 value="#Arguments.TTid#" 	voidnull>
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.ETid#" 	voidnull>
@@ -57,7 +60,7 @@
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTpasoaprueba#"	voidnull>
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTpasorechaza#"	voidnull>
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTautoriza#"	voidnull>
-                                                
+                                                , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.FTpasoVB#"	voidnull>
                                                 )
                 <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
             </cfquery>
@@ -70,7 +73,7 @@
     
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza
+                    select FTid, TTid, ETid, FTpasoactual, FTpasoaprueba, FTpasorechaza, FTpasoVB
 					from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
                     where FTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
@@ -110,6 +113,7 @@
         <cfargument name="FTpasoactual" 	required="false" 	type="numeric">
         <cfargument name="FTpasoaprueba"	required="false" 	type="any">
         <cfargument name="FTpasorechaza"	required="false" 	type="any">
+        <cfargument name="FTpasoVB" 		required="false" 	type="any">
          <cfargument name="FTautoriza" 		required="false" 	type="any" default="0">
         
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
@@ -118,15 +122,16 @@
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                 update <cf_dbdatabase table="FTFlujoTramite" datasource="ftec"> set
 	                     FTpasoactual	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTpasoactual#" 		voidnull>
-                        , FTpasoaprueba = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.FTpasoaprueba#" 	voidnull>
-                        , FTpasorechaza = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.FTpasorechaza#" 	voidnull>
-                        , FTautoriza = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.FTautoriza#" 	voidnull>
+                        , FTpasoaprueba = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTpasoaprueba#" 	voidnull>
+                        , FTpasorechaza = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTpasorechaza#" 	voidnull>
+                        , FTautoriza 	= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTautoriza#" 	voidnull>
+                        , FTpasoVB 		= <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.FTpasoVB#" 	voidnull>
                 where FTid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.FTid#" voidnull>
             </cfquery>
     
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select FTid, TTid, ETid, TAid, FTorden
+                    select FTid, TTid, ETid, TAid, FTorden, FTpasoVB
 					from <cf_dbdatabase table="FTFlujoTramite" datasource="ftec">
                     where FTid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.FTid#">
                 </cfquery>
@@ -144,7 +149,7 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
-                insert into <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec">(	   FTid
+                insert into <cf_dbdatabase table="FTDFlujoTramite" datasource="ftec">(FTid
                                                 , TAid
                                                 )
                                         values(<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	 value="#Arguments.FTid#" 	voidnull>

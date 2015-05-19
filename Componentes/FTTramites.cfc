@@ -7,6 +7,7 @@
         <cfargument name="TPid"				required="true" 	type="any">
         <cfargument name="HTcompleto"		required="no" 		type="any">
         <cfargument name="Aprueba"			required="true" 	type="any">
+        <cfargument name="VB"				required="true" 	type="any" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
         
         <cfquery name="rsSiguientePasoH" datasource="#Session.DSN#">
@@ -18,13 +19,14 @@
                                 	and HTcompleto = 1
                                 )
         </cfquery>
- 
         
         <cfif isdefined('rsSiguientePasoH') and rsSiguientePasoH.recordCount EQ 0>
         	<cfquery name="rsSiguientePaso" datasource="#Session.DSN#">
                 select top(1) c.ETid, a.TPid, a.SPid, 
-                	<cfif Arguments.Aprueba EQ 1>
+                	<cfif Arguments.Aprueba EQ 1 and Arguments.VB EQ 0>
                     	c.FTpasoaprueba 
+                    <cfelseif Arguments.Aprueba EQ 1 and Arguments.VB EQ 1>
+	                    coalesce(c.FTpasoVB,c.FTpasoaprueba)
                     <cfelse>
                     	c.FTpasorechaza 
                     </cfif> as PasoSigue
@@ -39,8 +41,10 @@
         <cfelse>
         	<cfquery name="rsSiguientePaso" datasource="#Session.DSN#">
                 select c.ETid, a.TPid, a.SPid, 
-                	<cfif Arguments.Aprueba EQ 1>
+                    <cfif Arguments.Aprueba EQ 1 and Arguments.VB EQ 0>
                     	c.FTpasoaprueba 
+                    <cfelseif Arguments.Aprueba EQ 1 and Arguments.VB EQ 1>
+	                    coalesce(c.FTpasoVB,c.FTpasoaprueba)
                     <cfelse>
                     	c.FTpasorechaza 
                     </cfif> as PasoSigue
@@ -57,7 +61,7 @@
         </cfif>
         
         <cfif isdefined('rsSiguientePaso') and rsSiguientePaso.recordCount EQ 1>
-<!---   <cfdump var="#rsSiguientePaso#">  --->
+			<!---   <cfdump var="#rsSiguientePaso#">  --->
             <cfquery name="rsDetallesAplicar" datasource="#Session.DSN#">
                 select  a.TPid, a.SPid, b.DSPid
                     from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
@@ -88,6 +92,7 @@
                 where a.SPid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rsSiguientePaso.SPid#">
              </cfquery>
              
+            
              <!---<cf_dump var="#rsDetallesAplicar#">--->
              <cfloop query="rsDetallesAplicar"> 
                 <cfinvoke component="ftec.Componentes.FTTramites" method="AltaHTramite" >

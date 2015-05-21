@@ -35,7 +35,7 @@
                and b.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
 			 LEFT OUTER JOIN FTListaValores c
 			 	on c.DVid       = b.DVid
-				and c.DVLcodigo = b.PCDValor	
+				and c.DVLcodigo = convert(char(11),b.PCDValor )	
 			 LEFT OUTER JOIN FTDatosVariables d
 			 	on d.DVid = b.DVid
         where a.Sid  = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsContrato.Sid#">

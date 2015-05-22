@@ -747,9 +747,14 @@
 
                 <cfquery datasource="#session.dsn#">
                     insert into #tempF05# (Proyectos, Funcionarios, Speriodo )
-                        values (#lVarProyectos#, Round(#lVarfuncionarios# / #meses#), #i#)
+                        values (#lVarProyectos#, Round((#lVarfuncionarios# / #meses#),0), #i#)
                 </cfquery>
             </cfloop>
+
+            <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
+               update #tempF05# set Funcionarios = 1
+               where Funcionarios = 0
+            </cfquery> 
 
                 <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
                     select round((Proyectos / Funcionarios),2) as crecimiento, Speriodo

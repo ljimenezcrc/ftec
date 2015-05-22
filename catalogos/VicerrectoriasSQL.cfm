@@ -186,11 +186,20 @@
     <!--- ========================================================================= ---> 
     
     <cfif isdefined ('form.AltaCostDist')>
+        <cfif isdefined ('form.CPid')>
         <cfinvoke component="ftec.Componentes.FTCostosProyectoD" method="Get" returnvariable="rsGet" >
             <cfinvokeargument name="CPid" 		value="#form.CPid#">
             <cfinvokeargument name="Vid" 		value="#form.VidDist#">
             <cfinvokeargument name="Debug"		value="false">
         </cfinvoke>
+        <cfelse>
+            <cfset TitleErrs = 'Operación Inválida'>
+            <cfset MsgErr    = 'Parámetros FTEC Costos de Proyectos'>
+            <cfset DetErrs   = 'El costo debe ser ingresado y luego la distribución, Verificar.'>
+            <cflocation url="/cfmx/sif/errorPages/BDerror.cfm?errType=1&errtitle=#URLEncodedFormat(TitleErrs)#&ErrMsg= #URLEncodedFormat(MsgErr)# <br>&ErrDet=#URLEncodedFormat(DetErrs)#" addtoken="no">
+        </cfif>
+
+
         
         
 

@@ -3,6 +3,10 @@
 <cfinvoke component="sif.Componentes.Translate" method="Translate" key="TAB_Indicadores" 	default="Generar Empleados Indicador" returnvariable="TAB_Indicadores" />
 <cfinvoke component="sif.Componentes.Translate" method="Translate" key="TAB_Observaciones" 	default="Consulta Empleado Indicadores" returnvariable="TAB_Observaciones" />
 
+<cfif isdefined("url.PageNum_lista2")>
+	<cfset form.tab = 2 > 
+</cfif>
+
 <cfif isdefined("url.tab") and not isdefined("form.tab")>
 	<cfset form.tab = url.tab >
 </cfif>

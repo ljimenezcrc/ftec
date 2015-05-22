@@ -97,7 +97,7 @@
                 <cfinvokeargument name="ajustar" value="N"/>
                 <cfinvokeargument name="cortes" value="CentroFuncionalPeriodoMes"/>
                 <cfinvokeargument name="checkboxes" value="S"/>
-                <cfinvokeargument name="keys" value="EIid"/>
+                <cfinvokeargument name="keys" value="EIid,"/>
                 <cfinvokeargument name="MaxRows" value="100"/>
                 <cfinvokeargument name="formName" value="lista"/> <!------>
                 <cfinvokeargument name="debug" value="N"/>

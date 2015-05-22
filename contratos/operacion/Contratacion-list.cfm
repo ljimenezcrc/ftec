@@ -24,12 +24,13 @@
                 inner join FTContratos b
                     on b.Cid = a.Cid
             where a.PCEstado in  ('P','R','A')
+            order by a.PCIdentificacion
         </cfquery>
 
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
             <cfinvokeargument name="query" value="#rsLista#"/>
-            <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado,ComStr"/>
-            <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado,Comentarios"/>
+            <cfinvokeargument name="desplegar" value=" PCIdentificacion, Nombre,Cdescripcion, PCEstado,ComStr"/>
+            <cfinvokeargument name="etiquetas" value=" Identificación, Nombre,Contrato, Estado,Comentarios"/>
             <cfinvokeargument name="formatos" value=" S, S, S, S,I"/>
             <cfinvokeargument name="align" value="left, left, left,  left,center"/>
             <cfinvokeargument name="ajustar" value="N"/>

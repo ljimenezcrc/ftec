@@ -15,6 +15,7 @@
 <cfset lvFTpasoactual = 0>
 <cfset lvFTpasoaprueba = 0>
 <cfset lvFTpasorechaza = 0>
+<cfset lvFTpasoVB      = 0>
     
 <cfif isDefined("session.Ecodigo") and isDefined("Form.FTid") and len(trim(#Form.FTid#)) NEQ 0>
     <cfquery name="rsFTramites" datasource="#session.dsn#">

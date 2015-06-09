@@ -22,8 +22,8 @@
 	where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
 </cfquery>
 
-<cfdocument format="pdf" bookmark="yes">
-<cfdocumentsection name="1">
+<!---<cfdocument format="pdf" bookmark="yes">
+<cfdocumentsection name="1">--->
 <!---Se recorren cada una de las secciones--->
 <cfloop query="rsContrato">
 	<!---Se Obtienen las variables de las secciones--->
@@ -102,5 +102,5 @@
 			</div>
 
 	</cfloop>
-	</cfdocumentsection>		
-</cfdocument>
+<!---	</cfdocumentsection>		
+</cfdocument>--->

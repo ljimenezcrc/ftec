@@ -24,8 +24,23 @@
                 inner join FTContratos b
                     on b.Cid = a.Cid
             where a.PCEstado in  ('P','R','A')
+            and a.Vid in (select x.Vid 
+                            from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> x
+                            inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec">  y
+                                on x.Vid = y.Vid
+                            where  x.Ecodigo =  #session.Ecodigo# 
+                                and coalesce(y.Usucodigo,0) =  #session.Usucodigo# )
+
             order by a.PCIdentificacion
         </cfquery>
+
+
+
+
+
+
+
+
 
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
             <cfinvokeargument name="query" value="#rsLista#"/>

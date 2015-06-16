@@ -108,6 +108,7 @@
 										<option value="8"  <cfif rsFTSeccionesD.TVariables EQ 8>  selected="selected"</cfif>>Fecha Nacimiento</option>
 										<option value="14" <cfif rsFTSeccionesD.TVariables EQ 14> selected="selected"</cfif>>Estado Civil</option>
 										<option value="15" <cfif rsFTSeccionesD.TVariables EQ 15> selected="selected"</cfif>>Nombre Coordinador</option>
+                                        <option value="16" <cfif rsFTSeccionesD.TVariables EQ 16> selected="selected"</cfif>>Cédula Coordinador</option>
 									</optgroup>
 									<optgroup label="Datos del Contrato">
 										<option value="9"  <cfif rsFTSeccionesD.TVariables EQ 9>  selected="selected"</cfif>>Numero Contrato</option>

@@ -14,6 +14,7 @@
 								WHEN 3 THEN 'Divorciado'
 								WHEN 4 THEN 'Union Libre'
 								WHEN 5 THEN 'Separado' END AS EstadoCivil
+           , Vid
 		from FTPContratacion a
 			inner join FTContratos b
 				on b.Cid = a.Cid
@@ -21,6 +22,45 @@
 				on c.Cid = b.Cid
 	where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
 </cfquery>
+
+
+<cf_dbfunction name="op_concat" returnvariable="_cat">
+
+
+<cfquery name="rsCoordinador" datasource="#session.DSN#">
+    select ta.Aid 
+        , ta.TAid
+        , ta.Vid
+        , ta.Usucodigo
+        , dp.Pid as Idenificacion
+        , dp.Pnombre #_Cat# ' ' #_Cat# dp.Papellido1 #_Cat# ' ' #_Cat# dp.Papellido2  as Nombre
+        
+        , ta.Afdesde
+        , ta.Afhasta
+        , ta.Ainactivo
+        , ta.TAresponsable
+        , z.TAcodigo #_Cat# ' - ' #_Cat# z.TAdescripcion as TipoAutorizador
+    from <cf_dbdatabase table="FTAutorizador " datasource="ftec"> ta
+        inner join Usuario u
+            on u.Usucodigo=ta.Usucodigo
+                and u.Uestado = 1 
+                and u.Utemporal = 0
+                and u.CEcodigo = <cfqueryparam cfsqltype="cf_sql_numeric" value="#session.CEcodigo#">
+        inner join DatosPersonales dp
+            on dp.datos_personales =u.datos_personales
+        inner join <cf_dbdatabase table="FTTipoAutorizador " datasource="ftec"> z
+            on ta.TAid = z.TAid
+            and z.TAid = 1 <!---Coordinador--->
+    where ta.Ecodigo=<cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
+        and Vid = #rsContrato.Vid#
+</cfquery>
+
+
+
+
+
+
+
 
 <!---<cfdocument format="pdf" bookmark="yes">
 <cfdocumentsection name="1">--->
@@ -75,8 +115,10 @@
 				<cfcase value="13"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &DateFormat(rsContrato.PCFechaF,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Estado Civil--->
 				<cfcase value="14"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsContrato.EstadoCivil & '</font>')></cfcase> 
-				<cfcase value="15"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &'Nombre Coordinador'& '</font>')></cfcase> 
+				<cfcase value="15"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsCoordinador.Nombre& '</font>')></cfcase> 
+				<cfcase value="16"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font color="red">' &rsCoordinador.Idenificacion& '</font>')></cfcase> 
 				<!---Caso no conteplado--->
+                
 				<cfdefaultcase></cfdefaultcase>
 			</cfswitch>
 		</cfloop>

@@ -26,7 +26,7 @@
             , a.FTpasoactual
             , a.FTpasoaprueba
             , a.FTpasorechaza
-            , a.FTpasoVB
+            , coalesce(a.FTpasoVB, a.FTpasoaprueba) as FTpasoVB
             , coalesce(a.FTautoriza,0) as FTautoriza
             , b.ETcodigo #_Cat# ' - ' #_Cat#  b.ETdescripcion as Estado
             , c.TTcodigo #_Cat# ' - ' #_Cat# c.TTdescripcion as Tramite

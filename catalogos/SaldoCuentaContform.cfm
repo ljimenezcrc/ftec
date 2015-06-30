@@ -185,7 +185,8 @@ where A.PCEMid = B.PCEMid
 			<td ><strong>A&ntilde;o Inicio:</strong></td>
 			<td  >
 				<select name="PeriodoInicio"  onChange="javascript:cambiar_meses(this);"  tabindex="1"> 
-					<cfloop query="rsAno"> 
+					<option value="">-- Seleccione opción --</option>
+                    <cfloop query="rsAno"> 
 						<option value="#rsAno.Speriodo#">#rsAno.Speriodo#</option>
 					</cfloop>
 				</select>		
@@ -194,6 +195,7 @@ where A.PCEMid = B.PCEMid
             <td ><strong>A&ntilde;o Final:</strong></td>
 			<td  >
 				<select name="PeriodoFinal"  tabindex="1">
+	                <option value="">-- Seleccione opción --</option>
 					<cfloop query="rsAno"> 
 						<option value="#rsAno.Speriodo#">#rsAno.Speriodo#</option>
 					</cfloop>

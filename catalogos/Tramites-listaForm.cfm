@@ -158,10 +158,10 @@
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                     <cfinvokeargument name="query" value="#rsListaSolicitudes#"/>
-                    <cfinvokeargument name="desplegar" value="Tipo, SPdocumento,Proveedor, Moneda, Total"/>
-                    <cfinvokeargument name="etiquetas" value="Tipo,Documento,Proveedor, Moneda, Monto"/>
-                    <cfinvokeargument name="formatos" value="V,V,V,S,M"/>
-                    <cfinvokeargument name="align" value="left, left,left,center, right"/>
+                    <cfinvokeargument name="desplegar" value="SPid,Tipo, SPdocumento,Proveedor, Moneda, Total"/>
+                    <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Documento,Proveedor, Moneda, Monto"/>
+                    <cfinvokeargument name="formatos" value="I,V,V,V,S,M"/>
+                    <cfinvokeargument name="align" value="center,left, left,left,center, right"/>
                     <cfinvokeargument name="ajustar" value="N"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Tramites-listaSql.cfm"/>
                     <cfinvokeargument name="keys" value="SPid,Tramite"/>

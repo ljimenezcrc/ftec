@@ -110,7 +110,8 @@
 	
 			<cfset filtroExtra = "">
 			<cfif isdefined('rsUsuariosAutorizados') and rsUsuariosAutorizados.recordCount GT 0>
-				<cfset filtroExtra = " and a.Usucodigo not in (#ValueList(rsUsuariosAutorizados.Usucodigo, ',')#)">		
+				<!--- <cfset filtroExtra = " and a.Usucodigo not in (#ValueList(rsUsuariosAutorizados.Usucodigo, ',')#)">		 --->
+				<cfset filtroExtra = " ">		
 			</cfif>
 	
 			<cfinvoke component="sif.Componentes.Translate"

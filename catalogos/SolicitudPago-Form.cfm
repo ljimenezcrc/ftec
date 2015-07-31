@@ -1,4 +1,15 @@
-﻿
+﻿<cf_dbfunction name="op_concat" returnvariable="_cat">
+<!--- Valores iniciales de la pantalla  --->
+<!---Consulta de impuestos--->
+
+<cfquery name="rsExecento" datasource="#Session.DSN#">
+	select Icodigo, Idescripcion , Icodigo #_Cat# ' - ' #_Cat# Idescripcion as Descripcion, Iporcentaje
+	from Impuestos 
+	where Ecodigo = #Session.Ecodigo#
+	and Icodigo = 'EX'
+	order by Idescripcion                                 
+</cfquery>
+
 <cfinvoke component="sif.Componentes.Translate"
 	method="Translate"
 	key="LB_NoSeEncontraronRegistros"
@@ -17,7 +28,7 @@
   	</cfif>  
 </cfif>
 
-<cf_dbfunction name="op_concat" returnvariable="_cat">
+
 
 <script src="/cfmx/rh/js/utilesMonto.js"></script>
 <!---Consulta de impuestos--->
@@ -27,6 +38,10 @@
 	where Ecodigo = #Session.Ecodigo#
 	order by Idescripcion                                 
 </cfquery>
+
+
+
+
 <!---Formas de Pago--->
 <cfquery name="rsFPagos" datasource="ftec">
 	select FPid ,FPcodigo, FPdescripcion 
@@ -225,7 +240,7 @@
 				<select name="FPid"  id="FPid" onchange="javascript:Fpago(this);" style="width:90%">
 					<option value="">--- Seleccionar ---</option>
 					<option value="2" <cfif modo neq 'ALTA' and isdefined("rsSolicitudProcesos") and rsSolicitudProcesos.FPid eq 2 >selected</cfif> >Cheque</option>
-					<option value="3" <cfif modo neq 'ALTA' and isdefined("rsSolicitudProcesos") and rsSolicitudProcesos.FPid eq 3 >selected</cfif> >Transferencia</option>
+					<option value="3" <cfif modo neq 'ALTA' and isdefined("rsSolicitudProcesos") and rsSolicitudProcesos.FPid eq 3 >selected<cfelseif modo eq 'ALTA'>selected</cfif> >Transferencia</option>
 				</select>
 			</div>
 		</div>
@@ -406,9 +421,7 @@
                                 <select name="Icodigo" tabindex="1"> 
                                     <option  title="-- Seleccione --" value=""> -- Seleccione -- </option>
                                     <cfloop query="rsImpuestos">
-                                        <!---<option  title="#rsImpuestos.Icodigo#" value="#rsImpuestos.Icodigo#"> #rsImpuestos.Descripcion# </option>--->
-                                        <option value="#Icodigo#" <cfif modo EQ 'CAMBIO' and isdefined('rsDSolicitudProcesos') and rsImpuestos.Icodigo EQ rsDSolicitudProcesos.Icodigo> selected</cfif>>#rsImpuestos.Descripcion#</option>
-                                        
+										<option value="#Icodigo#" <cfif modo EQ 'CAMBIO' and isdefined('rsDSolicitudProcesos') and rsImpuestos.Icodigo EQ rsDSolicitudProcesos.Icodigo> selected<cfelseif modo EQ 'CAMBIO' and rsExecento.Icodigo EQ rsImpuestos.Icodigo >selected</cfif>>#rsImpuestos.Descripcion#</option>
                                     </cfloop>
                                 </select>
                             </td>

@@ -130,7 +130,7 @@
                     <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Proveedor,Documento,Usuario Reg,Fecha Fact, Moneda,Monto"/>
                     <cfinvokeargument name="formatos" value="I,V,S,S,S,D,S,M"/>
                     <cfinvokeargument name="align" value="center,left,left,left,left,center, center,right"/>
-                    <cfinvokeargument name="ajustar" value="N"/>
+                    <cfinvokeargument name="ajustar" value="S"/>
                     <cfinvokeargument name="botones" value="Nuevo"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm"/>
                     <cfinvokeargument name="keys" value="SPid,VB"/>

@@ -182,10 +182,16 @@
                     <select name="PCEstadoCivil" id="PCEstadoCivil">
                         <option value=""> -- Seleccione una opción --</option>
                         <option value="1" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '1'>selected="selected"</cfif>>Soltero</option>
+                        <option value="6" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '6'>selected="selected"</cfif>>Soltera</option>
                         <option value="2" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '2'>selected="selected"</cfif>>Casado</option>
+                        <option value="7" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '7'>selected="selected"</cfif>>Casada</option>
                         <option value="3" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '3'>selected="selected"</cfif>>Divorciado</option>
-                        <option value="4" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '3'>selected="selected"</cfif>>Union Libre</option>
+                        <option value="8" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '8'>selected="selected"</cfif>>Divorciada</option>
                         <option value="5" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '5'>selected="selected"</cfif>>Separado</option>
+                        <option value="9" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '9'>selected="selected"</cfif>>Separada</option>
+						<option value="10" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '10'>selected="selected"</cfif>>Viudo</option>
+                        <option value="11" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '11'>selected="selected"</cfif>>Viuda</option>
+                        <option value="4" <cfif isdefined('rsForm') and rsForm.PCEstadoCivil  EQ '4'>selected="selected"</cfif>>Union Libre</option>
                    </select>
                </div>
 </div>

@@ -593,7 +593,7 @@
 					<cfinvokeargument name="etiquetas" 			value="Concepto,     Descripción,    Proyecto,        Tipo Imp,OC,        Mto.Imp,     Monto,    Total,&nbsp;"/>
 					<cfinvokeargument name="formatos" 			value="V,V,V,V,V,M,M,M,G"/>
 					<cfinvokeargument name="align" 				value="left,left,left,left,right,right,right,right,right, right"/>
-					<cfinvokeargument name="ajustar" 			value="N"/>
+					<cfinvokeargument name="ajustar" 			value="S"/>
 					<cfinvokeargument name="irA" 				value="SolicitudPago.cfm"/>
 					<cfinvokeargument name="showEmptyListMsg" 	value="true"/>
 					<cfinvokeargument name="EmptyListMsg" 		value="#LB_NoSeEncontraronRegistros#"/>

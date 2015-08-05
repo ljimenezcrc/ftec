@@ -30,6 +30,7 @@
         where a.PCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.PCid#">
     </cfquery>
 
+
     <cfquery name="rsProyectos" datasource="#Session.DSN#">
         select a.*, b.Vcodigo as Vcodigoresp, b.Vdescripcion as Vdescripcionresp , b.Vid as Vpkresp
         from  <cf_dbdatabase table="FTPContratacion " datasource="ftec"> a
@@ -164,7 +165,7 @@
 </div>
 <div class="row">
                  <!---Fecha Nacimiento>--->
-<label for="PCTidentificacion" style="text-align:right" class="col-sm-2">Fecha Nacimiento:</label>
+<!--- <label for="PCTidentificacion" style="text-align:right" class="col-sm-2">Fecha Nacimiento:</label>
              <div class="col-sm-4">
 					<!---<cfif modo neq 'ALTA'>--->
                     
@@ -174,7 +175,7 @@
                         <cf_sifcalendario   form ="fmContratacion" name="PCFechaN" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
                     </cfif>
               </div>
- </div>
+ </div> --->
  <div class="row">
             <!---Estado Civil--->
 <label for="PCTidentificacion" style="text-align:right" class="col-sm-2">Estado Civil:</label>
@@ -195,6 +196,40 @@
                    </select>
                </div>
 </div>
+
+
+<div class="row">
+<!---Fecha Aprobacion--->
+<label for="PCFechaA" style="text-align:right" class="col-sm-2">Fecha Aprobación:</label>
+             <div class="col-sm-4">
+					<!---<cfif modo neq 'ALTA'>--->
+                    
+                    <cfif not isdefined('rsForm.btnBuscarOferente') and  isdefined('rsForm.PCFechaA')>
+                        <cf_sifcalendario form ="fmContratacion" name="PCFechaA" value="#LSDateFormat(rsForm.PCFechaA,'dd/mm/yyyy')#">
+                    <cfelse>
+                        <cf_sifcalendario   form ="fmContratacion" name="PCFechaA" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
+                    </cfif>
+              </div>
+ </div>
+ <div class="row">
+
+
+
+<div class="row">
+<!---Fecha Firmas--->
+<label for="PCFechaF" style="text-align:right" class="col-sm-2">Fecha Firmas:</label>
+             <div class="col-sm-4">
+					<!---<cfif modo neq 'ALTA'>--->
+                    
+                    <cfif not isdefined('rsForm.btnBuscarOferente') and  isdefined('rsForm.PCFechaF')>
+                        <cf_sifcalendario form ="fmContratacion" name="PCFechaF" value="#LSDateFormat(rsForm.PCFechaF,'dd/mm/yyyy')#">
+                    <cfelse>
+                        <cf_sifcalendario   form ="fmContratacion" name="PCFechaF" value="#LSDateFormat(Now(),'dd/mm/yyyy')#">
+                    </cfif>
+              </div>
+ </div>
+ <div class="row">
+
 
 
 <div class="btn-group" align="center"> 

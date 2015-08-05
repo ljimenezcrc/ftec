@@ -110,9 +110,9 @@
 
                             ,{fn concat('<img border=''0''  width= ''15%''  onClick=''Aprueba(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/aprueba.png''>')})}  as ApruebaStr
 
-                            ,{fn concat('<img border=''0''  width= ''30%''  onClick=''VerContrato(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as VerStr
+                            ,{fn concat('<img border=''0''  width= ''25%''  onClick=''VerContrato(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as VerStr
 
-                            ,{fn concat('<img border=''0''  width= ''30%''  onClick=''Comentario(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as ComStr
+                            ,{fn concat('<img border=''0''  width= ''25%''  onClick=''Comentario(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as ComStr
                         from FTPContratacion a
                             inner join FTContratos b
                                 on b.Cid = a.Cid
@@ -126,7 +126,7 @@
                         <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado, Aprueba, Rechaza,Revisar,Comentario"/>
                         <cfinvokeargument name="formatos" value=" S, S, S, S,I,I,I,I"/>
                         <cfinvokeargument name="align" value="left, left, left,  left, center, center, center, center"/>
-                        <cfinvokeargument name="ajustar" value="true"/>
+                        <cfinvokeargument name="ajustar" value="S"/>
                         <cfinvokeargument name="keys" value="PCid"/>
                         <cfinvokeargument name="incluyeForm" value="false"/>
                         <cfinvokeargument name="formName" 	value="fmContratacion"/>

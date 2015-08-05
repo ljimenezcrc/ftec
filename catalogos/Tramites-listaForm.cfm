@@ -67,6 +67,7 @@
                         a.SPid,
                         a.TPid,
                         a.FPid,
+                        a.SPfechafactura,
                         a.SPestado,
                         b.SNnumero #_Cat# ' - ' #_Cat# b.SNnombre as Proveedor,
                         c.FPcodigo,
@@ -90,6 +91,7 @@
                                     ) then 0
                                 else 1
                         end as VB
+                        ,(select Usulogin from Usuario where Usucodigo = a.Usucodigo) as Usulogin
                     from <cf_dbdatabase table="FTSolicitudProceso" datasource="ftec"> a
                     inner join SNegocios b
 						on a.SNcodigo = b.SNcodigo
@@ -142,7 +144,7 @@
                     where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
                     
                     and e.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">
-                    
+                     
                 
                 <!--- <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">--->
                 <cfif isdefined("Form.TipoProceso") and Len(Trim(Form.TipoProceso)) NEQ 0>
@@ -154,15 +156,17 @@
                     and b.Vcodigo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Form.Vcodigoresp#">
                 </cfif>--->
             </cfquery>  
+
+            <!--- <cf_dump var="#rsListaSolicitudes#"> --->
             
             <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">
                 <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                     <cfinvokeargument name="query" value="#rsListaSolicitudes#"/>
-                    <cfinvokeargument name="desplegar" value="SPid,Tipo, SPdocumento,Proveedor, Moneda, Total"/>
-                    <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Documento,Proveedor, Moneda, Monto"/>
-                    <cfinvokeargument name="formatos" value="I,V,V,V,S,M"/>
-                    <cfinvokeargument name="align" value="center,left, left,left,center, right"/>
-                    <cfinvokeargument name="ajustar" value="N"/>
+                    <cfinvokeargument name="desplegar" value="SPid,Tipo, Proveedor,SPdocumento,Usulogin,SPfechafactura, Moneda, Total"/>
+                    <cfinvokeargument name="etiquetas" value="Consecutivo,Tipo,Proveedor,Documento,Usuario Reg,Fecha Fact, Moneda, Monto"/>
+                    <cfinvokeargument name="formatos" value="I,V,V,V,V,D,S,M"/>
+                    <cfinvokeargument name="align" value="center,left, left,left,center,center,center, right"/>
+                    <cfinvokeargument name="ajustar" value="S"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Tramites-listaSql.cfm"/>
                     <cfinvokeargument name="keys" value="SPid,Tramite"/>
                     <cfinvokeargument name="MaxRows" value="20"/>

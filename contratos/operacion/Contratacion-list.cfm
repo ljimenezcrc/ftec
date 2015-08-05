@@ -19,7 +19,7 @@
                 ,a.PCEnumero
                 ,a.PCEPeriodo
                 ,b.Cdescripcion
-                 ,{fn concat('<img border=''0''  width= ''30%''  onClick=''Comentario(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as ComStr
+                 ,{fn concat('<img border=''0''  width= ''15%''  onClick=''Comentario(',{fn concat(<cf_dbfunction name="to_char" args="a.PCid">,');'' src=''/cfmx/ftec/imagenes/ver.gif''>')})}  as ComStr
             from FTPContratacion a
                 inner join FTContratos b
                     on b.Cid = a.Cid
@@ -34,21 +34,13 @@
             order by a.PCIdentificacion
         </cfquery>
 
-
-
-
-
-
-
-
-
         <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
             <cfinvokeargument name="query" value="#rsLista#"/>
             <cfinvokeargument name="desplegar" value=" PCIdentificacion, Nombre,Cdescripcion, PCEstado,ComStr"/>
             <cfinvokeargument name="etiquetas" value=" Identificación, Nombre,Contrato, Estado,Comentarios"/>
             <cfinvokeargument name="formatos" value=" S, S, S, S,I"/>
             <cfinvokeargument name="align" value="left, left, left,  left,center"/>
-            <cfinvokeargument name="ajustar" value="N"/>
+            <cfinvokeargument name="ajustar" value="S"/>
             <cfinvokeargument name="irA" value="Contratacion.cfm"/>
             <cfinvokeargument name="keys" value="PCid"/>
             <cfinvokeargument name="incluyeForm" value="false"/>

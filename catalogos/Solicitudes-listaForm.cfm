@@ -85,7 +85,7 @@
                             on a1.SPid = b1.SPid
                     where b1.SPid = a.SPid) as Total
                     ,(select Usulogin from Usuario where Usucodigo = a.Usucodigo) as Usulogin
-                    ,(select sn.SNnombre from SNegocios  sn where sn.SNcodigo = a.SNcodigo ) as Proveedor
+                    ,(select sn.SNnumero #_Cat# ' - ' #_Cat# sn.SNnombre from SNegocios  sn where sn.SNcodigo = a.SNcodigo ) as Proveedor
                     ,(select  m.Miso4217 #_Cat# ' - ' #_Cat#  m.Msimbolo from Monedas m where m.Ecodigo =  a.Ecodigo and m.Mcodigo = a.Mcodigo) as Moneda
                     , 0 as VB
 

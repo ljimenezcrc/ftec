@@ -22,6 +22,8 @@
 <cfparam name="rsContrato.Cestado" 		default="">
 <cfparam name="rsContrato.Ecodigo" 		default="">
 <cfparam name="rsContrato.Usucodigo" 	default="">
+<cfparam name="rsContrato.PCFechaA"    default="">
+<cfparam name="rsContrato.PCFechaF"    default="">
 <cfparam name="rsSeccion" 				default="#QueryNew('Sid')#">
 
 <cf_navegacion name="form.Cid" default="">
@@ -73,7 +75,7 @@
                 ,'#rsOferente.PCnombre#' as PCnombre
                 ,'#rsOferente.PCapellido1#' as PCapellido1
                 ,'#rsOferente.PCapellido2#' as PCapellido2
-                , getdate() as PCFechaN
+                <!--- , getdate() as PCFechaN--->
             from dual
         </cfquery>    
 
@@ -96,7 +98,10 @@
         <cfinvokeargument name="PCApellido2" 		value="#form.PCApellido2#">
         <cfinvokeargument name="PCSexo" 			value="#form.PCSexo#">
         <cfinvokeargument name="PCEstadoCivil" 		value="#form.PCEstadoCivil#">
-        <cfinvokeargument name="PCFechaN" 			value="#form.PCFechaN#">
+        <!--- <cfinvokeargument name="PCFechaN" 			value="#form.PCFechaN#"> --->
+        <cfinvokeargument name="PCFechaA"             value="#form.PCFechaA#">
+        <cfinvokeargument name="PCFechaF"             value="#form.PCFechaF#">
+
 	</cfinvoke>
 	
 

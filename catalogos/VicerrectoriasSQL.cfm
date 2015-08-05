@@ -41,7 +41,9 @@
 	<cfif isdefined ('form.AltaAut')>
         <cfinvoke component="ftec.Componentes.FTAutorizador" method="Get" returnvariable="rsGet" >
             <cfinvokeargument name="Vid" 		value="#form.Vid#">
+            <cfinvokeargument name="TAid"  value="#form.TAid#">
             <cfinvokeargument name="Usucodigo" 	value="#form.Usucodigo#">
+
             <cfinvokeargument name="Debug"		value="false">
         </cfinvoke>
 		<cfif isdefined('rsGet') and rsGet.RecordCount EQ 0>

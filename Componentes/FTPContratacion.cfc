@@ -40,7 +40,7 @@ PCid				<!--- Id de la  Tabla --->
 					,a.PCApellido2		<!--- Apellido2 oferente --->
 					,a.PCSexo				<!--- F=Femenino, M=Masculino--->
 					,a.PCEstadoCivil		<!--- Estado Civil del  oferente  1=soltero, 2=casado, 3=divorciado, 4=union libre, 5=separado --->
-					,a.PCFechaN			<!--- Fecha Nacimiento oferente--->
+					<!---,a.PCFechaN			 Fecha Nacimiento oferente--->
 					,a.PCEstado 			<!--- Estado del Contrato P=Proceso edicion, T= en tramite, A=Aprobado, R=Rechazado,F=Finiquito del contrato(Cancelado)--->
 					,a.PCEnumero			<!--- Numero del contrato se asigna una ves aprobado --->
 					,a.PCEPeriodo			<!--- Año aprobacion contrato se asigna una ves aprobado --->
@@ -84,7 +84,9 @@ PCid				<!--- Id de la  Tabla --->
         <cfargument name="PCApellido2" 			required="false" 	type="string">
         <cfargument name="PCSexo" 				required="true" 	type="string">
         <cfargument name="PCEstadoCivil" 		required="true" 	type="string">
-        <cfargument name="PCFechaN" 			required="true" 	type="string">
+        <!--- <cfargument name="PCFechaN" 			required="false" 	type="string"> --->
+        <cfargument name="PCFechaA"           required="false"    type="string">
+        <cfargument name="PCFechaF"           required="false"    type="string">
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
 		<cfargument name="Conexion" 			required="false" 	type="string" 	default="ftec">  
@@ -102,7 +104,9 @@ PCid				<!--- Id de la  Tabla --->
                     ,PCApellido2		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCApellido2#" 		voidnull>
                     ,PCSexo				= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCSexo#" 				voidnull>
                     ,PCEstadoCivil		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCEstadoCivil#" 		voidnull>
-                    ,PCFechaN			= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>
+                    <!--- ,PCFechaN			= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>--->
+                    ,PCFechaA         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaA#"        voidnull>
+                    ,PCFechaF         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaF#"        voidnull>
                     ,PCUsucodigoC		= <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
               where PCid = #Arguments.PCid#
             </cfquery>
@@ -120,7 +124,9 @@ PCid				<!--- Id de la  Tabla --->
                             ,PCApellido2		<!--- Apellido2 oferente --->
                             ,PCSexo				<!--- F=Femenino, M=Masculino--->
                             ,PCEstadoCivil		<!--- Estado Civil del  oferente  1=soltero, 2=casado, 3=divorciado, 4=union libre, 5=separado --->
-                            ,PCFechaN			<!--- Fecha Nacimiento oferente--->
+                            <!---,PCFechaN			 Fecha Nacimiento oferente--->
+                            ,PCFechaA           <!---Fecha Aprobado--->
+                            ,PCFechaF           <!--- Fecha Firmas--->
                             ,PCEstado 			<!--- Estado del Contrato P=Proceso edicion, T= en tramite, A=Aprobado, R=Rechazado,F=Finiquito del contrato(Cancelado)--->
                             ,PCEnumero			<!--- Numero del contrato se asigna una ves aprobado --->
                             ,PCEPeriodo			<!--- Año aprobacion contrato se asigna una ves aprobado --->
@@ -135,7 +141,9 @@ PCid				<!--- Id de la  Tabla --->
                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.PCApellido2#" 		voidnull>
                             , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.PCSexo#" 		voidnull>
                             , <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.PCEstadoCivil#" 		voidnull>
-                            , <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>
+                            <!---, <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>--->
+                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaA#"        voidnull>
+                            , <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaF#"        voidnull>
                             
                             , 'P' <!---Proceso--->
                             , -1

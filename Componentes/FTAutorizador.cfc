@@ -12,6 +12,7 @@
                 from <cf_dbdatabase table="FTAutorizador" datasource="ftec">
 				where Vid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Vid#" voidnull>
                     and Usucodigo = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.Usucodigo#" voidnull>
+                    and TAid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.TAid#" voidnull>
 		</cfquery>
 
 		<cfif Arguments.Debug>

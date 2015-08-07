@@ -226,7 +226,16 @@
     <input type="hidden" name="Tramite" 	value="<cfif isdefined('form.Tramite')> #form.Tramite# </cfif>">   
     <input type="hidden" name="VB" 			value="<cfif isdefined('form.VB')> #form.VB# </cfif>">   
     <input type="hidden" name="SNvencompras" value="<cfoutput>#LvarSNvencompras#</cfoutput>" id="SNvencompras"  > 
-    
+    	<cfif modo NEQ "ALTA" and isdefined('rsSolicitudProcesos')>
+    	<div class="row">
+			<div class="col-sm-2">
+				Consecutivo
+			</div>
+			<div class="col-sm-5">
+				<input disabled="disabled"name="SPid" type="text" id="SPid" maxlength="25"  style="text-align: right;" value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPid#</cfif>" >
+			</div>
+		</div>
+		</cfif>
     	<!---Documento y Forma de Pago--->
 		<div class="row">
 			<div class="col-sm-2">

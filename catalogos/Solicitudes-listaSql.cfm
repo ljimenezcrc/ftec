@@ -21,8 +21,8 @@
 <cfif not isdefined("Form.btnAplicar") and not isdefined("Form.btnEliminar") >
 	<cfset action = "/cfmx/ftec/catalogos/SolicitudPago.cfm">
 </cfif>
-
-
+<!--- 
+<cf_dump var="#form#" --->>
 
 
 
@@ -54,8 +54,8 @@
     	<cfinvokeargument name="Aprueba"	value="0">
     </cfif> --->
     <cfset action = "/cfmx/ftec/catalogos/Solicitudes-lista.cfm">
-<cfelse>
-    <cfset action = "/cfmx/ftec/catalogos/Solicitudes-lista.cfm">
+<!--- <cfelse>
+    <cfset action = "/cfmx/ftec/catalogos/Solicitudes-lista.cfm"> --->
 </cfif>	
 
 

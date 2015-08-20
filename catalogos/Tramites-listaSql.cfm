@@ -49,9 +49,7 @@
     	<cfinvokeargument name="Aprueba"	value="0">
     </cfif> --->
     <cfset action = "/cfmx/ftec/catalogos/Tramites-lista.cfm">
-<cfelse>
-    <cfset action = "/cfmx/ftec/catalogos/Tramites-lista.cfm">
-</cfif>	
+ </cfif>	
 
 
 <form action="#action#" method="post" name="sql">

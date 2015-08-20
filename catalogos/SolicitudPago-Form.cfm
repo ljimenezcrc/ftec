@@ -224,6 +224,7 @@
 	<input type="hidden" name="TPid" 		value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.TPid#</cfif>">
     <input type="hidden" name="SPfp" 		value="<cfif isdefined('form.FPid')> #form.FPid# </cfif>">
     <input type="hidden" name="Tramite" 	value="<cfif isdefined('form.Tramite')> #form.Tramite# </cfif>">   
+    <input type="hidden" name="TramiteConsultas" 	value="<cfif isdefined('form.TramiteConsultas')> #form.TramiteConsultas# </cfif>">   
     <input type="hidden" name="VB" 			value="<cfif isdefined('form.VB')> #form.VB# </cfif>">   
     <input type="hidden" name="SNvencompras" value="<cfoutput>#LvarSNvencompras#</cfoutput>" id="SNvencompras"  > 
     	<cfif modo NEQ "ALTA" and isdefined('rsSolicitudProcesos')>
@@ -386,9 +387,10 @@
 		</div>			
 		<div class="row">
 			<div class="col-sm-12">
-					<cfif isdefined('form.Tramite') and modo EQ 'CAMBIO'>
+ 					<cfif isdefined('form.Tramite') and modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Rechazar,Regresar" >
-
+					<cfelseif isdefined('form.TramiteConsultas') and modo EQ 'CAMBIO'>
+						<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja,Aplicar,Rechazar," formName = "fEncabezado"  sufijo="Enc" include="Regresar" >
 					<cfelseif modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Eliminar,Regresar" exclude="BAJA" >
 					<cfelse>
@@ -400,120 +402,128 @@
 
     
 
+
 <form  name="fDetalle" method="post" action="SolicitudPago-Sql.cfm">
-	<input type="hidden" name="modo" value="#modo#">
-    <input type="hidden" name="SPid" value="#form.SPid#">
-    <input type="hidden" name="SPidDelete" value="<cfoutput>#form.SPid#</cfoutput>">
-    <input type="hidden" name="DSPidCambio" value="<cfif isdefined('form.DSPid')><cfoutput>#form.DSPid#</cfoutput></cfif>">
-	<input type="hidden" name="VB" value="<cfif isdefined('form.VB')><cfoutput>#form.VB#</cfoutput></cfif>">
 
-	<cfif modo EQ 'CAMBIO' and not isdefined('form.Tramite') >
-    <table width="95%" align="center" border="0" cellspacing="0" cellpadding="1">
-        <tr>
-        	<td colspan="5"> 
-            	<fieldset>
-                <legend><b>&nbsp;Detalle&nbsp;</b></legend>
-                    <table width="95%" align="center" border="0" cellspacing="0" cellpadding="1">
-                        <!---************************************* detalle solicitud***************************************---->	
-                        <tr><td>&nbsp;</td></tr>
-	                    <tr> 
-                            <td  align="right">Concepto:</td>
-	                        <td>
-								<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-                                    <cf_sifconceptos size="22" form="fDetalle"  verclasificacion="0" tabindex="1" query="#rsDSolicitudProcesos#"> 
-                                <cfelse>
-                                    <cf_sifconceptos size="22" form="fDetalle"  verclasificacion="0" tabindex="1">
-                                </cfif>
-                            </td>
-                            <td  align="right">Impuesto:</td>
-                            <td >
-                                <select name="Icodigo" tabindex="1"> 
-                                    <option  title="-- Seleccione --" value=""> -- Seleccione -- </option>
-                                    <cfloop query="rsImpuestos">
-										<option value="#Icodigo#" <cfif modo EQ 'CAMBIO' and isdefined('rsDSolicitudProcesos') and rsImpuestos.Icodigo EQ rsDSolicitudProcesos.Icodigo> selected<cfelseif modo EQ 'CAMBIO' and rsExecento.Icodigo EQ rsImpuestos.Icodigo >selected</cfif>>#rsImpuestos.Descripcion#</option>
-                                    </cfloop>
-                                </select>
-                            </td>
-                      	</tr>
-                        <tr>
-                        	<td align="right">Proyecto:</td>
-	                        <td>
-								<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-                                    <cf_FTvicerrectoria form="fDetalle"  size="30"  name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1" query="#rsDSolicitudProcesos#"> 
-                                <cfelse>
-                                    <cf_FTvicerrectoria tabindex="1" form="fDetalle" size="30" id="Vpkresp" name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1">
-                                </cfif>
-                            </td>
-                        </tr>            
-                        <tr><td>&nbsp;</td></tr>
-                        <tr> 
-                        	<td  align="right">Descripci&oacute;n:</td>
-                            <td>
-                            	<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-                                    <input name="DSPdescripcion" type="text" id="DSPdescripcion" size="60" maxlength="255"  style="text-align: left;"  value="#rsDSolicitudProcesos.DSPdescripcion#" />
-                                <cfelse>
-	                                <input name="DSPdescripcion" type="text" id="DSPdescripcion" size="60" maxlength="255"  style="text-align: left;"  value="" />
-                                </cfif>
-                            </td>
-                            <td  class="fileLabel" align="right">Monto</td>
-                            <td>
-                                <cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-                                    <cf_inputNumber name="DSPmonto"  value="#rsDSolicitudProcesos.DSPmonto#" enteros="15" decimales="2" negativos="false" comas="no">
-                                <cfelse>
-	                                 <cf_inputNumber name="DSPmonto"  value="0.00" enteros="15" decimales="2" negativos="false" comas="no">
-                                </cfif>
-                            </td>
-                        </tr>
-                    </table>
-         	</td>
-        </tr>   
-		<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-			<tr>
-				<td colspan="4">
-					<cfif NOT LEN(TRIM(rsDSolicitudProcesos.CPformato))>
-						<span class="Rojo">No se pudo recuperar la cuenta de Presupuesto</span>
-					<cfelseif NOT LEN(TRIM(rsDSolicitudProcesos.Oficodigo))>
-						<span class="Rojo">No se pudo recuperar la Oficina a afectar Presupuesto</span>
-					<cfelseif NOT rsSQLPP.RecordCount>
-						<span class="Rojo">No existe un periodo de presupuesto configurado para el periodo y mes de Auxiliares</span>
-					<cfelseif ListFind('0,2',rsSQLPP.CPPestado)>
-						<span class="Rojo">El periodo presupuestario se encuentra cerrado o Inactivo</span>
-					<cfelseif ListFind('5',rsSQLPP.CPPestado)>
-						<span class="Rojo">No se está controlando presupuesto</span>	
-					<cfelseif LEN(TRIM(rsDSolicitudProcesos.NAP))> 
-						<span class="Azul">La solicitud de pago ya posee un compromiso presupuestario asociado con la orden de compra. El numero de aprobación presupuestaria es <cfoutput><em>#rsDSolicitudProcesos.NAP#</em></cfoutput></span>
-					<cfelseif LEN(TRIM(rsDSolicitudProcesos.CPCPtipoControl)) and rsDSolicitudProcesos.CPCPtipoControl EQ 0>
-						<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em> posee control Abierto</cfoutput>
-					<cfelseif NOT LEN(TRIM(rsDSolicitudProcesos.Disponible))>
-						<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em>  para la Oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> no esta formulada para el periodo presupuestario Activo</cfoutput>
-					<cfelseif rsDSolicitudProcesos.Disponible LT rsDSolicitudProcesos.DSPmonto>
-						<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em>  para la Oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> no posee fondos suficientes. Disponible <em>#LSnumberFormat(rsDSolicitudProcesos.Disponible,'999,999,9999.99')#</em> </cfoutput>
-					<cfelse>
-						<span class="Azul">Se afectará la cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em> en la oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> la cual tienen un disponible de <em>#LSnumberFormat(rsDSolicitudProcesos.Disponible,'999,999,9999.99')#</em></cfoutput></span>	
-					</cfif>
+	<cfif not isdefined('form.TramiteConsultas')>
+		<input type="hidden" name="modo" value="#modo#">
+	    <input type="hidden" name="SPid" value="#form.SPid#">
+	    <input type="hidden" name="SPidDelete" value="<cfoutput>#form.SPid#</cfoutput>">
+	    <input type="hidden" name="DSPidCambio" value="<cfif isdefined('form.DSPid')><cfoutput>#form.DSPid#</cfoutput></cfif>">
+		<input type="hidden" name="VB" value="<cfif isdefined('form.VB')><cfoutput>#form.VB#</cfoutput></cfif>">
+
+		<cfif modo EQ 'CAMBIO' and not isdefined('form.Tramite') >
+	    <table width="95%" align="center" border="0" cellspacing="0" cellpadding="1">
+	        <tr>
+	        	<td colspan="5"> 
+	            	<fieldset>
+	                <legend><b>&nbsp;Detalle&nbsp;</b></legend>
+	                    <table width="95%" align="center" border="0" cellspacing="0" cellpadding="1">
+	                        <!---************************************* detalle solicitud***************************************---->	
+	                        <tr><td>&nbsp;</td></tr>
+		                    <tr> 
+	                            <td  align="right">Concepto:</td>
+		                        <td>
+									<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <cf_sifconceptos size="22" form="fDetalle"  verclasificacion="0" tabindex="1" query="#rsDSolicitudProcesos#"> 
+	                                <cfelse>
+	                                    <cf_sifconceptos size="22" form="fDetalle"  verclasificacion="0" tabindex="1">
+	                                </cfif>
+	                            </td>
+	                            <td  align="right">Impuesto:</td>
+	                            <td >
+	                                <select name="Icodigo" tabindex="1"> 
+	                                    <option  title="-- Seleccione --" value=""> -- Seleccione -- </option>
+	                                    <cfloop query="rsImpuestos">
+											<option value="#Icodigo#" <cfif modo EQ 'CAMBIO' and isdefined('rsDSolicitudProcesos') and rsImpuestos.Icodigo EQ rsDSolicitudProcesos.Icodigo> selected<cfelseif modo EQ 'CAMBIO' and rsExecento.Icodigo EQ rsImpuestos.Icodigo >selected</cfif>>#rsImpuestos.Descripcion#</option>
+	                                    </cfloop>
+	                                </select>
+	                            </td>
+	                      	</tr>
+	                        <tr>
+	                        	<td align="right">Proyecto:</td>
+		                        <td>
+									<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <cf_FTvicerrectoria form="fDetalle"  size="30"  name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1" query="#rsDSolicitudProcesos#"> 
+	                                <cfelse>
+	                                    <cf_FTvicerrectoria tabindex="1" form="fDetalle" size="30" id="Vpkresp" name="Vcodigoresp" desc="Vdescripcionresp" titulo="Seleccione Proyecto" proyectos="1"  usuario="1">
+	                                </cfif>
+	                            </td>
+	                        </tr>            
+	                        <tr><td>&nbsp;</td></tr>
+	                        <tr> 
+	                        	<td  align="right">Descripci&oacute;n:</td>
+	                            <td>
+	                            	<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <input name="DSPdescripcion" type="text" id="DSPdescripcion" size="60" maxlength="255"  style="text-align: left;"  value="#rsDSolicitudProcesos.DSPdescripcion#" />
+	                                <cfelse>
+		                                <input name="DSPdescripcion" type="text" id="DSPdescripcion" size="60" maxlength="255"  style="text-align: left;"  value="" />
+	                                </cfif>
+	                            </td>
+	                            <td  class="fileLabel" align="right">Monto</td>
+	                            <td>
+	                                <cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <cf_inputNumber name="DSPmonto"  value="#rsDSolicitudProcesos.DSPmonto#" enteros="15" decimales="2" negativos="false" comas="no">
+	                                <cfelse>
+		                                 <cf_inputNumber name="DSPmonto"  value="0.00" enteros="15" decimales="2" negativos="false" comas="no">
+	                                </cfif>
+	                            </td>
+	                        </tr>
+	                    </table>
+	         	</td>
+	        </tr>   
+			<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+				<tr>
+					<td colspan="4">
+						<cfif NOT LEN(TRIM(rsDSolicitudProcesos.CPformato))>
+							<span class="Rojo">No se pudo recuperar la cuenta de Presupuesto</span>
+						<cfelseif NOT LEN(TRIM(rsDSolicitudProcesos.Oficodigo))>
+							<span class="Rojo">No se pudo recuperar la Oficina a afectar Presupuesto</span>
+						<cfelseif NOT rsSQLPP.RecordCount>
+							<span class="Rojo">No existe un periodo de presupuesto configurado para el periodo y mes de Auxiliares</span>
+						<cfelseif ListFind('0,2',rsSQLPP.CPPestado)>
+							<span class="Rojo">El periodo presupuestario se encuentra cerrado o Inactivo</span>
+						<cfelseif ListFind('5',rsSQLPP.CPPestado)>
+							<span class="Rojo">No se está controlando presupuesto</span>	
+						<cfelseif LEN(TRIM(rsDSolicitudProcesos.NAP))> 
+							<span class="Azul">La solicitud de pago ya posee un compromiso presupuestario asociado con la orden de compra. El numero de aprobación presupuestaria es <cfoutput><em>#rsDSolicitudProcesos.NAP#</em></cfoutput></span>
+						<cfelseif LEN(TRIM(rsDSolicitudProcesos.CPCPtipoControl)) and rsDSolicitudProcesos.CPCPtipoControl EQ 0>
+							<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em> posee control Abierto</cfoutput>
+						<cfelseif NOT LEN(TRIM(rsDSolicitudProcesos.Disponible))>
+							<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em>  para la Oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> no esta formulada para el periodo presupuestario Activo</cfoutput>
+						<cfelseif rsDSolicitudProcesos.Disponible LT rsDSolicitudProcesos.DSPmonto>
+							<span class="Rojo">La cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em>  para la Oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> no posee fondos suficientes. Disponible <em>#LSnumberFormat(rsDSolicitudProcesos.Disponible,'999,999,9999.99')#</em> </cfoutput>
+						<cfelse>
+							<span class="Azul">Se afectará la cuenta presupuestaria <cfoutput><em>#rsDSolicitudProcesos.CPformato#</em> en la oficina <em>#rsDSolicitudProcesos.Odescripcion#</em> la cual tienen un disponible de <em>#LSnumberFormat(rsDSolicitudProcesos.Disponible,'999,999,9999.99')#</em></cfoutput></span>	
+						</cfif>
+					</td>
+				</tr> 
+			</cfif>
+	      	<tr align="center"> 
+	        	<td colspan="4">
+					<br>
+						<cfif modo EQ 'CAMBIO'>
+							<input type="button" class="btnNormal"  tabindex="1" name="OrdenCompra" value="Orden Compra" onClick="javascript:SelectOC(#rsSolicitudProcesos.SNcodigo#,#rsSolicitudProcesos.SPid#,#rsSolicitudProcesos.Mcodigo#);">		    
+						</cfif>
+						<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos') and form.DSPidCambio GT 0 >
+	                        <cf_botones modo="Cambio" exclude= ",Alta,Limpiar,Baja" formName = "fDetalle" incluyeForm="true" sufijo="Det">
+	                    <cfelse>
+	                         <cf_botones modo="Alta" incluyeForm="true" formName = "fDetalle" sufijo="Det">
+	                    </cfif>
+						
+					<br>
 				</td>
-			</tr> 
-		</cfif>
-      	<tr align="center"> 
-        	<td colspan="4">
-				<br>
-					<cfif modo EQ 'CAMBIO'>
-						<input type="button" class="btnNormal"  tabindex="1" name="OrdenCompra" value="Orden Compra" onClick="javascript:SelectOC(#rsSolicitudProcesos.SNcodigo#,#rsSolicitudProcesos.SPid#,#rsSolicitudProcesos.Mcodigo#);">		    
-					</cfif>
-					<cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos') and form.DSPidCambio GT 0 >
-                        <cf_botones modo="Cambio" exclude= ",Alta,Limpiar,Baja" formName = "fDetalle" incluyeForm="true" sufijo="Det">
-                    <cfelse>
-                         <cf_botones modo="Alta" incluyeForm="true" formName = "fDetalle" sufijo="Det">
-                    </cfif>
-					
-				<br>
-			</td>
-      	</tr>
-	</table>	
-    </cfif>
-
+	      	</tr>
+		</table>	
+	    </cfif>
+	</cfif>
 </form>
+
+
 </cfoutput>
+
+
+
 
 <cf_dbfunction name="to_char" args="a.DSPid" returnvariable="Lvar_DSPid">
 <cf_dbfunction name="concat" args="'<img src=/cfmx/rh/imagenes/edit_o.gif  onclick=editarlinea(' | #Lvar_DSPid# |') style=cursor:pointer />'" delimiters="|"  returnvariable="Lvar_editarregistro">
@@ -622,7 +632,7 @@
 	 			<cfoutput>Total: #LSnumberFormat(rsListaTotal.Total,'999,999,999.99')#</cfoutput>
 	 		</div>
 	 	</div>
-	 <cfif rsLista.recordcount gt 0 and not isdefined('form.Tramite')>
+	 <cfif rsLista.recordcount gt 0 and not isdefined('form.Tramite')  and not isdefined('form.TramiteConsultas')>
 	 		<div class="row">
 				<div class="col-sx-12" align="center">
 					<cf_botones incluyeForm="true" form="lista"  values="Eliminar" names="BajaDet" functions="funcEliminar();">

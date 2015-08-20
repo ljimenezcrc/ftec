@@ -48,7 +48,7 @@
     <cfelse>
     	<cfinvokeargument name="Aprueba"	value="0">
     </cfif> --->
-    <cfset action = "/cfmx/ftec/catalogos/Tramites-lista.cfm">
+    <cfset action = "/cfmx/ftec/catalogos/Consulta-Tramites-lista.cfm">
  </cfif>	
 
 

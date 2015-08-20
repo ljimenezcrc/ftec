@@ -173,7 +173,7 @@
 
         <!--- <cf_dump var="#rsListaSolicitudes#"> --->
     
-        <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Tramites-listaSql.cfm">
+        <form style="margin:0" name="listaSolicitudes" method="post" action="/cfmx/ftec/catalogos/Consulta-Tramites-listaSql.cfm">
         <tr>
             <td>                
             <cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
@@ -183,7 +183,7 @@
                 <cfinvokeargument name="formatos" value="I,V,V,V,V,D,S,M"/>
                 <cfinvokeargument name="align" value="center,left, left,left,center,center,center, right"/>
                 <cfinvokeargument name="ajustar" value="S"/>
-                <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Tramites-listaSql.cfm"/>
+                <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Consulta-Tramites-listaSql.cfm"/>
                 <cfinvokeargument name="keys" value="SPid"/>
                 <cfinvokeargument name="MaxRows" value="20"/>
                 <cfinvokeargument name="formName" value="listaSolicitudes"/> <!------>

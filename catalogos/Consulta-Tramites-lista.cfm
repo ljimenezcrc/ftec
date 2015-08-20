@@ -21,7 +21,7 @@
 					returnvariable="nombre_proceso"/>                                    
 				<cf_web_portlet_start titulo="#nombre_proceso#" >		          
 					<cfinclude template="/rh/portlets/pNavegacion.cfm">	  	          
-					<cfinclude template="Tramites-listaForm.cfm">                  
+					<cfinclude template="Consulta-Tramites-listaForm.cfm">                  
 				<cf_web_portlet_end>
 			</td>	
 		</tr>

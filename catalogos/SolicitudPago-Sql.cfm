@@ -127,10 +127,11 @@
 	<cfset modo = 'ALTA'>
 </cfif>
  
-<cfif  isdefined('form.Tramite') and #form.Tramite# EQ 1>
+ 
+ <cfif  isdefined('form.Tramite') and #form.Tramite# EQ 1>
     <form action="Tramites-lista.cfm" method="post" name="sql"></form>
-<cfelseif  isdefined('form.TramiteConsultas')>
-    <form action="Tramites-lista.cfm" method="post" name="sql"></form>    
+<cfelseif  isdefined('form.TramiteConsultas') and #form.TramiteConsultas# EQ 1>
+    <form action="Consulta-Tramites-lista.cfm" method="post" name="sql"></form>    
 <cfelseif  isdefined("Form.AplicarEnc") or isdefined("Form.RechazarEnc")>
 	<form action="Solicitudes-lista.cfm" method="post" name="sql"></form>
 <cfelseif isdefined("Form.RegresarEnc")>    

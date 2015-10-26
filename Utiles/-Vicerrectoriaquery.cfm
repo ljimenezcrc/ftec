@@ -1,5 +1,6 @@
 ﻿
 <!--- Recibe conexion, form, name, desc, ecodigo y dato --->
+
 <cf_dump var="#dato#">
 <cfif isdefined("url.dato") and url.dato NEQ "">
 	<cfscript>

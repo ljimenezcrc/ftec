@@ -40,8 +40,6 @@
 </cfquery>
 
 
-
-
 <!---Formas de Pago--->
 <cfquery name="rsFPagos" datasource="ftec">
 	select FPid ,FPcodigo, FPdescripcion 
@@ -89,6 +87,7 @@
             ,a.SPacta  
             ,a.SPfechaTrans
             ,a.SPobservacion
+            ,a.SPobservacionR
             ,d.LPcodigo     
        		,d.LPdescripcion 
             ,e.SNnumero
@@ -165,13 +164,14 @@
 			  from CPresupuestoControl d
 			 where d.Ecodigo	= ofi.Ecodigo
 			   and d.CPPid		= <cfif LEN(TRIM(rsSQLPP.CPPid))>#rsSQLPP.CPPid#<cfelse>-1</cfif>
-			   and d.CPCanoMes	>= case cpc.CPCPcalculoControl when 1 then #LvarAnoMesAux# when 2 then 0					else 0		end
+			   and d.CPCanoMes	>= case cpc.CPCPcalculoControl when 1 then #LvarAnoMesAux# when 2 then 0 else 0 end
 			   and d.CPCanoMes	<= case cpc.CPCPcalculoControl when 1 then #LvarAnoMesAux# when 2 then #LvarAnoMesAux#	else 600001 end
 			   and d.CPcuenta	= cp.CPcuenta
 			   and d.Ocodigo	= ofi.Ocodigo
 			) Disponible	,
-			eoc.NAP	   
-						   
+			eoc.NAP
+			,a.DSPprecio 
+			,a.DSPcantidad	   
 		
 		from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> a
 			left outer join <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> b
@@ -216,9 +216,14 @@
 	.Azul {color: #0000FF}
 </style>
  
-<cfoutput>
+<!---  <cfif not isdefined("Form.AccionRechazo") or ( isdefined("Form.AccionRechazo") and len(trim(Form.AccionRechazo)) eq 0 )>
+ 	<cfset accion = ''>	
+ </cfif> --->
+ 
 
-<form  name="fEncabezado" method="post" action="SolicitudPago-Sql.cfm" >
+<cfoutput>
+<!--- action="SolicitudPago-Sql.cfm" --->
+<form name="fEncabezado" id="fEncabezado" method="post" action="SolicitudPago-Sql.cfm" >
 	<input type="hidden" name="modo" 		value="#modo#">
     <input type="hidden" name="SPid" 		value="<cfif isdefined('form.SPid')> #form.SPid# </cfif>">
 	<input type="hidden" name="TPid" 		value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.TPid#</cfif>">
@@ -227,15 +232,20 @@
     <input type="hidden" name="TramiteConsultas" 	value="<cfif isdefined('form.TramiteConsultas')> #form.TramiteConsultas# </cfif>">   
     <input type="hidden" name="VB" 			value="<cfif isdefined('form.VB')> #form.VB# </cfif>">   
     <input type="hidden" name="SNvencompras" value="<cfoutput>#LvarSNvencompras#</cfoutput>" id="SNvencompras"  > 
+
+	<!--- SPobservacionR --->
+	<input type="hidden" id="AccionRechazo" name="AccionRechazo" value="">
+	<input type="hidden" id="actionJustificacion" name="actionJustificacion" value="">
+
     	<cfif modo NEQ "ALTA" and isdefined('rsSolicitudProcesos')>
-    	<div class="row">
-			<div class="col-sm-2">
-				Consecutivo
+	    	<div class="row">
+				<div class="col-sm-2">
+					Consecutivo
+				</div>
+				<div class="col-sm-5">
+					<input disabled="disabled"name="SPid" type="text" id="SPid" maxlength="25"  style="text-align: right;" value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPid#</cfif>" >
+				</div>
 			</div>
-			<div class="col-sm-5">
-				<input disabled="disabled"name="SPid" type="text" id="SPid" maxlength="25"  style="text-align: right;" value="<cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPid#</cfif>" >
-			</div>
-		</div>
 		</cfif>
     	<!---Documento y Forma de Pago--->
 		<div class="row">
@@ -384,11 +394,26 @@
 			<div class="col-sm-10">
 				<textarea name="SPobservacion" style="width:90%"  id="SPobservacion"><cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPobservacion#</cfif></textarea>
 			</div>
-		</div>			
+		</div>	
+
+		<div class="row">
+			<div class="col-sm-2">
+				Observación	de Rechazo
+			</div>
+			<div class="col-sm-10">
+				<textarea name="SPobservacionR" style="width:90%"  id="SPobservacionR"><cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPobservacionR#</cfif></textarea>
+			</div>
+		</div>	
+
 		<div class="row">
 			<div class="col-sm-12">
  					<cfif isdefined('form.Tramite') and modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja" formName = "fEncabezado"  sufijo="Enc" include="Aplicar,Rechazar,Regresar" >
+							
+						<!--- <input type="button" id="btnRechazarSolicitud" name="btnAprobarSolicitud" 
+												onClick="RechazarSolicitud();"
+												style="margin-top:10px" value="reta" class="btn btn-danger"> --->
+
 					<cfelseif isdefined('form.TramiteConsultas') and modo EQ 'CAMBIO'>
 						<cf_botones modo="#modo#" exclude= "Nuevo,Alta,Limpiar,Cambio,Baja,Aplicar,Rechazar," formName = "fEncabezado"  sufijo="Enc" include="Regresar" >
 					<cfelseif modo EQ 'CAMBIO'>
@@ -397,13 +422,31 @@
 						<cf_botones modo="#modo#" incluyeForm="true" formName = "fEncabezado"  sufijo="Enc" >
 					</cfif>
 			</div>
-		</div>    
+		</div> 
+
+		<!--- <div class="row"> 
+		<!--- <a href="javascript:PopUpAbrir1();" tabindex="-1" id="boton"><i class="fa fa-search"></i></a>
+		<cf_Confirm URL="/rh/basura/prueba.cfm"  index="1" botones="Cerrar" ShowButtons="true" importLibs="false" width="70%" height = "70%" delimiters="%"/> --->
+
+			<!--- Solicita el motivo de rechazo de la nota de credito --->
+			<cf_Confirm width="50" index="4" botones="Rechazar,Cancelar" funciones="RechazarSolicitud_private" title="Rechazo de Solicitud">
+				<div id="dialogRechazarDocs" class="dialogTexto">
+					<div>
+						<label for="dlMotivoRechazo" class="etiqueta" style="display:block">Motivo del Rechazo</label>
+						<i class="fa fa-trash-o" style="float:right;cursor:pointer" onClick="limpiarMotivoRechazo(event);"></i>
+						<textarea name="dlMotivoRechazo" id="dlMotivoRechazo"
+						style="width:100%;height:75px;"></textarea>
+					</div>
+					<p>Al rechazar la solicitud, se cambia el estado a digitacion</p>
+					<p>
+						¿Desea Continuar?
+					</p>
+				</div>
+			</cf_Confirm>
+		</div>   --->
 </form>
 
-    
-
-
-<form  name="fDetalle" method="post" action="SolicitudPago-Sql.cfm">
+<form  name="fDetalle" id="fDetalle" method="post" action="SolicitudPago-Sql.cfm">
 
 	<cfif not isdefined('form.TramiteConsultas')>
 		<input type="hidden" name="modo" value="#modo#">
@@ -460,15 +503,38 @@
 		                                <input name="DSPdescripcion" type="text" id="DSPdescripcion" size="60" maxlength="255"  style="text-align: left;"  value="" />
 	                                </cfif>
 	                            </td>
+	                        </tr>
+
+	                        <tr>
+
+	                        	<td  class="fileLabel" align="right">Cantida</td>
+	                            <td>
+	                                <cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <cf_inputNumber name="DSPcantidad"  value="#rsDSolicitudProcesos.DSPcantidad#" enteros="15" decimales="2" negativos="false" comas="no" onChange="calculo(this.value, DSPprecio.value);">
+	                                <cfelse>
+		                                 <cf_inputNumber name="DSPcantidad"  value="0.00" enteros="15" decimales="2" negativos="false" comas="no" onChange="calculo(this.value, DSPprecio.value);">
+	                                </cfif>
+	                            </td>
+
+	                            <td  class="fileLabel" align="right">Precio</td>
+	                            <td>
+	                                <cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
+	                                    <cf_inputNumber name="DSPprecio"  value="#rsDSolicitudProcesos.DSPprecio#" enteros="15" decimales="2" negativos="false" comas="no" onChange="calculo(this.value, DSPcantidad.value);">
+	                                <cfelse>
+		                                 <cf_inputNumber name="DSPprecio"  value="0.00" enteros="15" decimales="2" negativos="false" comas="no" onChange="calculo(this.value, DSPcantidad.value);">
+	                                </cfif>
+	                            </td>
+
 	                            <td  class="fileLabel" align="right">Monto</td>
 	                            <td>
 	                                <cfif modo NEQ "ALTA" and isdefined('rsDSolicitudProcesos')>
-	                                    <cf_inputNumber name="DSPmonto"  value="#rsDSolicitudProcesos.DSPmonto#" enteros="15" decimales="2" negativos="false" comas="no">
+	                                    <cf_inputNumber name="DSPmonto" readonly="true"  value="#rsDSolicitudProcesos.DSPmonto#" enteros="15" decimales="2" negativos="false" comas="no">
 	                                <cfelse>
-		                                 <cf_inputNumber name="DSPmonto"  value="0.00" enteros="15" decimales="2" negativos="false" comas="no">
+		                                 <cf_inputNumber name="DSPmonto"  readonly="true" value="0.00" enteros="15" decimales="2" negativos="false" comas="no">
 	                                </cfif>
 	                            </td>
 	                        </tr>
+
 	                    </table>
 	         	</td>
 	        </tr>   
@@ -522,9 +588,6 @@
 
 </cfoutput>
 
-
-
-
 <cf_dbfunction name="to_char" args="a.DSPid" returnvariable="Lvar_DSPid">
 <cf_dbfunction name="concat" args="'<img src=/cfmx/rh/imagenes/edit_o.gif  onclick=editarlinea(' | #Lvar_DSPid# |') style=cursor:pointer />'" delimiters="|"  returnvariable="Lvar_editarregistro">
   
@@ -539,6 +602,8 @@
 			,a.DSPdocumento    
 			, <cf_dbfunction name="sPart"args="a.DSPdescripcion,1,60"> as DSPdescripcion
 			,a.DSPobjeto   
+			,a.DSPprecio
+			,a.DSPcantidad
 			,a.DSPmonto
 			,a.Vid as Vpkresp
 			,c.Vcodigo as Vcodigoresp
@@ -597,8 +662,6 @@
 				on a.SPid = b.SPid
 		where b.SPid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#form.SPid#">
 	</cfquery>	
-                
-
             
 	<form name="lista" method="post" action="SolicitudPago-Sql.cfm">
 		<input type="hidden" name="modo" value="#modo#">
@@ -608,10 +671,10 @@
 			<div class="col-sx-12">
 				<cfinvoke component="rh.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
 					<cfinvokeargument name="query" 				value="#rsLista#"/>
-					<cfinvokeargument name="desplegar" 			value="Cdescripcion, DSPdescripcion, Vdescripcionresp,Icodigo,OrdenCompra,DSPimpuesto, DSPmonto, DSPmontototal,editar"/>
-					<cfinvokeargument name="etiquetas" 			value="Concepto,     Descripción,    Proyecto,        Tipo Imp,OC,        Mto.Imp,     Monto,    Total,&nbsp;"/>
-					<cfinvokeargument name="formatos" 			value="V,V,V,V,V,M,M,M,G"/>
-					<cfinvokeargument name="align" 				value="left,left,left,left,right,right,right,right,right, right"/>
+					<cfinvokeargument name="desplegar" 			value="Cdescripcion, DSPdescripcion, Vcodigoresp,Icodigo,OrdenCompra,DSPcantidad , DSPprecio, DSPimpuesto, DSPmonto, DSPmontototal,editar"/>
+					<cfinvokeargument name="etiquetas" 			value="Concepto,     Descripción,    Proyecto,        Tipo Imp,OC,        Cantidad,        Precio,        Mto.Imp,     Monto,    Total,&nbsp;"/>
+					<cfinvokeargument name="formatos" 			value="V,V,V,V,V,M,M,M,M,M,G"/>
+					<cfinvokeargument name="align" 				value="left,left,left,left,right,right,right,right,right,right,right, right"/>
 					<cfinvokeargument name="ajustar" 			value="S"/>
 					<cfinvokeargument name="irA" 				value="SolicitudPago.cfm"/>
 					<cfinvokeargument name="showEmptyListMsg" 	value="true"/>
@@ -654,8 +717,52 @@
 	<cf_qforms form="fDetalle" objForm="objForm2">
 </cfif>
 
+<!--- SolicitudPago-Sql.cfm --->
 
+</cfoutput>
 <script type="text/javascript">
+
+	var popUpWin=0;
+	function funcRechazarEnc(e){
+		//document.fEncabezado.AccionRechazo.value = 'Paso'
+		document.fEncabezado.action = "";
+		popUpWindow("RechazoSolicitud.cfm" ,250,200,650,350);
+				
+		//PopUpAbrir4();
+	}
+	function popUpWindow(URLStr, left, top, width, height){
+	  if(popUpWin) {
+		if(!popUpWin.closed) popUpWin.close();
+	  }
+	  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
+	}
+<!---
+	function RechazarSolicitud(e){
+		PopUpAbrir4();
+	}
+
+	function RechazarSolicitud_private(){
+		var motivoRechazo = $('#dlMotivoRechazo').val().trim();
+		if(motivoRechazo){
+			//bloqueoPoPupSubmit('myModal4');
+			$('#fEncabezado #actionAprobarRechazar').val('Rechazar');
+			$('#fEncabezado #actionJustificacion').val(motivoRechazo);
+			$('#fEncabezado').submit();					
+		}else{
+			alert('Debe indicar un motivo de rechazo');
+		}
+	}
+	
+	//limpia el campo de motivo de rechazo.
+	function limpiarMotivoRechazo(e){
+		$('#myModal4 #dlMotivoRechazo').val('');
+	}
+
+	--->
+
+
+
+
 
 	function CalculaFechaVen(){ 
 		if(document.getElementById('SPfechafactura').value !=''){
@@ -824,5 +931,10 @@
 			document.fDetalle.submit();
 		}
 
+		function calculo(cantidad,precio){ 
+			// DSPmonto = (precio*cantidad); 
+			document.fDetalle.DSPmonto.value= (precio*cantidad); 
+		}
+
+
     </script>
-</cfoutput>

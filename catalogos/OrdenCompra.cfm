@@ -502,7 +502,7 @@
 				  where dcp.DOlinea = a.DOlinea			
 				 ),0)
 			<!---Menos Cantidad en Digitacion de SP---> 
-			- Coalesce((select Count(1)
+			- Coalesce((select sum(coalesce(dsp.DSPcantidad,1))
 				from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> dsp
 			  where dsp.DOlinea = a.DOlinea			
 			 ),0)
@@ -514,7 +514,7 @@
 			  where dcp.DOlinea = a.DOlinea			
 			 ),0) CantidadEnCP,
 			<!---Cantidad en Digitacion de SP---> 
-			Coalesce((select Count(1)
+			Coalesce((select sum(coalesce(dsp.DSPcantidad,1))
 				from <cf_dbdatabase table="FTDSolicitudProceso" datasource="ftec"> dsp
 			  where dsp.DOlinea = a.DOlinea			
 			 ),0) CantidadEnSP,

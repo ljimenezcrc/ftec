@@ -21,20 +21,17 @@
 <cfif not isdefined("Form.btnAplicar") and not isdefined("Form.btnEliminar") >
 	<cfset action = "/cfmx/ftec/catalogos/SolicitudPago.cfm">
 </cfif>
-<!--- 
-<cf_dump var="#form#" --->>
+ 
 
-
-
-<cfif isdefined("Form.btnAplicar") and isdefined("Form.chk")>
+<cfif (isdefined("Form.btnAplicar") or isdefined("Form.btnEliminar")) and isdefined("Form.chk")>
 
 	<cfquery name="rsSolicitudProcesos" datasource="#Session.DSN#">
 		select 	a.SPid,a.TPid, 0 as VB
 	    from <cf_dbdatabase table="FTSolicitudProceso " datasource="ftec"> a
 	    where a.SPid in (<cfqueryparam cfsqltype="cf_sql_numeric" value="#form.chk#" list="true">)
 	</cfquery> 
- 
-    <cfif isDefined('rsSolicitudProcesos') and rsSolicitudProcesos.RecordCount>
+
+    <cfif isdefined("Form.btnAplicar") and isDefined('rsSolicitudProcesos') and rsSolicitudProcesos.RecordCount>
 	    <cfloop query="rsSolicitudProcesos">
 		    <cfinvoke component="ftec.Componentes.FTTramites" method="AplicaTramite" >
 		        <cfinvokeargument name="SPid" 		value="#rsSolicitudProcesos.SPid#">
@@ -45,6 +42,13 @@
 				<cfinvokeargument name="Debug"		value="false">
 		    </cfinvoke>	
 	    </cfloop>
+
+    <cfelseif isdefined("Form.btnEliminar") and isDefined('rsSolicitudProcesos') and rsSolicitudProcesos.RecordCount>
+	    <cfloop query="rsSolicitudProcesos">
+		    <cfinvoke component="ftec.Componentes.FTSolicitudProceso" method="Baja" >
+		        <cfinvokeargument name="SPid" 		value="#rsSolicitudProcesos.SPid#">
+		    </cfinvoke>	
+	    </cfloop>	    
 
 	</cfif>
 

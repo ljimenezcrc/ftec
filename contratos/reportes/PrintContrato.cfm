@@ -7,13 +7,13 @@
 <cf_navegacion name="PCid">
 <!---Se valida que se envie el Id del contrato--->
 <cfif not isdefined('form.PCid')>
-	No se envio el ID del proceso de contrataci?n<cfabort>
+	No se envio el ID del proceso de contratación<cfabort>
 </cfif>
 <!---Se Obtiene la Informacion del contrato y sus secciones--->
 <cfquery name="rsContrato" datasource="ftec">
 	select c.STexto, c.Sid, a.PCIdentificacion, a.PCNombre,a.PCFechaN,a.PCEnumero,a.PCEPeriodo, a.PCFechaC, a.PCFechaA, a.PCFechaF,
 		   a.PCApellido1,PCApellido2,
-		   CASE PCTidentificacion WHEN 'F' THEN 'F?sica' WHEN 'J' THEN 'jur?dica' ELSE 'Otra' END AS TipoIdentificacion,
+		   CASE PCTidentificacion WHEN 'F' THEN 'Física' WHEN 'J' THEN 'jurídica' ELSE 'Otra' END AS TipoIdentificacion,
 		   CASE a.PCSexo WHEN 'M' then 'Masculino' WHEN 'F' THEN 'Femenino' ELSE 'Desconocido' END AS Sexo,
 		   CASE a.PCEstadoCivil WHEN 1 THEN 'Soltero'
 								WHEN 2 THEN 'Casado'
@@ -72,15 +72,15 @@
 <cfset Seccion = ''>
 
 
-<!--- 
 
-<cfdocument format="pdf" bookmark="yes">
-<cfdocumentsection name="1"> --->
+
+<!---<cfdocument format="pdf" bookmark="yes">
+<cfdocumentsection name="1">--->
 <!---Se recorren cada una de las secciones--->
 <cfloop query="rsContrato">
 	<!---Se Obtienen las variables de las secciones--->
     <cfquery name="rsVariable" datasource="ftec">
-        select top 3 a.Variable, a.TVariables, CASE WHEN d.DVtipoDato = 'L' then c.DVLdescripcion else b.PCDValor end as PCDValor
+        select a.Variable, a.TVariables, CASE WHEN d.DVtipoDato = 'L' then c.DVLdescripcion else b.PCDValor end as PCDValor
          from FTSeccionesD a
             LEFT OUTER JOIN FTPDContratacion b
                 on b.SDid = a.SDid
@@ -99,11 +99,11 @@
 			<cfswitch expression="#rsVariable.TVariables#"> 
 				<!---Dato Variable--->
 				<cfcase value="1"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' & rsVariable.PCDValor & '</font>')></cfcase> 
-				<!---Tipo de Identificaci?n--->
+				<!---Tipo de Identificación--->
 				<cfcase value="2">
 					<cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.TipoIdentificacion & '</font>')>
 				</cfcase> 
-				<!---Identificaci?n--->
+				<!---Identificación--->
 				<cfcase value="3"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.PCIdentificacion & '</font>')></cfcase>
 				<!---Nombre--->
 				<cfcase value="4"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.PCNombre & '</font>')></cfcase> 
@@ -115,13 +115,13 @@
 				<cfcase value="7"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.Sexo & '</font>')></cfcase> 
 				<!---Fecha Nacimiento--->
 				<cfcase value="8"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &DateFormat(rsContrato.PCFechaN,'DD/MM/YYYY') & '</font>')></cfcase> 
-				Numero Contrato
+				<!---Numero Contrato--->
 				<cfcase value="9"><cfset Seccion  = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.PCEnumero & '</font>')></cfcase> 
-				<!---Periodo Contrataci?n--->
+				<!---Periodo Contratación--->
 				<cfcase value="10"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.PCEPeriodo & '</font>')></cfcase> 
-				<!---Fecha de Creaci?n--->
+				<!---Fecha de Creación--->
 				<cfcase value="11"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &DateFormat(rsContrato.PCFechaC,'DD/MM/YYYY') & '</font>')></cfcase> 
-				<!---Fecha de Aprobaci?n--->
+				<!---Fecha de Aprobación--->
 				<cfcase value="12"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &DateFormat(rsContrato.PCFechaA,'DD/MM/YYYY') & '</font>')></cfcase> 
 				<!---Fecha de Firmas--->
 				<cfcase value="13"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &DateFormat(rsContrato.PCFechaF,'DD/MM/YYYY') & '</font>')></cfcase> 
@@ -155,20 +155,6 @@
 				<div class="col-xs-12" style="text-align: justify;"><cfoutput>#Replace(Seccion,'DOBLE CLICK PARA EDITAR','','ALL')#</cfoutput></div>
 			</div>
 
-<!--- 			<cfset Seccion = Replace(Seccion,'DOBLE CLICK PARA EDITAR','','ALL')>	    --->
-
 	</cfloop>
-<!--- 	</cfdocumentsection>		
-</cfdocument>
- --->
- 
-
-
-<!--- <cfset xx = Replace(Seccion,'&Oacute;','chr(162)','ALL')> --->
-
-<!--- 
-<cfreport template="PrintContratos.cfr" format="pdf">
-		<cfreportparam name="CuerpoContrato" value="zzz&aa">
-</cfreport>
-
- --->
+<!---	</cfdocumentsection>		
+</cfdocument>--->

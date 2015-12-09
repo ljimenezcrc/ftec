@@ -143,7 +143,7 @@
                 where a.Ecodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Ecodigo#">
                 
                 and e.Usucodigo = <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">
-                
+                and a.SPestado <> -1
             
             <!--- <cfqueryparam cfsqltype="cf_sql_integer" value="#Session.Usucodigo#">--->
             <cfif isdefined("Form.TipoProceso") and Len(Trim(Form.TipoProceso)) NEQ 0>

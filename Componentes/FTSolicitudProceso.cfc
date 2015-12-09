@@ -313,7 +313,11 @@
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
         <cfargument name="DOlinea" 			required="false" 	type="numeric" hint="Id del Detalle de la Orden de compra" default="-1">  
 		<cfargument name="CFid" 			required="false" 	type="numeric" hint="Id del centro funcional" default="-1">  
-		           
+        <cfargument name="PrecioU"          required="false"    type="numeric" hint="precio unidario" default="0.00">  
+        <cfargument name="Cantidad"         required="false"    type="numeric" hint="cantidad pendiente" default="0.00">  
+
+ 
+
         <cfquery name="rsImp" datasource="#Session.DSN#">
             select Icodigo, coalesce(Iporcentaje,0) as imp
             from Impuestos 
@@ -418,6 +422,9 @@
                                                         ,CFcuenta  
                                                         ,DSPmontototal 
 														,DOlinea
+                                                        ,DSPprecio 
+                                                        ,DSPcantidad 
+
 														 
                                                     )
                                                 values(	<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.SPid#"voidnull>
@@ -432,6 +439,11 @@
                                                         ,<cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#LvarCFcuenta#"	voidnull>
                                                         ,((#Arguments.DSPmonto# * #rsImp.imp#) / 100 ) + #Arguments.DSPmonto#
 														,<cfqueryparam cfsqltype="cf_sql_numeric" 			value="#Arguments.DOlinea#" null="#Arguments.DOlinea EQ -1#">
+                                                        ,<cfqueryparam cfsqltype="cf_sql_money"             value="#Arguments.PrecioU#" null="#Arguments.PrecioU EQ 0.00#">
+                                                        ,<cfqueryparam cfsqltype="cf_sql_float"             value="#Arguments.Cantidad#" null="#Arguments.Cantidad EQ 0.00#">
+
+     
+
                                                         )
                         <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
                     </cfquery>
@@ -486,6 +498,8 @@
         <cfargument name="Icodigo"			required="true" 	type="string" >
         <cfargument name="DSPdescripcion"	required="true" 	type="string" >
         <cfargument name="DSPmonto"			required="false" 	type="numeric" default="0.00" >
+        <cfargument name="DSPcantidad"      required="false"    type="numeric" default="0.00" >
+        <cfargument name="DSPprecio"        required="false"    type="numeric" default="0.00" >
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">  
                 
         
@@ -559,8 +573,10 @@
                                                         ,Cid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 	value="#Arguments.Cid#" voidnull>
                                                         ,Icodigo = <cf_jdbcquery_param  cfsqltype="cf_sql_varchar" 	value="#Arguments.Icodigo#" voidnull>
                                                         ,DSPdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_varchar"	value="#Arguments.DSPdescripcion#" 	voidnull>                
-                                                        ,DSPmonto = <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.DSPmonto#" 	voidnull>
-                                                        ,DSPimpuesto = ((#Arguments.DSPmonto# * #rsImp.imp#) / 100 )
+                                                        ,DSPprecio  = <cf_jdbcquery_param cfsqltype="cf_sql_money"        value="#Arguments.DSPprecio#"    voidnull>
+                                                        ,DSPcantidad = <cf_jdbcquery_param cfsqltype="cf_sql_float"        value="#Arguments.DSPcantidad#"    voidnull>
+                                                        ,DSPmonto = <cf_jdbcquery_param cfsqltype="cf_sql_money"		value="#Arguments.DSPprecio * Arguments.DSPcantidad#" 	voidnull>
+                                                        ,DSPimpuesto = (((#Arguments.DSPprecio * Arguments.DSPcantidad#) * #rsImp.imp#) / 100 )
                                                         ,Ecodigo  = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#Arguments.Ecodigo#"voidnull>
                                                         ,Ccuenta   = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#rsCCuenta.Ccuenta#"voidnull>
                                                         ,CFcuenta  = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" 		value="#rsCFuenta.CFcuenta#"voidnull>

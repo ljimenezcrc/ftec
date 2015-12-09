@@ -131,11 +131,11 @@
                     <cfinvokeargument name="formatos" value="I,V,S,S,S,D,S,M"/>
                     <cfinvokeargument name="align" value="center,left,left,left,left,center, center,right"/>
                     <cfinvokeargument name="ajustar" value="S"/>
-                    <cfinvokeargument name="botones" value="Nuevo,Aplicar"/>
+                    <cfinvokeargument name="botones" value="Nuevo,Eliminar,Aplicar"/>
                     <cfinvokeargument name="irA" value="/cfmx/ftec/catalogos/Solicitudes-listaSql.cfm"/>
                     <cfinvokeargument name="keys" value="SPid"/>
                     <cfinvokeargument name="MaxRows" value="20"/>
-                     <cfinvokeargument name="formName" value="listaSolicitudes"/> <!------>
+                    <cfinvokeargument name="formName" value="listaSolicitudes"/> <!------>
                     <cfinvokeargument name="debug" value="N"/>
                     <cfinvokeargument name="navegacion" value="#navegacion#"/>
                     <cfinvokeargument name="incluyeForm" value="true"/>	

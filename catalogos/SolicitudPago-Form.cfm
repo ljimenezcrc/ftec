@@ -1,4 +1,22 @@
-﻿<cf_dbfunction name="op_concat" returnvariable="_cat">
+﻿<style type="text/css">
+	fieldset {
+	  margin-bottom: 1em;
+	  border: 1px solid #888;
+	  border-right: 1px solid #666;
+	  border-bottom: 1px solid #666;
+	}
+
+	legend {
+		font-family:Courier; color:white; font-size: 20px;
+	    border: 1px solid #888;
+	  	border-right: 1px solid #666;
+	  	border-bottom: 1px solid #666;
+	  	padding: .3 em;
+	  	background-color: #180061;
+	}
+</style>
+
+<cf_dbfunction name="op_concat" returnvariable="_cat">
 <!--- Valores iniciales de la pantalla  --->
 <!---Consulta de impuestos--->
 

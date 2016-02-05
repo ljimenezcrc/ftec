@@ -51,8 +51,89 @@
 				}
             
         </script>
-        <form name="fmContratacion" class="form-inline"  role="form" action="FiniquitoContrato.cfm" method="post">
+
+                 
+        <cfset navegacion = "">
+                    
+        <cfif isdefined("form.NombreF") and len(trim(form.NombreF))NEQ 0>
+            <cfset navegacion = navegacion  &  "NombreF="&form.NombreF>           
+        </cfif>
+                    
+        <cfif isdefined("form.IdentificacionF") and len(trim(form.IdentificacionF))NEQ 0>
+            <cfif len(trim(navegacion)) NEQ 0>  
+                    <cfset navegacion = navegacion & iif(len(trim(navegacion)),DE("&"),DE("?")) &  "IdentificacionF="&form.IdentificacionF>
+                <cfelse>    
+                    <cfset navegacion = navegacion & "IdentificacionF="&form.IdentificacionF>
+            </cfif> 
+        </cfif>
+
+        <cfif isdefined("form.ContratoF") and len(trim(form.ContratoF))NEQ 0>
+            <cfif len(trim(navegacion)) NEQ 0>  
+                    <cfset navegacion = navegacion & iif(len(trim(navegacion)),DE("&"),DE("?")) &  "ContratoF="&form.ContratoF>
+                <cfelse>    
+                    <cfset navegacion = navegacion & "ContratoF="&form.ContratoF>
+            </cfif> 
+        </cfif>
+
+        <cfif isdefined("form.EstadoF") and len(trim(form.EstadoF))NEQ 0 and form.EstadoF NEQ '-1'>
+            <cfif len(trim(navegacion)) NEQ 0>  
+                    <cfset navegacion = navegacion & iif(len(trim(navegacion)),DE("&"),DE("?")) &  "EstadoF="&form.EstadoF>
+                <cfelse>    
+                    <cfset navegacion = navegacion & "ContratoF="&form.EstadoF>
+            </cfif> 
+        </cfif>
+
+
+        <form name="fmContratacion" class="form-inline"  role="form" action="ConsultaContratos.cfm" method="post">
             <cf_dbfunction name="op_concat" returnvariable="_cat">
+
+            <table width="100%">
+            <tr><strong>
+                <td>Nombre</td>
+                <td>Identificación</td>
+                <td>Contraro</td>
+                <!--- <td>Estado</td> --->
+                </strong>
+            </tr>
+            <tr>
+                <td>
+                    <input name="NombreF" type="text" size="40" maxlength="40" tabindex="1"
+                        value="<cfif isdefined("form.NombreF") and len(trim(form.NombreF))NEQ 0><cfoutput>#form.NombreF#</cfoutput></cfif>"/>
+                </td>
+                <td>
+                    <input name="IdentificacionF" type="text"  size="20" maxlength="20" tabindex="1"
+                        value="<cfif isdefined("form.IdentificacionF") and len(trim(form.IdentificacionF))NEQ 0><cfoutput>#form.IdentificacionF#</cfoutput></cfif>"/>
+                </td>
+                <td>
+                    <input name="ContratoF" type="text"  size="60" maxlength="60" tabindex="1"
+                        value="<cfif isdefined("form.ContratoF") and len(trim(form.ContratoF))NEQ 0><cfoutput>#form.ContratoF#</cfoutput></cfif>"/>
+                </td>
+                <td>
+                    <select name="EstadoF">
+                        <option value="-1"<cfif isdefined("form.EstadoF") and trim(form.EstadoF) eq '-1'>selected</cfif>>Todos</option>
+                        <option value="A" <cfif isdefined("form.EstadoF") and trim(form.EstadoF) eq 'A'>selected</cfif>>Aprobado</option>
+                        <option value="F" <cfif isdefined("form.EstadoF") and trim(form.EstadoF) eq 'F'>selected</cfif>>Finiquito</option>
+                    </select>
+                </td>
+
+
+
+<!---                 <td>
+                    <input name="EstadoF" type="text"  size="10" maxlength="10" tabindex="1"
+                        value="<cfif isdefined("form.EstadoF") and len(trim(form.EstadoF))NEQ 0><cfoutput>#form.EstadoF#</cfoutput></cfif>"/>
+                </td> --->
+
+                <td>
+                    <cfinvoke component="sif.Componentes.Translate"
+                        method="Translate"
+                        Key="BTN_Filtro"
+                        Default="Filtro"
+                        returnvariable="BTN_Filtro"/>
+
+                    <input name="BTNfiltro" type="submit" value="<cfoutput>#BTN_Filtro#</cfoutput>" tabindex="1">
+                </td>
+            </tr>
+        </table>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -83,13 +164,31 @@
                             inner join FTContratos b
                                 on b.Cid = a.Cid
                         where a.PCEstado in ('A','F')
+
+                        <cfif isdefined("form.NombreF") and len(trim(form.NombreF))NEQ 0>
+                            and ltrim(rtrim(upper(a.PCApellido1 #_cat# ' ' #_cat#  a.PCApellido2  #_cat# ' ' #_cat# a.PCNombre))) like '%#trim(ucase(form.NombreF))#%'
+                        </cfif>
+
+                        <cfif isdefined("form.IdentificacionF") and len(trim(form.IdentificacionF))NEQ 0>
+                            and ltrim(rtrim(upper(a.PCidentificacion))) like '%#trim(ucase(form.IdentificacionF))#%'
+                        </cfif>
+                        <cfif isdefined("form.ContratoF") and len(trim(form.ContratoF))NEQ 0>
+                            and ltrim(rtrim(upper(b.Cdescripcion))) like '%#trim(ucase(form.ContratoF))#%'
+                        </cfif>
+                        <cfif isdefined("form.EstadoF") and len(trim(form.EstadoF))NEQ 0 and form.EstadoF NEQ '-1'>
+                            and ltrim(rtrim(upper(a.PCEstado))) like '#form.EstadoF#'
+                        </cfif>
+
+                        order by a.PCApellido1 #_cat# ' ' #_cat#  a.PCApellido2  #_cat# ' ' #_cat# a.PCNombre
                     </cfquery>
+
+<!--- EstadoF   ---> 
 
 
                     <cfinvoke component="commons.Componentes.pListas" method="pListaQuery" returnvariable="pListaRet">
                         <cfinvokeargument name="query" value="#rsLista#"/>
-                        <cfinvokeargument name="desplegar" value=" Cdescripcion,PCIdentificacion, Nombre, PCEstado,VerStr,ComStr"/>
-                        <cfinvokeargument name="etiquetas" value="Contrato, Identificación, Nombre, Estado, Revisar,Comentario"/>
+                        <cfinvokeargument name="desplegar" value=" Nombre, PCIdentificacion, Cdescripcion,  PCEstado,VerStr,ComStr"/>
+                        <cfinvokeargument name="etiquetas" value="Nombre,Identificación, Contrato,  Estado, Revisar,Comentario"/>
                         <cfinvokeargument name="formatos" value=" S, S, S, S,I,I"/>
                         <cfinvokeargument name="align" value="left, left, left,  left, center, center"/>
                         <cfinvokeargument name="ajustar" value="true"/>
@@ -97,7 +196,7 @@
                         <cfinvokeargument name="incluyeForm" value="false"/>
                         <cfinvokeargument name="formName" 	value="fmContratacion"/>
                         <cfinvokeargument name="showLink"   value="false"/>
-                            
+                        <cfinvokeargument name="navegacion" value="#navegacion#"/>
                     </cfinvoke>
                   
             	</div>

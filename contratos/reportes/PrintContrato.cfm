@@ -69,7 +69,7 @@
 
 
 
-<cfset Seccion = ''>
+
 
 
 
@@ -94,7 +94,7 @@
     </cfquery>
 
         
-		<cfset Seccion = Seccion & rsContrato.STexto>
+			<cfset Seccion = rsContrato.STexto>
 		<cfloop query="rsVariable">
 			<cfswitch expression="#rsVariable.TVariables#"> 
 				<!---Dato Variable--->

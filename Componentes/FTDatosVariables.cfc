@@ -193,6 +193,7 @@
 						select rtrim(DVLcodigo) DVLcodigo, rtrim(DVLdescripcion) DVLdescripcion 
                         	from FTListaValores 
                             	where DVid = #DatoVariable.DVid#
+                            order by rtrim(DVLdescripcion)
 					</cfquery>
 					<cfif Arguments.readonly>
                     	<cfloop query="ValorDatoVariable">

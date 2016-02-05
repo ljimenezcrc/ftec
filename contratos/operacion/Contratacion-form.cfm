@@ -237,10 +237,11 @@
 	<cfif isdefined('form.btnBuscarOferente') >  	
         <button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
     </cfif>
+ 
    <cfif LEN(TRIM(form.Cid))>
 		<cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
 	        <button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
-	    	<button type="button"  name="btnGContrato"  class="btn btn-success" 
+	    	<button type="button"  name="btnGContratoPre"  class="btn btn-success" 
 				onclick="window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid=<cfoutput>#rsForm.PCid#</cfoutput>','mywindow')">Contrato Preliminar</button>
         <cfif not isdefined('form.PCestado')>  	    
             <button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>

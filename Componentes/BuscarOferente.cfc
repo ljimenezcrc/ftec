@@ -52,6 +52,73 @@
             </cfquery>
 		<cfreturn rs>
 	</cffunction>
+
+
+    <!---Genera la consulta con datos en blanco para poder hacer el ingreso.--->
+    <cffunction name="NDF" access="public" returntype="query">
+        <cfargument name="Identificacion" type="string" required="yes">
+ 
+            <cfquery name="rs" datasource="#session.dsn#">
+                select
+                    <!---DEidentificacion as PCIdentificacion
+                    ,'F' as PCTIdentificacion
+                    ,DEsexo as PCSexo
+                    ,DEnombre as PCNombre
+                    ,DEapellido1 as PCApellido1
+                    ,DEapellido2 as PCApellido2
+                    ,DEcivil as PCEstadoCivil <!---1=soltero, 2=casado, 3=divorciado, 4=union libre, 5=separado--->
+
+
+                    
+                    <cfif isdefined('form.Cid') and len(form.Cid)>
+                         #form.Cid# as Cid
+                    <cfelse>
+                         -1 as Cid
+                    </cfif>
+                    <cfif isdefined('form.PCid') and len(form.PCid)>
+                        ,#form.PCid# as PCid
+                    <cfelse>
+                        , -1 as PCid
+                    </cfif>
+                    <cfif isdefined('form.Vid') and len(form.Vid)>
+                        ,#form.Vid# as Vid
+                    <cfelse>
+                        , -1 as Vid
+                    </cfif>
+                    <cfif isdefined('form.TCid') and len(form.TCid)>
+                         ,#form.TCid# as TCid
+                    <cfelse>
+                         ,-1 as TCid
+                    </cfif>
+
+                    <cfif isdefined('form.Cdescripcion') and len(form.Cdescripcion)>
+                         ,'#form.Cdescripcion#' as Cdescripcion
+                    <cfelse>
+                         ,NULL as Cdescripcion
+                    </cfif>
+                    --->
+
+                    <cfif isdefined('form.PCTidentificacion') and len(form.PCTidentificacion)>
+                         '#form.PCTidentificacion#' as PCTidentificacion
+                    <cfelse>
+                         NULL as PCTidentificacion
+                    </cfif>
+                     
+                    <cfif isdefined('form.PCIdentificacion') and len(form.PCIdentificacion)>
+                       ,'#form.PCIdentificacion#' as PCIdentificacion 
+                    <cfelse>
+                        ,null as PCIdentificacion 
+                    </cfif> 
+                    ,null as PCSexo
+                    ,null as PCEstadoCivil
+                    ,null as PCnombre
+                    ,null as PCapellido1
+                    ,null as PCapellido2
+                from dual
+            </cfquery>
+        <cfreturn rs>
+    </cffunction>
+
 </cfcomponent>
 
 

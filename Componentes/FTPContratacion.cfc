@@ -90,6 +90,8 @@ PCid				<!--- Id de la  Tabla --->
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
 		<cfargument name="Conexion" 			required="false" 	type="string" 	default="ftec">  
+
+ 
         
         <cftransaction>   
             <cfif isdefined('Arguments.PCid')>

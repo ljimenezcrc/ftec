@@ -46,27 +46,45 @@
             <cfinvokeargument name="Identificacion"	value="#form.PCIdentificacion#">
         </cfinvoke>
     </cfif>
-    
+
     <cfif not rsOferente.RecordCount >
         <cfinvoke component="ftec.Componentes.BuscarOferente" method="Padron" returnvariable="rsOferente">
-            <cfinvokeargument name="Identificacion"	value="#form.PCIdentificacion#">
+            <cfinvokeargument name="Identificacion" value="#form.PCIdentificacion#">
         </cfinvoke>
     </cfif>
 
+    <cfif not rsOferente.RecordCount >
+        <cfinvoke component="ftec.Componentes.BuscarOferente" method="NDF" returnvariable="rsOferente">
+            <cfinvokeargument name="Identificacion" value="#form.PCIdentificacion#">
+        </cfinvoke>
+    </cfif>
+
+    <!--- <cf_dump var="#rsOferente#"> --->
+
+
 	<cfif isdefined('rsOferente') and rsOferente.RecordCount>
         <cfquery name="rsForm"  datasource="ftec">
-            select #form.Cid# as Cid
+            select
+                <cfif isdefined('form.Cid') and len(form.Cid) NEQ 0>
+                     #form.Cid# as Cid
+                <cfelse>
+                     null as Cid
+                </cfif>
                 <cfif isdefined('form.PCid') and len(#form.PCid#)>
                     ,#form.PCid# as PCid
                 <cfelse>
-                    , NULL as PCid
-                </cfif>
+                    , null as PCid
+                </cfif>--->
                 <cfif isdefined('form.Vid') and len(#form.Vid#)>
                     ,#form.Vid# as Vid
                 <cfelse>
-                    , NULL as Vid
+                    , -1 as Vid
                 </cfif>
-                ,#form.TCid# as TCid
+                <cfif isdefined('form.TCid') and len(form.TCid)>
+                     ,#form.TCid# as TCid
+                <cfelse>
+                     , -1 as TCid
+                </cfif>
                 ,'#form.Cdescripcion#' as Cdescripcion
                 ,'#rsOferente.PCTidentificacion#' as PCTidentificacion
                 ,'#rsOferente.PCIdentificacion#' as PCIdentificacion   
@@ -77,8 +95,7 @@
                 ,'#rsOferente.PCapellido2#' as PCapellido2
                 <!--- , getdate() as PCFechaN--->
             from dual
-        </cfquery>    
-
+        </cfquery>
     </cfif>    
 </cfif>
 
@@ -112,6 +129,8 @@
         <cfinvokeargument name="form" value="#form#">
     </cfinvoke>
     <cfset form.modo = 'CAMBIO'>
+    <cfset form.PCestado = 'Proceso'>
+
     
 <!---Elimina el contrato--->
 <cfelseif isdefined('form.BtnEliminar')>

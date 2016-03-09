@@ -39,7 +39,7 @@
 </cfquery>
 
 	<cfquery name="DVL" datasource="#session.dsn#">
-		select DVid idDVL,rtrim(DVLcodigo) codigoDVL,DVLdescripcion descripcionDVL
+		select DVid idDVL,rtrim(DVLcodigo) codigoDVL, DVLdescripcion descripcionDVL, coalesce(DVLorden,0) as ordenDVL
 		from <cf_dbdatabase table="FTListaValores" datasource="ftec">
   		where DVid = #form.DVid#
 	</cfquery>
@@ -47,11 +47,12 @@
     
  	<cfif isdefined('form.DVLcodigo') and len(trim(form.DVLcodigo)) GT 0>
 		<cfquery name="DVLeligido" datasource="#session.dsn#">
-			select DVid,rtrim(DVLcodigo) DVLcodigo ,DVLdescripcion
+			select DVid,rtrim(DVLcodigo) DVLcodigo ,DVLdescripcion, coalesce(DVLorden,0) as DVLorden
 			from <cf_dbdatabase table="FTListaValores" datasource="ftec">
 			where DVid = #form.DVid#
 			and DVLcodigo = '#form.DVLcodigo#'
 		</cfquery>
+
 		<cfset modoDet = 'CAMBIO'>
 	</cfif>
 	<cfset MostrarValoreLista = 'YES'>
@@ -96,18 +97,19 @@
 	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="TR_ValorLista">
 		<tr><td>Codigo:		</td><td><input name="DVLcodigo" 	  type="text" value="<cfoutput>#DVLeligido.DVLcodigo#</cfoutput>" 	 size="30" maxlength="10"> </td></tr>
 		<tr><td>Descripción:</td><td><input name="DVLdescripcion" type="text" value="<cfoutput>#DVLeligido.DVLdescripcion#</cfoutput>" size="30" maxlength="100"></td></tr>
+		<tr><td>Orden:</td><td><input name="DVLorden" type="text" value="<cfoutput>#DVLeligido.DVLorden#</cfoutput>" size="10" maxlength="10"></td></tr>
 		<tr><td colspan="2">
 		<cfif modo EQ 'CAMBIO'>
 			
 			<cfinvoke component="sif.Componentes.pListas" method="pListaQuery" >
 				<cfinvokeargument name="query" 				value="#DVL#"/>
-				<cfinvokeargument name="desplegar" 			value="codigoDVL,descripcionDVL"/>
-				<cfinvokeargument name="etiquetas" 			value="Codigo,Valor"/>
-				<cfinvokeargument name="formatos" 			value="S,S"/>
-				<cfinvokeargument name="align" 				value="left,left"/>
+				<cfinvokeargument name="desplegar" 			value="codigoDVL,descripcionDVL,ordenDVL"/>
+				<cfinvokeargument name="etiquetas" 			value="Codigo,Valor,Orden"/>
+				<cfinvokeargument name="formatos" 			value="S,S,I"/>
+				<cfinvokeargument name="align" 				value="left,left,left"/>
 				<cfinvokeargument name="checkboxes" 		value="N"/>
 				<cfinvokeargument name="keys" 				value="idDVL,codigoDVL"/>
-				<cfinvokeargument name="MaxRows" 			value="10"/>
+				<cfinvokeargument name="MaxRows" 			value="25"/>
 				<cfinvokeargument name="showEmptyListMsg" 	value="true"/>
 				<cfinvokeargument name="PageIndex" 			value="2"/>
 				<cfinvokeargument name="lineaAzul" 		    value="true"/>
@@ -116,6 +118,7 @@
 				<cfinvokeargument name="ira" 				value="DatosVariables.cfm"/>
 				<cfinvokeargument name="funcion" 			value="changeFormActionforDetalles"/>
 				<cfinvokeargument name="fparams" 			value="idDVL,codigoDVL"/>
+				<cfinvokeargument name="PageIndex" 			value="2"/>	
 			</cfinvoke>	
 		</cfif>	
 		</td></tr>

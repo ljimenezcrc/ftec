@@ -4,6 +4,7 @@
 <cfparam name="MostrarValoreLista" 		 default="FALSE">
 <cfparam name="DVLeligido.DVLcodigo" 	 default="">
 <cfparam name="DVLeligido.DVLdescripcion"default="">
+<cfparam name="DVLeligido.DVLorden"		 default="">
 <cfparam name="DV.DVetiqueta" 	 		 default="">
 <cfparam name="DV.DVtipoDato" 	 		 default="">
 <cfparam name="DV.DVlongitud" 	 		 default="">

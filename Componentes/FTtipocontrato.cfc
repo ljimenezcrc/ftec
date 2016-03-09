@@ -5,9 +5,10 @@
 	<cffunction access="public" name="Get" returntype="query">
     	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
         <cfargument name="TCcodigo" 		required="true" 	type="string">
+        <cfargument name="TCnoaplicaconsec" required="false"     type="numeric" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">        
         <cfquery name="rsGetTipo" datasource="#Session.DSN#">
-			select TCid, TCcodigo, TCdescripcion, Ecodigo
+			select TCid, TCcodigo, TCdescripcion, Ecodigo, TCnoaplicaconsec
 				from <cf_dbdatabase table="FTtipocontrato" datasource="ftec">
 				where TCcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_char" value="#Arguments.TCcodigo#" voidnull>
 		</cfquery>
@@ -27,16 +28,19 @@
     	<cfargument name="Ecodigo" 			required="false" 	type="numeric" default="#Session.Ecodigo#">
         <cfargument name="TCcodigo" 		required="true" 	type="string">
     	<cfargument name="TCdescripcion" 	required="true" 	type="string">
+        <cfargument name="TCnoaplicaconsec" required="true"     type="numeric" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">     
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                 insert into <cf_dbdatabase table="FTtipocontrato" datasource="ftec">(	  Ecodigo
                                                 , TCcodigo
                                                 , TCdescripcion
+                                                , TCnoaplicaconsec
                                                 )
                                         values(	  <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#Arguments.Ecodigo#">
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TCcodigo#" 		voidnull>
                                                 , <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TCdescripcion#" 	voidnull>
+                                                , <cfqueryparam cfsqltype="cf_sql_numeric"          value="#Arguments.TCnoaplicaconsec#">
                                                 )
                 <cf_dbidentity1 datasource="#session.DSN#" verificar_transaccion="false">
             </cfquery>
@@ -47,7 +51,7 @@
     
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select TCid, TCcodigo, TCdescripcion, Ecodigo
+                    select TCid, TCcodigo, TCdescripcion, Ecodigo, TCnoaplicaconsec
 					from <cf_dbdatabase table="FTtipocontrato" datasource="ftec">
                     where TCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Lvar_Iid#">
                 </cfquery>
@@ -85,18 +89,20 @@
         <cfargument name="TCid" 			required="true" 	type="numeric">
         <cfargument name="TCcodigo" 		required="true" 	type="string">
     	<cfargument name="TCdescripcion" 	required="true" 	type="string">
+        <cfargument name="TCnoaplicaconsec" required="true"     type="numeric" default="0">
         <cfargument name="Debug" 			required="false" 	type="boolean" 	default="false">   
         <cftransaction>   
             <cfquery name="rsInsert" datasource="#Session.DSN#" result="res">
                 update <cf_dbdatabase table="FTtipocontrato" datasource="ftec"> set
 	                     TCcodigo		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TCcodigo#" 		voidnull>
                         , TCdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_char" 		value="#Arguments.TCdescripcion#" 	voidnull>
+                        , TCnoaplicaconsec = <cfqueryparam cfsqltype="cf_sql_numeric"       value="#Arguments.TCnoaplicaconsec#">
                 where TCid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"	value="#Arguments.TCid#" voidnull>
             </cfquery>
     
             <cfif Arguments.Debug>
                 <cfquery name="rsDebug" datasource="#Session.DSN#">
-                    select TCid, TCcodigo, TCdescripcion, Ecodigo
+                    select TCid, TCcodigo, TCdescripcion, Ecodigo, TCnoaplicaconsec
 					from <cf_dbdatabase table="FTtipocontrato" datasource="ftec">
                     where TCid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.TCid#">
                 </cfquery>

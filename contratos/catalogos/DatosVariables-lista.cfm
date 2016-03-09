@@ -73,4 +73,5 @@
 		<cfinvokeargument name="mostrar_filtro" 	value="true"/>
 		<cfinvokeargument name="rsDVtipoDato" 	    value="#rsDVtipoDato#"/>
 		<cfinvokeargument name="rsDVobligatorio" 	value="#rsDVobligatorio#"/>	
+		<cfinvokeargument name="PageIndex" 	value="1"/>	
 </cfinvoke>

@@ -35,6 +35,7 @@
 		<cfinvokeargument name="DVid" 			value="#form.DVid#">
 		<cfinvokeargument name="DVLcodigo" 		value="#form.DVLcodigo#">
 		<cfinvokeargument name="DVLdescripcion" value="#form.DVLdescripcion#">
+		<cfinvokeargument name="DVLorden" 		value="#form.DVLorden#">
 	</cfinvoke>
 	<cfset Param = "DVid=#form.DVid#">
 <cfelseif isdefined('BAJADET')>
@@ -49,6 +50,7 @@
 		<cfinvokeargument name="DVid" 			value="#form.DVid#">
 		<cfinvokeargument name="DVLcodigo" 		value="#form.DVLcodigo#">
 		<cfinvokeargument name="DVLdescripcion" value="#form.DVLdescripcion#">
+		<cfinvokeargument name="DVLorden" 		value="#form.DVLorden#">
 	</cfinvoke>
 	<cfset Param = "DVid=#form.DVid#">
 </cfif>

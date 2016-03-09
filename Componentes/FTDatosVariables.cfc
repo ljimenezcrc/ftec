@@ -69,22 +69,28 @@
 			where DVid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.DVid#">
 		</cfquery>
 	</cffunction>
-	<!---==================AGREGAR UN DALOR DE LA LISTA DE DATOS VARIABLES==================--->
+	<!---==================AGREGAR UN VALOR DE LA LISTA DE DATOS VARIABLES==================--->
 	<cffunction name="ALTALISTA"  access="public" returntype="string" hint="AGREGAR UN DALOR DE LA LISTA DE DATOS VARIABLES">
 		<cfargument name="Conexion" 	  type="string"  required="false" default="ftec">
 		<cfargument name="BMUsucodigo"    type="numeric" required="false" default="#Session.Usucodigo#">
 		<cfargument name="DVid" 		  type="numeric" required="true">
 		<cfargument name="DVLcodigo" 	  type="string"  required="true">
 		<cfargument name="DVLdescripcion" type="string"  required="true">
+		<cfargument name="DVLorden" 	  type="numeric" required="false">
 		
 		<cfquery datasource="#Arguments.Conexion#">	
 			insert into FTListaValores
-             (DVid,DVLcodigo,DVLdescripcion,BMUsucodigo)
+             (DVid,DVLcodigo,DVLdescripcion,BMUsucodigo,DVLorden)
 			values(
 				<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.DVid#">,
 				<cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.DVLcodigo)#">,
 				<cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.DVLdescripcion)#">,
-				#Arguments.BMUsucodigo#
+				#Arguments.BMUsucodigo#,
+				<cfif isDefined('Arguments.DVLorden') and Arguments.DVLorden GT 0>
+					<cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.DVLorden#">	
+				<cfelse>
+					null
+				</cfif>
 				)
 		</cfquery>
 	</cffunction>
@@ -106,10 +112,16 @@
 		<cfargument name="DVid" 		  type="numeric" required="true">
 		<cfargument name="DVLcodigo" 	  type="string"  required="true">
 		<cfargument name="DVLdescripcion" type="string"  required="true">
+		<cfargument name="DVLorden" 	  type="numeric" required="false">
 		
 		<cfquery datasource="#Arguments.Conexion#">	
 			update FTListaValores
 			set DVLdescripcion = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#TRIM(Arguments.DVLdescripcion)#">
+			<cfif isDefined('Arguments.DVLorden') and Arguments.DVLorden GT 0>
+				,DVLorden = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.DVLorden#">	
+			<cfelse>
+				,DVLorden = null
+			</cfif>
 			where DVid       = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.DVid#">
 			   and DVLcodigo = <cf_jdbcquery_param cfsqltype="cf_sql_varchar" value="#Arguments.DVLcodigo#">
 		</cfquery>
@@ -193,7 +205,7 @@
 						select rtrim(DVLcodigo) DVLcodigo, rtrim(DVLdescripcion) DVLdescripcion 
                         	from FTListaValores 
                             	where DVid = #DatoVariable.DVid#
-                            order by rtrim(DVLdescripcion)
+                            order by coalesce(DVLorden,0),rtrim(DVLdescripcion)
 					</cfquery>
 					<cfif Arguments.readonly>
                     	<cfloop query="ValorDatoVariable">

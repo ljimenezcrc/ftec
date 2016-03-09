@@ -41,6 +41,14 @@
 			</td>
 		</tr>
 
+		<tr valign="baseline" bgcolor="##FFFFFF"> 
+			<td> 
+				<input name="TCnoaplicaconsec"  id="TCnoaplicaconsec" type="checkbox" tabindex="1" 	value="0" 
+				<cfif modo neq 'ALTA' and rsTipos.TCnoaplicaconsec eq 1 >checked="checked"</cfif> >
+			</td>
+			<td align="right" nowrap><cf_translate key="LB_noaplica">No aplica Consecutivo</cf_translate></td>
+		</tr>
+
 		<tr valign="baseline"> 
 			<td colspan="5" align="center" nowrap>
 				<cfset tabindex=5>

@@ -11,9 +11,13 @@
         <cftransaction>
             <cfif #Arguments.Aprueba# EQ 1> 
                 <cfquery name="rsNex" datasource="#session.dsn#">
-                    select coalesce(max(PCEnumero),0) + 1 Numero
-                    from  <cf_dbdatabase table="FTPContratacion" datasource="ftec">
-                    where PCEnumero > 0
+                    select coalesce(max(a.PCEnumero),0) + 1 Numero
+                    from  <cf_dbdatabase table="FTPContratacion" datasource="ftec"> a
+                    inner join <cf_dbdatabase table="FTContratos" datasource="ftec"> b
+                        on  b.Cid = a.Cid
+                            and b.TCid in (select c.TCid from <cf_dbdatabase table="FTTipoContrato" datasource="ftec"> c
+                                            where coalesce(c.TCnoaplicaconsec,0) = 0)
+                      where PCEnumero > 0
                         and PCEPeriodo = year(getdate())
                 </cfquery>
                 <cfquery name="rsUpdate" datasource="#Session.DSN#">
@@ -22,10 +26,24 @@
                             , PCEnumero = #rsNex.Numero#
                         where PCid =  <cf_jdbcquery_param cfsqltype="cf_sql_numeric"    value="#Arguments.PCid#">
                             and PCEnumero < 0
+                            and exists (select 1 
+                                        from <cf_dbdatabase table="FTContratos" datasource="ftec"> b
+                                        inner join <cf_dbdatabase table="FTTipoContrato" datasource="ftec"> c
+                                            on c.TCid = b.TCid
+                                                and coalesce(c.TCnoaplicaconsec,0) = 0)
+                                        where b.Cid = <cf_dbdatabase table="FTPContratacion" datasource="ftec">.Cid
+                                        )
                 </cfquery>
                             
             </cfif>
-        
+
+
+            <!--- FTTipoContrato  TCid 
+
+            FTContratos TCid Cid
+
+            FTPContratacion  Cid PCid --->
+                    
             <cfquery name="rsUpdate" datasource="#Session.DSN#">
                 update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set 
                     PCEstado =   
@@ -60,7 +78,7 @@
             
             <!---se envia el correo segun corresponda--->
             
-<!---            <cfquery name="rsCorreos" datasource="#session.dsn#">
+            <!--- <cfquery name="rsCorreos" datasource="#session.dsn#">
                 select b.Pemail1 as Email
                 from Usuario a
                     inner join DatosPersonales b
@@ -196,6 +214,7 @@
         
         <cfreturn rs>
     </cffunction>    
+
     <cffunction access="public" name="AltaHTramite" returntype="numeric">
         <cfargument name="Usucodigo"        required="true"     type="numeric" default="#session.Usucodigo#">
         <cfargument name="ETid"             required="true"     type="numeric">
@@ -510,7 +529,7 @@
         
         
         
-<!---        <cfquery name="rs" datasource="#session.dsn#">
+        <!---        <cfquery name="rs" datasource="#session.dsn#">
             select b.Pemail1 as Email
             from Usuario a
                 inner join DatosPersonales b

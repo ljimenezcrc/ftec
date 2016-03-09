@@ -10,6 +10,11 @@
             <cfinvoke component="ftec.Componentes.FTtipocontrato" method="Alta" >
             	<cfinvokeargument name="TCcodigo" 		value="#form.TCcodigo#">
                 <cfinvokeargument name="TCdescripcion"	value="#form.TCdescripcion#">
+                <cfif isDefined('form.TCnoaplicaconsec')>
+                    <cfinvokeargument name="TCnoaplicaconsec"  value="1">    
+                <cfelse>
+                    <cfinvokeargument name="TCnoaplicaconsec"  value="0">    
+                </cfif>
                 <cfinvokeargument name="Debug"			value="false">
             </cfinvoke>
 		<cfelse>
@@ -30,6 +35,11 @@
             <cfinvokeargument name="TCid" 			value="#form.TCid#">
             <cfinvokeargument name="TCcodigo" 		value="#form.TCcodigo#">
             <cfinvokeargument name="TCdescripcion"	value="#form.TCdescripcion#">
+            <cfif isDefined('form.TCnoaplicaconsec')>
+                <cfinvokeargument name="TCnoaplicaconsec"  value="1">    
+            <cfelse>
+                <cfinvokeargument name="TCnoaplicaconsec"  value="0">    
+            </cfif>
             <cfinvokeargument name="Debug"			value="false">
         </cfinvoke>
     

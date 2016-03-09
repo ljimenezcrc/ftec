@@ -191,28 +191,48 @@
              	<cfset variable = variable & ch>
             <cfelseif inicia EQ true AND  ch EQ '##'>
             	<cfset variblesNuevas [cont]= variable>
-                <cfset cont = cont+1 >
-   
+
+				<!--- inserta nuevas varibles en el orden que aparecen --->
 				<cfquery datasource="#Arguments.conexion#" name="rsInserto">
-					INSERT INTO FTSeccionesD (Sid,TVariables,Variable,SDReport,Ecodigo,Usucodigo)
+					INSERT INTO FTSeccionesD (Sid,TVariables,Variable,SDReport,Ecodigo,Usucodigo,SDorden) 
 					SELECT 
 							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#"> ,
 							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric"   			value="#Arguments.TVariables#">,
 							<cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="60"  	value="#variable#">,
 							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric"				value="1">,
 							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Ecodigo#">,
-							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Usucodigo#">
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Usucodigo#">,
+							<cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#cont#"> 
 					 from dual
 					 where (select Count(1) 
 							 from FTSeccionesD 
 							where Sid      = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
 							  and Variable = <cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="100"  	value="#variable#">) = 0
 				</cfquery>
+
+
+				<!--- Actauliza el orden de las demas variables --->
+				<cfquery datasource="#Arguments.conexion#" name="rsInserto">
+					update FTSeccionesD set SDorden = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#cont#">
+					<!---select Sid,TVariables,Variable,SDReport,Ecodigo,Usucodigo,SDorden 
+					from FTSeccionesD--->
+					where (select Count(1) 
+							 from FTSeccionesD a 
+							where a.Sid      = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
+								and a.Sid = FTSeccionesD.Sid
+								and a.Variable = <cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="100"  	value="#variable#">
+								and a.Variable = FTSeccionesD.Variable) = 1
+						and  FTSeccionesD.Variable = <cf_jdbcQuery_param cfsqltype="cf_sql_varchar" len="100"  	value="#variable#">
+						and FTSeccionesD.Sid = <cf_jdbcQuery_param cfsqltype="cf_sql_numeric" scale="0" 	value="#Arguments.Sid#">
+				</cfquery>
+
+				<cfset cont = cont+1 >
                 <cfset variable="" >
                 <cfset inicia = false>
             </cfif>
        </cfloop>
-	    
+
+    
 		<cfquery datasource="#Arguments.conexion#">
 	   		delete from FTPDContratacion
 			where SDid in (select SDid 
@@ -259,7 +279,7 @@
 		</cfif>
 		
 		<cfquery name="rsFTSeccionesD" datasource="#Arguments.Conexion#">
-			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo , b.NombreSeccion
+			select a.SDid,a.Sid,a.TVariables,a.Variable,a.DVid,a.SDReport,a.Ecodigo,a.Usucodigo , b.NombreSeccion, a.SDorden
    			from FTSeccionesD a
 				inner join FTSecciones b
 					on b.Sid = a.Sid
@@ -267,7 +287,7 @@
 			<cfif isdefined('Arguments.Cid')>
 				and b.Cid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#Arguments.Cid#">
 			</cfif>
-			Order by a.Sid
+			Order by a.Sid, a.SDorden
 		</cfquery>
 		<cfreturn rsFTSeccionesD>
 	</cffunction>

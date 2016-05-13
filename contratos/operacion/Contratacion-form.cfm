@@ -48,7 +48,6 @@
         from  <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> b
 	    where b.Vid = <cfqueryparam cfsqltype="cf_sql_numeric" value="#rsForm.Vid#">
     </cfquery>
-    
 </cfif>
 
 
@@ -137,6 +136,9 @@
 	</div>
 	<div class="col-sm-2"> <input type="submit" name="btnBuscarOferente" value="Buscar Oferente" class="btn btn-success" /></div>
 </div>
+
+
+
 <cfif isdefined('rsForm')>
 	<!---Nombre Aplellido1 Aplellido2 --->
 	
@@ -214,7 +216,6 @@
  <div class="row">
 
 
-
 <div class="row">
 <!---Fecha Firmas--->
 <label for="PCFechaF" style="text-align:right" class="col-sm-2">Fecha Firmas:</label>
@@ -229,37 +230,34 @@
               </div>
  </div>
  <div class="row">
-
-
-
-<div class="btn-group" align="center"> 
-  	<button type="submit"  name="btnRegresar" class="btn btn-success">Regresar a la Lista</button>
-	<cfif isdefined('form.btnBuscarOferente') >  	
-        <button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
-    </cfif>
- 
-   <cfif LEN(TRIM(form.Cid))>
-		<cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
+	<div class="btn-group" align="center"> 
+	  	<button type="submit"  name="btnRegresar" class="btn btn-success">Regresar a la Lista</button>
+		<cfif isdefined('form.btnBuscarOferente') >  	
 	        <button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
-	    	<button type="button"  name="btnGContratoPre"  class="btn btn-success" 
-				onclick="window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid=<cfoutput>#rsForm.PCid#</cfoutput>','mywindow')">Contrato Preliminar</button>
-        <cfif not isdefined('form.PCestado')>  	    
-            <button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
-        </cfif>
-		</cfif>
-		<cfif isdefined('form.PCestado') and form.PCestado neq 'Aprobado' >  	
-			<button type="submit"  name="btnTramite" class="btn btn-danger">Enviar a aprobar</button>
-		  	<button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
-		</cfif>
-   </cfif>
+	    </cfif>
+	 
+	   <cfif LEN(TRIM(form.Cid))>
+			<cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
+		        <button type="submit"  name="btnGContrato"  class="btn btn-info">Guardar Contrato</button>
+		    	<button type="button"  name="btnGContratoPre"  class="btn btn-success" 
+					onclick="window.open('/cfmx/ftec/contratos/reportes/PrintContrato.cfm?PCid=<cfoutput>#rsForm.PCid#</cfoutput>','mywindow')">Contrato Preliminar</button>
+	        <cfif not isdefined('form.PCestado')>  	    
+	            <button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
+	        </cfif>
+			</cfif>
+			<cfif isdefined('form.PCestado') and form.PCestado neq 'Aprobado' >  	
+				<button type="submit"  name="btnTramite" class="btn btn-danger">Enviar a aprobar</button>
+			  	<button type="submit"  name="btnEliminar"  class="btn btn-danger">Eliminar Contrato</button>
+			</cfif>
+	   </cfif>
+	</div>
 </div>
 
 
 </cfif>
         
 
-
-<hr />
+ 
 <!---Datos Variables--->
 <cfif isdefined('rsForm') and LEN(TRIM(rsForm.PCid))>
 	<cfinvoke component="ftec.Componentes.FTDatosVariables" method="PrintDatoVariable">

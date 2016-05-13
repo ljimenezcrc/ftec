@@ -227,6 +227,7 @@
                                 on d.Vid = a.Vid
                             inner join <cf_dbdatabase table="DatosPersonales" datasource="#session.DSN#"> dp
                                 on dp.datos_personales = a.PCUsucodigoC
+                                    and dp.datos_personales = #session.Usucodigo#
 
                         where a.PCEstado in ('A','F')
 

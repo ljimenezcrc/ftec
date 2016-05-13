@@ -163,7 +163,7 @@
                     on d.Vid = a.Vid
                 inner join <cf_dbdatabase table="DatosPersonales" datasource="#session.DSN#"> dp
                     on dp.datos_personales = a.PCUsucodigoC
-            where a.PCEstado in  ('P','R','A')
+            where a.PCEstado in  ('P','R')
             and a.Vid in (select x.Vid 
                             from <cf_dbdatabase table="FTVicerrectoria" datasource="ftec"> x
                             inner join <cf_dbdatabase table="FTAutorizador" datasource="ftec">  y

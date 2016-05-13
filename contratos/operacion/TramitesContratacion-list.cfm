@@ -23,32 +23,25 @@
 					 PCid:  PCid,
 					 Aprueba:  Aprueba     
 					}
-	
-					try {
-						$.ajax ({
-							type: "get",
-							url: "/cfmx/ftec/Componentes/FTTramitesContratacion.cfc",
-							data: dataP,
-							dataType: "json",
-							success: function( objResponse ){
-	
-							 var lista = objResponse.DATA;
-	
-									
-								},
-							error:  function( objRequest, strError ){
-								alert('ERROR'+objRequest + ' - ' + strError);
-								console.log(objRequest);
-								console.log(strError);
-								}
-						});
-					} catch(ss){
-					 alert('FALLO Inesperado');
-					 console.log(ss);
-					}
- 
-                    $('form[name=fmContratacion]').submit();
-				}
+
+                    try {
+                        $.ajax ({
+                            type: "post",
+                            url: "/cfmx/ftec/Componentes/FTTramitesContratacion.cfc",
+                            data: dataP,
+                            dataType: "xml",
+                            async: false,
+                            cache: false,
+                            
+                            error:  function( objRequest, strError ){
+                                Status = 1; 
+                            }
+                        });
+                    } catch(ss){
+                        alert('FALLO Inesperado');
+                    }
+                    $('form[name=fmContratacion]').submit();                
+			}
             function rechaza(PCid){ 
                 var Aprueba = 2
                 var dataP = {
@@ -57,30 +50,25 @@
                      Aprueba:  Aprueba     
                     }
     
+                    
                     try {
                         $.ajax ({
-                            type: "get",
+                            type: "post",
                             url: "/cfmx/ftec/Componentes/FTTramitesContratacion.cfc",
                             data: dataP,
-                            dataType: "json",
-                            success: function( objResponse ){
-    
-                             var lista = objResponse.DATA;
-    
-                                    
-                                },
+                            dataType: "xml",
+                            async: false,
+                            cache: false,
+                            
                             error:  function( objRequest, strError ){
-                                alert('ERROR'+objRequest + ' - ' + strError);
-                                console.log(objRequest);
-                                console.log(strError);
-                                }
+                                Status = 1; 
+                            }
                         });
                     } catch(ss){
-                     alert('FALLO Inesperado');
-                     console.log(ss);
+                        alert('FALLO Inesperado');
                     }
-                    
-                    $('form[name=fmContratacion]').submit();
+                    $('form[name=fmContratacion]').submit();    
+
                 }
  
         </script>

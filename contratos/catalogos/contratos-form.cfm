@@ -116,6 +116,8 @@
 										<option value="11" <cfif rsFTSeccionesD.TVariables EQ 11> selected="selected"</cfif>>Fecha de Creación</option>
 										<option value="12" <cfif rsFTSeccionesD.TVariables EQ 12> selected="selected"</cfif>>Fecha de Aprobación</option>
 										<option value="13" <cfif rsFTSeccionesD.TVariables EQ 13> selected="selected"</cfif>>Fecha de Firmas</option>
+										<option value="17" <cfif rsFTSeccionesD.TVariables EQ 17> selected="selected"</cfif>>Codigo Proyecto</option>
+										<option value="18" <cfif rsFTSeccionesD.TVariables EQ 18> selected="selected"</cfif>>Nombre Proyacto</option>
 									</optgroup>
 									
 									<optgroup label="Datos Variables">

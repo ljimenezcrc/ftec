@@ -3,10 +3,11 @@
     <!--- *************************** --->
     <!--- Aplica Tramite  --->
     <!--- *************************** --->
-
-    <cffunction   name="EnviarTramite" access="remote" returnformat="json"  output="true" returntype="query">
+    <cffunction name="EnviarTramite" hint="Proceso de tramite" access="remote" output="false" returntype="struct">
         <cfargument name="PCid"             required="true"     type="any">
         <cfargument name="Aprueba"          required="true"     type="any">
+
+        <cfset datos['Status'] = 1>
 
         <cftransaction>
             <cfif #Arguments.Aprueba# EQ 1> 
@@ -20,6 +21,7 @@
                       where PCEnumero > 0
                         and PCEPeriodo = year(getdate())
                 </cfquery>
+
                 <cfquery name="rsUpdate" datasource="#Session.DSN#">
                     update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set 
                              PCEPeriodo = year(getdate())
@@ -30,20 +32,13 @@
                                         from <cf_dbdatabase table="FTContratos" datasource="ftec"> b
                                         inner join <cf_dbdatabase table="FTTipoContrato" datasource="ftec"> c
                                             on c.TCid = b.TCid
-                                                and coalesce(c.TCnoaplicaconsec,0) = 0)
+                                                and coalesce(c.TCnoaplicaconsec,0) = 0
                                         where b.Cid = <cf_dbdatabase table="FTPContratacion" datasource="ftec">.Cid
                                         )
+                                        
                 </cfquery>
-                            
             </cfif>
 
-
-            <!--- FTTipoContrato  TCid 
-
-            FTContratos TCid Cid
-
-            FTPContratacion  Cid PCid --->
-                    
             <cfquery name="rsUpdate" datasource="#Session.DSN#">
                 update <cf_dbdatabase table="FTPContratacion" datasource="ftec"> set 
                     PCEstado =   
@@ -108,7 +103,7 @@
         <cfquery name="rs" datasource="#Session.DSN#">
             select 1 from dual
         </cfquery>
-        <cfreturn rs>
+        <cfreturn datos>
     </cffunction>
  
 

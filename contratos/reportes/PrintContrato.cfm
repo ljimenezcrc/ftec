@@ -69,9 +69,12 @@
 
 
 
-
-
-
+<cfquery name="rsProyecto" datasource="#session.DSN#">
+    select Vcodigo ,  Vdescripcion 
+    from <cf_dbdatabase table="FTVicerrectoria " datasource="ftec"> a
+    where a.Ecodigo=<cfqueryparam cfsqltype="cf_sql_integer" value="#session.Ecodigo#">
+        and Vid = #rsContrato.Vid#
+</cfquery>
 
 
 <!---<cfdocument format="pdf" bookmark="yes">
@@ -129,6 +132,10 @@
 				<cfcase value="14"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsContrato.EstadoCivil & '</font>')></cfcase> 
 				<cfcase value="15"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsCoordinador.Nombre& '</font>')></cfcase> 
 				<cfcase value="16"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsCoordinador.Idenificacion& '</font>')></cfcase> 
+
+				<cfcase value="17"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsProyecto.Vcodigo& '</font>')></cfcase> 
+				<cfcase value="18"><cfset Seccion = replace(Seccion,'##' & rsVariable.Variable & '##','<font class="LabelRed">' &rsProyecto.Vdescripcion& '</font>')></cfcase> 
+
 				<!---Caso no conteplado--->
                 
 				<cfdefaultcase></cfdefaultcase>

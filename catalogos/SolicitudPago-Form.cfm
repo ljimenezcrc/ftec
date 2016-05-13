@@ -407,7 +407,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-2">
-				Observación	
+				Justificación	
 			</div>
 			<div class="col-sm-10">
 				<textarea name="SPobservacion" style="width:90%"  id="SPobservacion"><cfif isdefined('rsSolicitudProcesos')> #rsSolicitudProcesos.SPobservacion#</cfif></textarea>

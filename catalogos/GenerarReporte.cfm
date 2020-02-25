@@ -15,8 +15,6 @@
     where Iid  = #form.Indicador#
 </cfquery>
 
-
-
 <cfswitch expression="#rsInd.Icodigo#">
     <cfcase value="F02">  
     	<cfset pInicio 	= #form.PeriodoInicio# - 1>            
@@ -42,10 +40,6 @@
 <cfset LvarCantidadCuentas = fnInsertaCuentas()>
 <cfset fnActualizaDatos()>
 <cfset fnInsertaPadres()>
-
-
-
-
 
 <cfset LvarSoloMes = false>
 <cfset LvarMesInicial = #form.MesInicial#>
@@ -99,18 +93,12 @@
 	
 	<!--- <cf_dump var="#rsCuentasContables#"> --->
 
-	
-
-
-<cf_templateheader title="Contratos">
-	<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Gráfico indicadores'>
-		<cfset fnPintaReporte()>
-		<cfreturn>
-	<cf_web_portlet_end>	
-<cf_templatefooter>
-
-
-    
+	<cf_templateheader title="Contratos">
+		<cf_web_portlet_start border="true" skin="#Session.Preferences.Skin#" tituloalign="center" titulo='Gráfico indicadores'>
+			<cfset fnPintaReporte()>
+			<cfreturn>
+		<cf_web_portlet_end>	
+	<cf_templatefooter>
     
 </cffunction>
 
@@ -139,7 +127,6 @@
 	
 		</cfcase>
 		<cfcase value="3">
-        
         
             <cfquery name="rsCuentasIndicador" datasource="#session.DSN#">
                 select CIid, Indicador, Cuenta, NivelDet, NivelTot, MesInicio, MesFinal

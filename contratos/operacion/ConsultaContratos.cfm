@@ -227,8 +227,14 @@
                                 on d.Vid = a.Vid
                             inner join <cf_dbdatabase table="DatosPersonales" datasource="#session.DSN#"> dp
                                 on dp.datos_personales = a.PCUsucodigoC
-                                    and dp.datos_personales = #session.Usucodigo#
-
+                                    and dp.datos_personales in (select x.Usucodigo 
+                                                                from  FTAutorizador x
+                                                                where x.Vid = a.Vid
+                                                                and x.Vid in (select Vid
+                                                                                from  FTAutorizador where Usucodigo = #session.Usucodigo#
+                                                                            )
+                                                                )
+                                    <!---= #session.Usucodigo# se cambia para que todos los empleados autorizados de la Unidad operativa puedan ver las consultas y no solo el empleado que lo hizo--->
                         where a.PCEstado in ('A','F')
 
                         <cfif isdefined("form.NumeroF") and len(trim(form.NumeroF)) NEQ 0>

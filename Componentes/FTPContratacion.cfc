@@ -85,14 +85,13 @@ PCid				<!--- Id de la  Tabla --->
         <cfargument name="PCSexo" 				required="true" 	type="string">
         <cfargument name="PCEstadoCivil" 		required="true" 	type="string">
         <!--- <cfargument name="PCFechaN" 			required="false" 	type="string"> --->
-        <cfargument name="PCFechaA"           required="false"    type="string">
-        <cfargument name="PCFechaF"           required="false"    type="string">
+        <cfargument name="PCFechaA"           required="false"    type="date">
+        <cfargument name="PCFechaF"           required="false"    type="date">
         <cfargument name="PCUsucodigoC" 		required="true" 	type="numeric" default="#session.Usucodigo#">
         <cfargument name="Debug" 				required="false" 	type="boolean" 	default="false">     
 		<cfargument name="Conexion" 			required="false" 	type="string" 	default="ftec">  
 
  
-        
         <cftransaction>   
             <cfif isdefined('Arguments.PCid')>
              <cfquery name="rsInsert" datasource="#Arguments.Conexion#" result="res">
@@ -107,8 +106,8 @@ PCid				<!--- Id de la  Tabla --->
                     ,PCSexo				= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCSexo#" 				voidnull>
                     ,PCEstadoCivil		= <cf_jdbcquery_param cfsqltype="cf_sql_char" 	value="#Arguments.PCEstadoCivil#" 		voidnull>
                     <!--- ,PCFechaN			= <cf_jdbcquery_param cfsqltype="cf_sql_date" 		value="#Arguments.PCFechaN#" 		voidnull>--->
-                    ,PCFechaA         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaA#"        voidnull>
-                    ,PCFechaF         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#Arguments.PCFechaF#"        voidnull>
+                    ,PCFechaA         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#LSParseDateTime(Arguments.PCFechaA)#" voidnull>
+                    ,PCFechaF         = <cf_jdbcquery_param cfsqltype="cf_sql_date"       value="#LSParseDateTime(Arguments.PCFechaF)#" voidnull>
                     ,PCUsucodigoC		= <cfqueryparam cfsqltype="cf_sql_numeric" 	value="#session.Usucodigo#">
               where PCid = #Arguments.PCid#
             </cfquery>

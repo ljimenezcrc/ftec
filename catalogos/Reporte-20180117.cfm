@@ -214,10 +214,10 @@
                     where nivel = 0
                 </cfquery>  
         
-                <cfset Titulo_Grafico = 'FUNDATEC'& "<br/>"& ' INGRESOS GENERADOS POR EL ITCR Y CUSTODIADOS POR FUNDATEC'& 
-													"<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-													"<br/>"& 'EN COLONES' &
-													"<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
+                <cfset Titulo_Grafico = 'FUNDATEC'& chr(13)& chr(10)& ' INGRESOS GENERADOS POR EL ITCR Y CUSTODIADOS POR FUNDATEC'& 
+													chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+													chr(13)& chr(10)& 'EN COLONES' &
+													chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
 
                 <cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
@@ -429,9 +429,9 @@
         
 
 				<cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON DE CRECIMIENTO DEL INGRESO CON RELACION AL AÑO ANTERIOR'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
+                                        chr(13)& chr(10)& 'RAZON DE CRECIMIENTO DEL INGRESO CON RELACION AL AÑO ANTERIOR'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
                                                       
                 <cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
@@ -514,9 +514,9 @@
                 </cfquery>  
         
  				<cfset Titulo_Grafico = 'FUNDATEC'& 
-                        "<br/>"& 'GASTOS DE OPERACION DE LA UAF'& 
-                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >    
+                        chr(13)& chr(10)& 'GASTOS DE OPERACION DE LA UAF'& 
+                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >    
                 <cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 
@@ -534,7 +534,7 @@
                     <!---name="#NumGrafico#"--->
                     >  
                   
-                    <cfchartseries type="Bullet" 
+                    <cfchartseries type="cylinder" 
                         query="rsDatos" 
                         itemcolumn="Speriodo" 
                         valuecolumn="saldofin"   
@@ -641,9 +641,9 @@
 
         
  				<cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON DE CRECIMIENTO DEL GASTO OPERATIVO DE LA UAF' &"<br/>"& ' CON RELACION AL AÑO ANTERIOR'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
+                                        chr(13)& chr(10)& 'RAZON DE CRECIMIENTO DEL GASTO OPERATIVO DE LA UAF' &chr(13)& chr(10)& ' CON RELACION AL AÑO ANTERIOR'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >  
 
 
 
@@ -780,9 +780,9 @@
         
                  
                 <cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON ENTRE LA CANTIDAD DE PROYECTOS ACTIVOS Y LA CANTIDAD' &"<br/>"& ' DE FUNCIONARIOS DE LA UAF EN EL AÑO DE ANALISIS'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# > 
+                                        chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE PROYECTOS ACTIVOS Y LA CANTIDAD' &chr(13)& chr(10)& ' DE FUNCIONARIOS DE LA UAF EN EL AÑO DE ANALISIS'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# > 
                                         
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
@@ -960,9 +960,9 @@
  
         
                  <cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &"<br/>"& 'DE FUNCIONARIOS DE LA UAF'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# > 
+                                        chr(13)& chr(10)& 'RAZON ENTRE LA CANTIDAD DE INGRESOS CUSTODIADOS Y LA CANTIDAD' &chr(13)& chr(10)& 'DE FUNCIONARIOS DE LA UAF'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# > 
 				
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
@@ -1078,8 +1078,6 @@
                     order by Speriodo
                 </cfquery> 
 
-                
-
 
                 <!---Temporal para hacer el round --->    
                 <cf_dbtemp name="tempIndicadoresF07" returnvariable="tempF07" datasource="#session.DSN#">
@@ -1092,7 +1090,7 @@
                     </cfquery>
                 </cfloop>
                 <cfquery  datasource="#session.dsn#" name = "rsDatos"> 
-                    select distinct round(crecimiento,2) as crecimiento,Speriodo
+                    select round(crecimiento,2) as crecimiento,Speriodo
                     from #tempF07#
                     order by Speriodo
                 </cfquery> 
@@ -1102,9 +1100,9 @@
                 
         
                 <cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON ENTRE EL COSTO ADMINISTRATIVO COBRADO Y LOS INGRESOS' &"<br/>"& 'CUSTODIADOS EN EL AÑO DE ANALISIS'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >
+                                        chr(13)& chr(10)& 'RAZON ENTRE EL COSTO ADMINISTRATIVO COBRADO Y LOS INGRESOS' &chr(13)& chr(10)& 'CUSTODIADOS EN EL AÑO DE ANALISIS'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'>  
                 <cfset NumGrafico = 'F07'>
@@ -1112,7 +1110,7 @@
                 <!--- <cfset escalaMax = #rsDatos.saldofin# + fix(#rsDatos.saldofin# / 4)>   --->
         
                 <div align="center">
-                <cfchart format="jpg" font="Arial" fontBold="true" fontSize="12"
+                <cfchart format="jpg" 
                     xaxistitle="#Titulo_EjeX#" 
                     yaxistitle="#Titulo_EjeY#"
                     <!--- scaleto="#escalaMax#" --->
@@ -1225,9 +1223,9 @@
                 </cfquery> 
         
                 <cfset Titulo_Grafico = 'FUNDATEC'& 
-                                        "<br/>"& 'RAZON DE CRECIMIENTO DE LOS INGRESOS DE LA UAF POR CONCEPTO DE' &"<br/>"& 'COSTOS ADMINISTRATIVOS EN EL AÑO DE ANALISIS'& 
-                                        "<br/>"& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
-                                        "<br/>"& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >
+                                        chr(13)& chr(10)& 'RAZON DE CRECIMIENTO DE LOS INGRESOS DE LA UAF POR CONCEPTO DE' &chr(13)& chr(10)& 'COSTOS ADMINISTRATIVOS EN EL AÑO DE ANALISIS'& 
+                                        chr(13)& chr(10)& 'DEL  '& #rsMinPeriodo.desde# &  ' AL ' &  #rsMaxPeriodo.hasta# & 
+                                        chr(13)& chr(10)& ' PARA LOS MESES DE:' & #MesIni# & ' a ' & #MesFin# >
                 
 				<cfset Titulo_EjeY = 'Colones'>  
                 <cfset Titulo_EjeX = 'Periodos Analizados'> 

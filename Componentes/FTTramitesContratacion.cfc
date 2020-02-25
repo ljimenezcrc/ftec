@@ -446,7 +446,8 @@
                                                     where PCid = <cf_jdbcquery_param cfsqltype="cf_sql_numeric" value="#Arguments.PCid#">)
             </cfquery>
             
-            <cfset Ruta = "<a href='http://#session.sitio.host#/cfmx/ftec/contratos/operacion/TramitesContratacion-list.cfm'>Aprobación de Trámites</a>">
+
+            <cfset Ruta = "<a href='http://#session.sitio.host#/cfmx/ftec/contratos/operacion/Contratacion.cfm'>Consulta Contrato</a>">
             
             <cfloop query="ParaElCorreo">
                 <cfsavecontent variable="_mail_body">
@@ -460,7 +461,7 @@
                     </style>
                     </head>
                     <body>
-                    <cfoutput>
+                        <cfoutput>
                           <table border="1" cellpadding="4" cellspacing="0" style="border:2px solid ##999999; "><tr bgcolor="##999999"><td colspan="2" height="8"></td></tr><tr bgcolor="##003399"><td colspan="2" height="24"></td></tr><tr bgcolor="##999999">
                             <td colspan="2"><strong>Trámite de Contratos </strong> </td>
                             </tr><tr><td width="70">&nbsp;</td><td width="559">&nbsp;</td></tr>
